@@ -1,0 +1,149 @@
+#!/usr/bin/python
+
+#    ubuntu-release - provides information about the current releases
+#    Copyright 2009  Benjamin Drung <bdrung@ubuntu.com>
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+import csv
+import datetime
+import getopt
+import os
+import sys
+
+# error codes
+COMMAND_LINE_SYNTAX_ERROR = 1
+DISTRIBUTION_DATA_OUTDATED = 2
+
+def convert_date(s):
+	if s is None or s == "":
+		date = None
+	else:
+		try:
+			(year, month, day) = map(lambda x: int(x), s.split("-"))
+			date = datetime.date(year, month, day)
+		except ValueError:
+			(year, month) = map(int, s.split("-"))
+			if month == 12:
+				date = datetime.date(year, month, 31)
+			else:
+				date = datetime.date(year, month + 1, 1) - datetime.timedelta(1)
+	return date
+
+def read_file(filename):
+	csvfile = open(filename)
+	csv_reader = csv.DictReader(csvfile)
+	rows = []
+	
+	for row in csv_reader:
+		for column in ("release","eol","eol-server"):
+			row[column] = convert_date(row[column])
+		rows.append(row)
+
+	return rows
+
+def get_data_dir():
+	data_dir = os.path.dirname(sys.argv[0])
+	if data_dir == "/usr/bin":
+		data_dir = "/usr/share/release"
+	return data_dir
+
+def main(date, selected):
+	lines = read_file(os.path.join(get_data_dir(), "ubuntu.csv"))
+	
+	releases = None
+	if selected == "all":
+		releases = lines
+	if selected == "devel":
+		releases = filter(lambda x: date < x["release"] and date <= x["eol"], lines)
+		del releases[1:]
+	elif selected == "lts":
+		releases = filter(lambda x: x["version"].find("LTS") >= 0 and date >= x["release"] and date <= x["eol"], lines)
+		del releases[0:-1]
+	elif selected == "stable":
+		releases = filter(lambda x: date >= x["release"] and date <= x["eol"], lines)
+		del releases[0:-1]
+	elif selected == "supported":
+		releases = filter(lambda x: date <= x["eol"] or (x["eol-server"] is not None and date <= x["eol-server"]), lines)
+	elif selected == "unsupported":
+		releases = filter(lambda x: date > x["eol"], lines)
+
+	if len(releases) == 0:
+		sys.stderr.write("E: Distribution data outdated.\n")
+		sys.exit(DISTRIBUTION_DATA_OUTDATED)
+
+	for release in map(lambda x: x["series"], releases):
+		print release
+
+
+def usage(output_target):
+	print >> output_target, """Usage: %s [OPTIONS] VERSION
+
+Options:
+      --date         date for calculating the version (default: today)
+  -h, --help         display this help and exit
+
+Version:
+  -a, --all          list all known versions
+  -d, --devel        latest development version
+      --lts          latest long term support (LTS) version
+  -s, --stable       latest stable version
+      --supported    list of all supported stable versions
+      --unsupported  list of all unsupported stable versions""" % (sys.argv[0])
+
+
+if __name__ == "__main__":
+	try:
+		long_opts = ["all", "date=", "devel", "lts", "help", "stable",
+				"supported", "unsupported"]
+		opts, args = getopt.gnu_getopt(sys.argv[1:], "adhs", long_opts)
+	except getopt.GetoptError, e:
+		# print help information and exit:
+		print str(e) # will print something like "option -a not recognized"
+		sys.exit(COMMAND_LINE_SYNTAX_ERROR)
+
+	date = datetime.date.today()
+	release = set()
+
+	for o, a in opts:
+		if o in ("-a", "--all"):
+			release.add("all")
+		elif o == "--date":
+			try:
+				date = convert_date(a)
+			except ValueError:
+				print "Option " + o + " needs to be an date in ISO 8601 format."
+				sys.exit(COMMAND_LINE_SYNTAX_ERROR)
+		elif o in ("-d", "--devel"):
+			release.add("devel")
+		elif o in ("-h", "--help"):
+			usage(sys.stdout)
+			sys.exit()
+		elif o == "--lts":
+			release.add("lts")
+		elif o in ("-s", "--stable"):
+			release.add("stable")
+		elif o == "--supported":
+			release.add("supported")
+		elif o == "--unsupported":
+			release.add("unsupported")
+		else:
+			assert False, "unhandled option"
+
+	if len(release) != 1:
+		sys.stderr.write("You have to select exactly one of --all, --devel, --lts, --stable, --supported, --unsupported.\n")
+		sys.exit(COMMAND_LINE_SYNTAX_ERROR)
+
+	main(date, release.pop())
+	sys.exit(0)

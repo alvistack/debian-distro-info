@@ -1,0 +1,11 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@
+
+override_dh_auto_build:
+	./check-data
+
+override_dh_auto_install:
+	mkdir -p debian/release/usr/bin
+	ln -s $(shell lsb_release -is | tr '[:upper:]' '[:lower:]')-release debian/release/usr/bin/release

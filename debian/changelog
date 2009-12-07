@@ -1,0 +1,6 @@
+release (0.1) UNRELEASED; urgency=low
+
+  * Initial release (Closes: #559761)
+
+ -- Benjamin Drung <bdrung@ubuntu.com>  Thu, 26 Nov 2009 14:59:09 +0100
+

@@ -1,0 +1,99 @@
+#!/usr/bin/python
+
+#    check-data - checks, if the data in the cvs files are correct
+#    Copyright 2009  Benjamin Drung <bdrung@ubuntu.com>
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+import csv
+import datetime
+import os
+import sys
+
+def convert_date(s):
+	if s is None or s == "":
+		date = None
+	else:
+		try:
+			(year, month, day) = map(lambda x: int(x), s.split("-"))
+			date = datetime.date(year, month, day)
+		except ValueError:
+			(year, month) = map(int, s.split("-"))
+			if month == 12:
+				date = datetime.date(year, month, 31)
+			else:
+				date = datetime.date(year, month + 1, 1) - datetime.timedelta(1)
+	return date
+
+def error_message(filename, line, message):
+	sys.stderr.write(filename + ": line" + str(line) + ": " + message + "\n")
+	sys.exit(1)
+
+def check_version(filename, line, version):
+	if not type(version) == str:
+		error_message(filename, line, "version is not an string")
+
+def check_strings(filename, line, row, columns):
+	for column in columns:
+		if not type(row[column]) == str or len(row[column]) == 0:
+			error_message(filename, line, "column " + column + " contains no valid string")
+
+def check_dates(filename, line, row, columns):
+	for column in columns:
+		if not row[column] is None and type(row[column]) != datetime.date:
+			error_message(filename, line, "column " + column + " is no valid date")
+
+def read_debian_file(filename):
+	csvfile = open(filename)
+	csv_reader = csv.DictReader(csvfile)
+	rows = []
+	
+	for row in csv_reader:
+		for column in ("release","eol"):
+			row[column] = convert_date(row[column])
+		rows.append(row)
+
+	return rows
+
+def check_debian(filename):
+	data = read_debian_file(filename)
+	for i in xrange(len(data)):
+		row = data[i]
+		check_version(filename, i + 1, row["version"])
+		check_strings(filename, i + 1, row, ("codename", "series"))
+		check_dates(filename, i + 1, row, ("release","eol"))
+
+def read_ubuntu_file(filename):
+	csvfile = open(filename)
+	csv_reader = csv.DictReader(csvfile)
+	rows = []
+	
+	for row in csv_reader:
+		for column in ("release","eol","eol-server"):
+			row[column] = convert_date(row[column])
+		rows.append(row)
+
+	return rows
+
+def check_ubuntu(filename):
+	data = read_ubuntu_file(filename)
+	for i in xrange(len(data)):
+		row = data[i]
+		check_version(filename, i + 1, row["version"])
+		check_strings(filename, i + 1, row, ("codename", "series"))
+		check_dates(filename, i + 1, row, ("release","eol","eol-server"))
+
+if __name__ == "__main__":
+	check_debian("debian.csv")
+	check_ubuntu("ubuntu.csv")

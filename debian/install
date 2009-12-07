@@ -1,0 +1,4 @@
+debian.csv usr/share/release/
+debian-release usr/bin/
+ubuntu.csv usr/share/release/
+ubuntu-release usr/bin/
