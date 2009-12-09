@@ -1,4 +1,4 @@
-Source: release
+Source: release-info
 Section: devel
 Priority: optional
 Maintainer: Benjamin Drung <bdrung@ubuntu.com>
@@ -7,14 +7,14 @@ Build-Depends: debhelper (>= 7.0.50~),
                python
 Standards-Version: 3.8.3
 DM-Upload-Allowed: yes
-Vcs-Git: git://git.debian.org/git/collab-maint/release.git
-Vcs-Browser: http://git.debian.org/?p=collab-maint/release.git
+Vcs-Git: git://git.debian.org/git/collab-maint/release-info.git
+Vcs-Browser: http://git.debian.org/?p=collab-maint/release-info.git
 
-Package: release
+Package: release-info
 Architecture: all
 Depends: ${python:Depends}, ${misc:Depends}
-Description: provides information about the current releases
+Description: provides information about the distribution's releases
  This package contains information about all releases of Debian and Ubuntu. The
- release script will give you the codename for e.g. the latest stable release of
- your distribution. To get information about a specific distribution there are
- the debian-release and the ubuntu-release scripts.
+ release-info script will give you the codename for e.g. the latest stable
+ release of your distribution. To get information about a specific distribution
+ there are the debian-release-info and the ubuntu-release-info scripts.

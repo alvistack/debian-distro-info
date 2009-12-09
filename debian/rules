@@ -7,5 +7,5 @@ override_dh_auto_build:
 	./check-data
 
 override_dh_auto_install:
-	mkdir -p debian/release/usr/bin
-	ln -s $(shell lsb_release -is | tr '[:upper:]' '[:lower:]')-release debian/release/usr/bin/release
+	mkdir -p debian/release-info/usr/bin
+	ln -s $(shell lsb_release -is | tr '[:upper:]' '[:lower:]')-release-info debian/release-info/usr/bin/release-info

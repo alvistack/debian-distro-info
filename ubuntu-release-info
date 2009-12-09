@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-#    debian-release - provides information about the current releases
+#    ubuntu-release-info - provides information about Ubuntu's releases
 #    Copyright 2009  Benjamin Drung <bdrung@ubuntu.com>
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -47,7 +47,7 @@ def read_file(filename):
 	rows = []
 	
 	for row in csv_reader:
-		for column in ("release","eol"):
+		for column in ("release","eol","eol-server"):
 			row[column] = convert_date(row[column])
 		rows.append(row)
 
@@ -56,33 +56,28 @@ def read_file(filename):
 def get_data_dir():
 	data_dir = os.path.dirname(sys.argv[0])
 	if data_dir == "/usr/bin":
-		data_dir = "/usr/share/release"
+		data_dir = "/usr/share/release-info"
 	return data_dir
 
 def main(date, selected):
-	lines = read_file(os.path.join(get_data_dir(), "debian.csv"))
+	lines = read_file(os.path.join(get_data_dir(), "ubuntu.csv"))
 	
 	releases = None
 	if selected == "all":
 		releases = lines
-	elif selected == "devel":
-		releases = filter(lambda x: x["release"] is None or (date < x["release"] and (x["eol"] is None or date <= x["eol"])), lines)
-		del releases[0:-1]
-	elif selected == "old":
-		releases = filter(lambda x: x["release"] is not None and date >= x["release"] and (x["eol"] is None or date <= x["eol"]), lines)
-		del releases[-1]
+	if selected == "devel":
+		releases = filter(lambda x: date < x["release"] and date <= x["eol"], lines)
+		del releases[1:]
+	elif selected == "lts":
+		releases = filter(lambda x: x["version"].find("LTS") >= 0 and date >= x["release"] and date <= x["eol"], lines)
 		del releases[0:-1]
 	elif selected == "stable":
-		releases = filter(lambda x: x["release"] is not None and date >= x["release"] and (x["eol"] is None or date <= x["eol"]), lines)
+		releases = filter(lambda x: date >= x["release"] and date <= x["eol"], lines)
 		del releases[0:-1]
 	elif selected == "supported":
-		releases = filter(lambda x: x["eol"] is None or date <= x["eol"], lines)
-	elif selected == "testing":
-		releases = filter(lambda x: x["release"] is None or (date < x["release"] and (x["eol"] is None or date <= x["eol"])), lines)
-		del releases[-1]
-		del releases[0:-1]
+		releases = filter(lambda x: date <= x["eol"] or (x["eol-server"] is not None and date <= x["eol-server"]), lines)
 	elif selected == "unsupported":
-		releases = filter(lambda x: x["eol"] is not None and date > x["eol"], lines)
+		releases = filter(lambda x: date > x["eol"], lines)
 
 	if len(releases) == 0:
 		sys.stderr.write("E: Distribution data outdated.\n")
@@ -102,18 +97,17 @@ Options:
 Version:
   -a, --all          list all known versions
   -d, --devel        latest development version
-  -o, --old          latest old (stable) version
+      --lts          latest long term support (LTS) version
   -s, --stable       latest stable version
       --supported    list of all supported stable versions
-  -t, --testing      current testing version
       --unsupported  list of all unsupported stable versions""" % (sys.argv[0])
 
 
 if __name__ == "__main__":
 	try:
-		long_opts = ["all", "date=", "devel", "help", "oldstable", "stable",
-				"supported", "testing", "unsupported"]
-		opts, args = getopt.gnu_getopt(sys.argv[1:], "adhost", long_opts)
+		long_opts = ["all", "date=", "devel", "lts", "help", "stable",
+				"supported", "unsupported"]
+		opts, args = getopt.gnu_getopt(sys.argv[1:], "adhs", long_opts)
 	except getopt.GetoptError, e:
 		# print help information and exit:
 		print str(e) # will print something like "option -a not recognized"
@@ -136,21 +130,19 @@ if __name__ == "__main__":
 		elif o in ("-h", "--help"):
 			usage(sys.stdout)
 			sys.exit()
-		elif o in ("-o", "--old"):
-			release.add("old")
+		elif o == "--lts":
+			release.add("lts")
 		elif o in ("-s", "--stable"):
 			release.add("stable")
 		elif o == "--supported":
 			release.add("supported")
-		elif o in ("-t", "--testing"):
-			release.add("testing")
 		elif o == "--unsupported":
 			release.add("unsupported")
 		else:
 			assert False, "unhandled option"
 
 	if len(release) != 1:
-		sys.stderr.write("You have to select exactly one of --all, --devel, --old, --stable, --supported, --testing, --unsupported.\n")
+		sys.stderr.write("You have to select exactly one of --all, --devel, --lts, --stable, --supported, --unsupported.\n")
 		sys.exit(COMMAND_LINE_SYNTAX_ERROR)
 
 	main(date, release.pop())
