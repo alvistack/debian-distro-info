@@ -56,7 +56,7 @@ def read_file(filename):
 def get_data_dir():
 	data_dir = os.path.dirname(sys.argv[0])
 	if data_dir == "/usr/bin":
-		data_dir = "/usr/share/release-info"
+		data_dir = "/usr/share/distro-release-info"
 	return data_dir
 
 def main(date, selected):
