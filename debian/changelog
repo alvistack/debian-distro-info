@@ -1,6 +1,6 @@
-release-info (0.1) UNRELEASED; urgency=low
+release-info (0.1) unstable; urgency=low
 
   * Initial release (Closes: #559761)
 
- -- Benjamin Drung <bdrung@ubuntu.com>  Thu, 26 Nov 2009 14:59:09 +0100
+ -- Benjamin Drung <bdrung@ubuntu.com>  Wed, 23 Dec 2009 15:39:46 +0100
 
