@@ -2,5 +2,5 @@ release-info (0.1) unstable; urgency=low
 
   * Initial release (Closes: #559761)
 
- -- Benjamin Drung <bdrung@ubuntu.com>  Wed, 23 Dec 2009 15:39:46 +0100
+ -- Benjamin Drung <bdrung@debian.org>  Sat, 28 May 2011 22:10:10 +0200
 

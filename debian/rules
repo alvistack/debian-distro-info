@@ -1,11 +1,20 @@
 #!/usr/bin/make -f
 
 %:
-	dh $@
+	dh $@ --with python2
 
-override_dh_auto_build:
-	./check-data
+override_dh_auto_clean:
+	dh_auto_clean
+	rm -rf *.egg-info
 
 override_dh_auto_install:
-	mkdir -p debian/release-info/usr/bin
-	ln -s $(shell lsb_release -is | tr '[:upper:]' '[:lower:]')-release-info debian/release-info/usr/bin/release-info
+	dh_auto_install
+	dh_link usr/bin/$(shell dpkg-vendor --query Vendor | tr '[:upper:]' '[:lower:]')-distro-info usr/bin/distro-info
+
+ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
+override_dh_auto_test:
+	set -e; \
+	for python in $(shell pyversions -r); do \
+		$$python setup.py test; \
+	done
+endif

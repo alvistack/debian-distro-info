@@ -1,18 +1,21 @@
 Source: release-info
-Section: devel
+Section: python
 Priority: optional
-Maintainer: Benjamin Drung <bdrung@ubuntu.com>
+Maintainer: Benjamin Drung <bdrung@debian.org>
 Build-Depends: debhelper (>= 7.0.50~),
-               lsb-release,
-               python
-Standards-Version: 3.8.3
-DM-Upload-Allowed: yes
+               pylint,
+               python-all,
+               python-setuptools,
+               python-unittest2
+Standards-Version: 3.9.2
+X-Python-Version: >= 2.6
 Vcs-Git: git://git.debian.org/git/collab-maint/release-info.git
 Vcs-Browser: http://git.debian.org/?p=collab-maint/release-info.git
 
-Package: release-info
+Package: python-distro-info
 Architecture: all
-Depends: ${python:Depends}, ${misc:Depends}
+Depends: ${misc:Depends}, ${python:Depends}
+Provides: ${python:Provides}
 Description: provides information about the distributions' releases
  This package contains information about all releases of Debian and Ubuntu. The
  release-info script will give you the codename for e.g. the latest stable
