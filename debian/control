@@ -16,6 +16,8 @@ Package: python-distro-info
 Architecture: all
 Depends: ${misc:Depends}, ${python:Depends}
 Provides: ${python:Provides}
+Breaks: ubuntu-dev-tools (<< 0.125~)
+Replaces: ubuntu-dev-tools (<< 0.125~)
 Description: provides information about the distributions' releases
  This package contains information about all releases of Debian and Ubuntu. The
  distro-info script will give you the codename for e.g. the latest stable
