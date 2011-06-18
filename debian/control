@@ -1,4 +1,4 @@
-Source: release-info
+Source: distro-info
 Section: python
 Priority: optional
 Maintainer: Benjamin Drung <bdrung@debian.org>
@@ -9,8 +9,8 @@ Build-Depends: debhelper (>= 7.0.50~),
                python-unittest2
 Standards-Version: 3.9.2
 X-Python-Version: >= 2.6
-Vcs-Git: git://git.debian.org/git/collab-maint/release-info.git
-Vcs-Browser: http://git.debian.org/?p=collab-maint/release-info.git
+Vcs-Git: git://git.debian.org/git/collab-maint/distro-info.git
+Vcs-Browser: http://git.debian.org/?p=collab-maint/distro-info.git
 
 Package: python-distro-info
 Architecture: all
@@ -18,6 +18,6 @@ Depends: ${misc:Depends}, ${python:Depends}
 Provides: ${python:Provides}
 Description: provides information about the distributions' releases
  This package contains information about all releases of Debian and Ubuntu. The
- release-info script will give you the codename for e.g. the latest stable
+ distro-info script will give you the codename for e.g. the latest stable
  release of your distribution. To get information about a specific distribution
- there are the debian-release-info and the ubuntu-release-info scripts.
+ there are the debian-distro-info and the ubuntu-distro-info scripts.

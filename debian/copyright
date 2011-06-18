@@ -1,5 +1,5 @@
 Format: http://svn.debian.org/wsvn/dep/web/deps/dep5.mdwn?op=file&rev=166
-Upstream-Name: release-info
+Upstream-Name: distro-info
 Upstream-Contact: Benjamin Drung <bdrung@debian.org>
 
 Files: *

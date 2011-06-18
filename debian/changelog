@@ -1,4 +1,4 @@
-release-info (0.1) unstable; urgency=low
+distro-info (0.1) unstable; urgency=low
 
   * Initial release (Closes: #559761)
 
