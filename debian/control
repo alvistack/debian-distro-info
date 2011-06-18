@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Benjamin Drung <bdrung@debian.org>
 Build-Depends: debhelper (>= 7.0.50~),
                pylint,
-               python-all,
+               python-all (>= 2.6.3-3~),
                python-setuptools,
                python-unittest2
 Standards-Version: 3.9.2
