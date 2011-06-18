@@ -1,5 +1,10 @@
 #!/usr/bin/make -f
 
+define \n
+
+
+endef
+
 %:
 	dh $@ --with python2
 
@@ -13,8 +18,5 @@ override_dh_auto_install:
 
 ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
 override_dh_auto_test:
-	set -e; \
-	for python in $(shell pyversions -r); do \
-		$$python setup.py test; \
-	done
+	$(foreach python,$(shell pyversions -r),$(python) setup.py test$(\n))
 endif
