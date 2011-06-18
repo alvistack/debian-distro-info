@@ -1,5 +1,5 @@
 Source: distro-info
-Section: python
+Section: devel
 Priority: optional
 Maintainer: Benjamin Drung <bdrung@debian.org>
 Build-Depends: debhelper (>= 8),
