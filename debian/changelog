@@ -2,4 +2,4 @@ distro-info (0.1) unstable; urgency=low
 
   * Initial release (Closes: #559761)
 
- -- Benjamin Drung <bdrung@debian.org>  Sat, 28 May 2011 22:10:10 +0200
+ -- Benjamin Drung <bdrung@debian.org>  Sun, 19 Jun 2011 00:08:57 +0200
