@@ -15,8 +15,8 @@ Vcs-Browser: http://git.debian.org/?p=collab-maint/distro-info.git
 Package: distro-info
 Architecture: all
 Depends: ${misc:Depends}, ${python:Depends}
-Breaks: ubuntu-dev-tools (<< 0.125~)
-Replaces: ubuntu-dev-tools (<< 0.125~)
+Breaks: ubuntu-dev-tools (<< 0.127~)
+Replaces: ubuntu-dev-tools (<< 0.127~)
 Description: provides information about the distributions' releases
  This package contains information about all releases of Debian and Ubuntu. The
  distro-info script will give you the codename for e.g. the latest stable
