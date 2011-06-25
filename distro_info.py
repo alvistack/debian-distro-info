@@ -79,6 +79,10 @@ class DistroInfo(object):
         """Return all distributions that were available on the given date."""
         return [x for x in self._rows if date >= x["created"]]
 
+    def codename(self, release, date=None, default=None):
+        """Map codename aliases to the codename they describe."""
+        return release
+
     def devel(self, date=None):
         """Get latest development distribution based on the given date."""
         if date is None:
