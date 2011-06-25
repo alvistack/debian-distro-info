@@ -1,3 +1,11 @@
+distro-info (0.2) unstable; urgency=low
+
+  * Make sure all DistroInfo classes have a .codename method.
+  * Add experimental to list of Debian distributions.
+  * Bump Breaks and Replaceses for ubuntu-dev-tools.
+
+ -- Benjamin Drung <bdrung@debian.org>  Sat, 25 Jun 2011 16:30:59 +0200
+
 distro-info (0.1) unstable; urgency=low
 
   * Initial release (Closes: #559761)
