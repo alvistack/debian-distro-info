@@ -1,6 +1,6 @@
 version,codename,series,created,release,eol,eol-server
-4.10,Warty Warthog,warty,2004-03-05,2004-10-26,2006-04-26
-5.04,Hoary Hedgehog,hoary,2004-10-26,2005-04-08,2006-10-08
+4.10,Warty Warthog,warty,2004-03-05,2004-10-20,2006-04-26
+5.04,Hoary Hedgehog,hoary,2004-10-20,2005-04-08,2006-10-08
 5.10,Breezy Badger,breezy,2005-04-08,2005-10-12,2007-04-12
 6.06 LTS,Dapper Drake,dapper,2005-10-12,2006-06-01,2009-07-14,2011-06-01
 6.10,Edgy Eft,edgy,2006-06-01,2006-10-26,2008-04-25
