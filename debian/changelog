@@ -1,3 +1,10 @@
+distro-info (0.2.1) unstable; urgency=low
+
+  * Correct release and EOL dates of old Ubuntu releases by reviewing
+    ubuntu-announce emails.
+
+ -- Benjamin Drung <bdrung@debian.org>  Sat, 23 Jul 2011 15:55:23 +0200
+
 distro-info (0.2) unstable; urgency=low
 
   * Make sure all DistroInfo classes have a .codename method.
