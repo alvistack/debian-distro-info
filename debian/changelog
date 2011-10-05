@@ -1,3 +1,9 @@
+distro-info (0.2.2) unstable; urgency=low
+
+  * Add 12.04 LTS "Precise Pangolin" to Ubuntu list.
+
+ -- Benjamin Drung <bdrung@debian.org>  Thu, 06 Oct 2011 01:07:36 +0200
+
 distro-info (0.2.1) unstable; urgency=low
 
   * Correct release and EOL dates of old Ubuntu releases by reviewing
