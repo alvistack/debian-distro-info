@@ -138,7 +138,7 @@ class DebianDistroInfo(DistroInfo):
             codename = self.testing(date)
         elif release == "stable":
             codename = self.stable(date)
-        elif release == "old":
+        elif release == "oldstable":
             codename = self.old(date)
         else:
             codename = default
@@ -190,7 +190,7 @@ class DebianDistroInfo(DistroInfo):
     def valid(self, codename):
         """Check if the given codename is known."""
         return DistroInfo.valid(self, codename) or \
-               codename in ["unstable", "testing", "stable", "old"]
+               codename in ["unstable", "testing", "stable", "oldstable"]
 
 
 class UbuntuDistroInfo(DistroInfo):
