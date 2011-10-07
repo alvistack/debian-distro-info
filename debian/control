@@ -2,6 +2,7 @@ Source: distro-info
 Section: devel
 Priority: optional
 Maintainer: Benjamin Drung <bdrung@debian.org>
+Uploaders: Stefano Rivera <stefanor@debian.org>
 Build-Depends: debhelper (>= 8),
                pylint,
                python-all (>= 2.6.3-3~),

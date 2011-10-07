@@ -1,6 +1,7 @@
-distro-info (0.2.3) UNRELEASED; urgency=low
+distro-info (0.2.3) unstable; urgency=low
 
-  * "old" is not a Debian suite alias, but "oldstable is.
+  * "old" is not a Debian suite alias, but "oldstable" is.
+  * Add myself to Uploaders.
 
  -- Stefano Rivera <stefanor@debian.org>  Fri, 07 Oct 2011 22:24:08 +0200
 
