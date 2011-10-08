@@ -20,7 +20,6 @@ Debian::DistroInfo - provides information about Ubuntu's and Debian's distributi
 
 =cut
 
-use 5.010;
 use strict;
 use warnings;
 
@@ -47,7 +46,6 @@ sub convert_date {
 {
     package DistroInfo;
 
-    use Data::Dumper; # TODO: Removeme
     use Time::Piece;
 
     sub _get_data_dir {
