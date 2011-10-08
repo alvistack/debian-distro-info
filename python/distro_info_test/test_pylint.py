@@ -25,7 +25,7 @@ class PylintTestCase(unittest.TestCase):
     def test_pylint(self):
         "Test: Run pylint on Python source code"
         files = ['distro_info.py']
-        for script in setup.scripts:
+        for script in setup.SCRIPTS:
             f = open(script, 'r')
             if 'python' in f.readline():
                 files.append(script)

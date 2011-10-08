@@ -42,7 +42,7 @@ def _get_data_dir():
     if __file__.startswith("/usr/lib"):
         data_dir = "/usr/share/distro-info"
     else:
-        data_dir = os.path.join(os.path.dirname(__file__), "data")
+        data_dir = os.path.join(os.path.dirname(__file__), "..", "data")
     return data_dir
 
 

@@ -38,7 +38,7 @@ def load_tests(loader, tests, pattern):
 class HelpTestCase(unittest.TestCase):
     @classmethod
     def populate(cls):
-        for script in setup.scripts:
+        for script in setup.SCRIPTS:
             setattr(cls, 'test_' + script, cls.make_help_tester(script))
 
     @classmethod
