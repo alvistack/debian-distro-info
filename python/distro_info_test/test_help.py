@@ -1,6 +1,6 @@
 # test_help.py - Ensure scripts can run --help.
 #
-# Copyright (C) 2010, Stefano Rivera <stefanor@ubuntu.com>
+# Copyright (C) 2010, Stefano Rivera <stefanor@debian.org>
 #
 # Permission to use, copy, modify, and/or distribute this software for any
 # purpose with or without fee is hereby granted, provided that the above
