@@ -13,9 +13,9 @@ install:
 	install -m 644 $(wildcard data/*.csv) $(DESTDIR)$(PREFIX)/share/distro-info
 	install -d $(DESTDIR)$(PREFIX)/share/man/man1
 	install -m 644 $(wildcard doc/*.1) $(DESTDIR)$(PREFIX)/share/man/man1
-	cd python && python setup.py install --root="$(DESTDIR)" --no-compile --install-layout=deb
 	install -d $(DESTDIR)$(PREFIX)/share/perl5/Debian
 	install -m 644 $(wildcard perl/Debian/*.pm) $(DESTDIR)$(PREFIX)/share/perl5/Debian
+	cd python && python setup.py install --root="$(DESTDIR)" --no-compile --install-layout=deb
 	ln -s $(VENDOR)-distro-info $(DESTDIR)$(PREFIX)/bin/distro-info
 
 test:
