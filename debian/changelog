@@ -1,3 +1,9 @@
+distro-info (0.2.4) UNRELEASED; urgency=low
+
+  * Add basic Perl module, API-compatible with the Python one.
+
+ -- Stefano Rivera <stefanor@debian.org>  Sun, 09 Oct 2011 00:45:53 +0200
+
 distro-info (0.2.3) unstable; urgency=low
 
   * "old" is not a Debian suite alias, but "oldstable" is.
