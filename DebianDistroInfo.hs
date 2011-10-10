@@ -44,6 +44,11 @@ startOptions = do
                    optFormat  = debSeries
                  }
 
+onlyOneFilter :: a
+onlyOneFilter = error ("You have to select exactly one of --all, " ++
+                       "--devel, --oldstable, --stable, --supported, " ++
+                       "--testing, --unsupported.")
+
 options :: [OptDescr (Options -> IO Options)]
 options =
   let
@@ -63,30 +68,27 @@ options =
         hPutStrLn stderr (usageInfo "" options)
         hPutStrLn stderr ("See " ++ prg ++ "(1) for more info.")
         exitWith ExitSuccess
+    setFilter debianFilter opt =
+      case optFilter opt of
+        Nothing -> return opt { optFilter = Just debianFilter }
+        Just _ -> onlyOneFilter
   in
     [ Option "h" ["help"] (NoArg printHelp) "show this help message and exit"
     , Option "" ["date"] (ReqArg readDate "DATE")
              "date for calculating the version (default: today)"
-    , Option "a" ["all"]
-             (NoArg (\ opt -> return opt { optFilter = Just debianAll }))
+    , Option "a" ["all"] (NoArg (setFilter debianAll))
              "list all known versions"
-    , Option "d" ["devel"]
-             (NoArg (\ opt -> return opt { optFilter = Just debianDevel }))
+    , Option "d" ["devel"] (NoArg (setFilter debianDevel))
              "latest development version"
-    , Option "o" ["oldstable"]
-             (NoArg (\ opt -> return opt { optFilter = Just debianOldstable }))
+    , Option "o" ["oldstable"] (NoArg (setFilter debianOldstable))
              "latest oldstable version"
-    , Option "s" ["stable"]
-             (NoArg (\ opt -> return opt { optFilter = Just debianStable }))
+    , Option "s" ["stable"] (NoArg (setFilter debianStable))
              "latest stable version"
-    , Option "" ["supported"]
-             (NoArg (\opt -> return opt { optFilter = Just debianSupported }))
+    , Option "" ["supported"] (NoArg (setFilter debianSupported))
              "list of all supported stable versions"
-    , Option "t" ["testing"]
-             (NoArg (\ opt -> return opt { optFilter = Just debianTesting }))
+    , Option "t" ["testing"] (NoArg (setFilter debianTesting))
              "current testing version"
-    , Option "" ["unsupported"]
-             (NoArg (\opt -> return opt { optFilter = Just debianUnsupported }))
+    , Option "" ["unsupported"] (NoArg (setFilter debianUnsupported))
              "list of all unsupported stable versions"
     , Option "c" ["codename"]
              (NoArg (\ opt -> return opt { optFormat = debSeries }))
@@ -108,9 +110,7 @@ main = do
                 optFormat  = format } <- foldl (>>=) startOptions actions
       maybeCsv <- parseCSVFromFile "/usr/share/distro-info/debian.csv"
       case maybeFilter of
-        Nothing -> error ("You have to select exactly one of " ++
-                          "--all, --devel, --oldstable, --stable, " ++
-                          "--supported, --testing, --unsupported.")
+        Nothing -> onlyOneFilter
         Just debianFilter ->
           case maybeCsv of
             Left errorMsg -> print errorMsg

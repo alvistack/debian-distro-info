@@ -44,6 +44,10 @@ startOptions = do
                    optFormat  = ubuSeries
                  }
 
+onlyOneFilter :: a
+onlyOneFilter = error ("You have to select exactly one of --all, --devel, " ++
+                       "--lts, --stable, --supported, --unsupported.")
+
 options :: [OptDescr (Options -> IO Options)]
 options =
   let
@@ -56,27 +60,25 @@ options =
         hPutStrLn stderr (usageInfo "" options)
         hPutStrLn stderr ("See " ++ prg ++ "(1) for more info.")
         exitWith ExitSuccess
+    setFilter ubuntuFilter opt =
+      case optFilter opt of
+        Nothing -> return opt { optFilter = Just ubuntuFilter }
+        Just _ -> onlyOneFilter
   in
     [ Option "h" ["help"] (NoArg printHelp) "show this help message and exit"
     , Option "" ["date"] (ReqArg readDate "DATE")
              "date for calculating the version (default: today)"
-    , Option "a" ["all"]
-             (NoArg (\ opt -> return opt { optFilter = Just ubuntuAll }))
+    , Option "a" ["all"] (NoArg (setFilter ubuntuAll))
              "list all known versions"
-    , Option "d" ["devel"]
-             (NoArg (\ opt -> return opt { optFilter = Just ubuntuDevel }))
+    , Option "d" ["devel"] (NoArg (setFilter ubuntuDevel))
              "latest development version"
-    , Option "" ["lts"]
-             (NoArg (\opt -> return opt { optFilter = Just ubuntuLTS }))
+    , Option "" ["lts"] (NoArg (setFilter ubuntuLTS))
              "latest long term support (LTS) version"
-    , Option "s" ["stable"]
-             (NoArg (\ opt -> return opt { optFilter = Just ubuntuStable }))
+    , Option "s" ["stable"] (NoArg (setFilter ubuntuStable))
              "latest stable version"
-    , Option "" ["supported"]
-             (NoArg (\opt -> return opt { optFilter = Just ubuntuSupported }))
+    , Option "" ["supported"] (NoArg (setFilter ubuntuSupported))
              "list of all supported stable versions"
-    , Option "" ["unsupported"]
-             (NoArg (\opt -> return opt { optFilter = Just ubuntuUnsupported }))
+    , Option "" ["unsupported"] (NoArg (setFilter ubuntuUnsupported))
              "list of all unsupported stable versions"
     , Option "c" ["codename"]
              (NoArg (\ opt -> return opt { optFormat = ubuSeries }))
@@ -98,8 +100,7 @@ main = do
                 optFormat  = format } <- foldl (>>=) startOptions actions
       maybeCsv <- parseCSVFromFile "/usr/share/distro-info/ubuntu.csv"
       case maybeFilter of
-        Nothing -> error ("You have to select exactly one of --all, --devel," ++
-                          " --lts, --stable, --supported, --unsupported.")
+        Nothing -> onlyOneFilter
         Just ubuntuFilter ->
           case maybeCsv of
             Left errorMsg -> print errorMsg
