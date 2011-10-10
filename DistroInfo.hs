@@ -237,8 +237,11 @@ ubuntuUnsupported date = filter isUnsupported
 ------------
 
 debFull :: DebianEntry -> String
-debFull DebianEntry { debVersion = version, debCodename = codename } =
-  "Debian " ++ version ++ " \"" ++ codename ++ "\""
+debFull DebianEntry { debVersion = version, debCodename = codename,
+                      debSeries = series } =
+  if version /= ""
+  then "Debian " ++ version ++ " \"" ++ codename ++ "\""
+  else "Debian " ++ series
 
 ubuFull :: UbuntuEntry -> String
 ubuFull UbuntuEntry { ubuVersion = version, ubuCodename = codename } =
