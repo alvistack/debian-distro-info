@@ -47,6 +47,13 @@ startOptions = do
 options :: [OptDescr (Options -> IO Options)]
 options =
   let
+    debVersionOrSeries e =
+      let
+        version = debVersion e
+      in
+        if version /= ""
+        then version
+        else debSeries e
     readDate arg opt =
       return opt { optDate = readTime defaultTimeLocale "%F" arg }
     printHelp _ =
@@ -85,7 +92,7 @@ options =
              (NoArg (\ opt -> return opt { optFormat = debSeries }))
              "print the codename"
     , Option "r" ["release"]
-             (NoArg (\ opt -> return opt { optFormat = debVersion }))
+             (NoArg (\ opt -> return opt { optFormat = debVersionOrSeries }))
              "print the release version"
     , Option "f" ["fullname"]
              (NoArg (\ opt -> return opt { optFormat = debFull }))
