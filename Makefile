@@ -6,9 +6,18 @@ endef
 PREFIX ?= /usr
 VENDOR ?= $(shell dpkg-vendor --query Vendor | tr '[:upper:]' '[:lower:]')
 
-build: ;
+build: debian-distro-info ubuntu-distro-info
 
-install:
+debian-distro-info: DebianDistroInfo.hs DistroInfo.hs
+	ghc -Wall -o $@ --make -main-is DebianDistroInfo $<
+
+ubuntu-distro-info: UbuntuDistroInfo.hs DistroInfo.hs
+	ghc -Wall -o $@ --make -main-is UbuntuDistroInfo $<
+
+install: debian-distro-info ubuntu-distro-info
+	install -d $(DESTDIR)$(PREFIX)/bin
+	install -m 755 $^ $(DESTDIR)$(PREFIX)/bin
+	ln -s $(VENDOR)-distro-info $(DESTDIR)$(PREFIX)/bin/distro-info
 	install -d $(DESTDIR)$(PREFIX)/share/distro-info
 	install -m 644 $(wildcard data/*.csv) $(DESTDIR)$(PREFIX)/share/distro-info
 	install -d $(DESTDIR)$(PREFIX)/share/man/man1
@@ -16,13 +25,12 @@ install:
 	install -d $(DESTDIR)$(PREFIX)/share/perl5/Debian
 	install -m 644 $(wildcard perl/Debian/*.pm) $(DESTDIR)$(PREFIX)/share/perl5/Debian
 	cd python && python setup.py install --root="$(DESTDIR)" --no-compile --install-layout=deb
-	ln -s $(VENDOR)-distro-info $(DESTDIR)$(PREFIX)/bin/distro-info
 
 test:
 	$(foreach python,$(shell pyversions -r),cd python && $(python) setup.py test$(\n))
 
 clean:
-	rm -rf python/build python/*.egg-info
+	rm -rf *-distro-info *.hi *.o python/build python/*.egg-info
 	find python -name '*.pyc' -delete
 
 .PHONY: build clean install test
