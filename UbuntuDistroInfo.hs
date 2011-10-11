@@ -82,7 +82,7 @@ options =
              "list of all unsupported stable versions"
     , Option "c" ["codename"]
              (NoArg (\ opt -> return opt { optFormat = ubuSeries }))
-             "print the codename"
+             "print the codename (default)"
     , Option "r" ["release"]
              (NoArg (\ opt -> return opt { optFormat = ubuVersion }))
              "print the release version"
