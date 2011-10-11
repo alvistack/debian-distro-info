@@ -157,8 +157,8 @@ sub convert_date {
         $date = $self->{'date'} if (!defined($date));
         my @supported = $self->supported($date);
         my @unsupported = ();
-        for my $release ($self->all) {
-            push(@unsupported, $release) if ! grep {$_ eq $release} @supported;
+        for my $row ($self->_avail($date)) {
+            push(@unsupported, $row->{'series'}) if ! grep {$_ eq $row->{'series'}} @supported;
         }
         return @unsupported;
     }
@@ -190,9 +190,9 @@ sub convert_date {
         $date = $self->{'date'} if (!defined($date));
         my @distros;
         for my $row ($self->_avail($date)) {
-            if (!defined($row->{'release'}) 
+            if (!defined($row->{'release'})
                   || ($date < $row->{'release'}
-                      && !defined($row->{'eol'} || $date <= $row->{'eol'}))) {
+                      && !defined($row->{'eol'}) || $date <= $row->{'eol'})) {
                 push(@distros, $row);
             }
         }
@@ -248,7 +248,7 @@ sub convert_date {
             'stable' => 1,
             'oldstable' => 1,
         );
-        return $self->SUPER::valid($codename) or exists($codenames{$codename});
+        return $self->SUPER::valid($codename) || exists($codenames{$codename});
     }
 }
 
