@@ -28,6 +28,7 @@ install: debian-distro-info ubuntu-distro-info
 
 test:
 	$(foreach python,$(shell pyversions -r),cd python && $(python) setup.py test$(\n))
+	cd perl && ./test.pl
 
 clean:
 	rm -rf *-distro-info *.hi *.o python/build python/*.egg-info
