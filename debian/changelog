@@ -2,6 +2,7 @@ distro-info (0.3) UNRELEASED; urgency=low
 
   [ Stefano Rivera ]
   * Add basic Perl module, API-compatible with the Python one.
+  * Add liblist-compare-perl as a Build-Dependency for the Perl test suite.
 
   [ Benjamin Drung ]
   * Improve speed by rewriting scripts in Haskell (LP: #796317).
