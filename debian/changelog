@@ -1,4 +1,4 @@
-distro-info (0.3) UNRELEASED; urgency=low
+distro-info (0.3) unstable; urgency=low
 
   [ Stefano Rivera ]
   * Add basic Perl module, API-compatible with the Python one.
@@ -9,7 +9,7 @@ distro-info (0.3) UNRELEASED; urgency=low
   * Allow printing of release version and full name (LP: #807644).
   * Split scripts, Perl and Python libraries in separate binary packages.
 
- -- Benjamin Drung <bdrung@debian.org>  Mon, 10 Oct 2011 23:41:37 +0200
+ -- Benjamin Drung <bdrung@debian.org>  Tue, 11 Oct 2011 23:55:18 +0200
 
 distro-info (0.2.3) unstable; urgency=low
 
