@@ -71,6 +71,12 @@ class DebianDistroInfoTestCase(unittest.TestCase):
                        "sarge", "etch"]
         self.assertEqual(self._distro_info.unsupported(self._date), unsupported)
 
+    def test_codename(self):
+        """Test: Codename decoding"""
+        self.assertIsNone(self._distro_info.codename('foobar'))
+        self.assertEqual(self._distro_info.codename('testing', self._date),
+                         self._distro_info.testing(self._date))
+
 
 #pylint: disable=R0904
 class UbuntuDistroInfoTestCase(unittest.TestCase):
