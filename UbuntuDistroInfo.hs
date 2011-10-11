@@ -103,7 +103,7 @@ main = do
         Nothing -> onlyOneFilter
         Just ubuntuFilter ->
           case maybeCsv of
-            Left errorMsg -> print errorMsg
+            Left errorMsg -> error $ show errorMsg
             Right csvData ->
               let
                 result = map format $ ubuntuFilter date $ ubuntuEntry csvData

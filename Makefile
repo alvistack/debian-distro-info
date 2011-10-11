@@ -11,6 +11,9 @@ build: debian-distro-info ubuntu-distro-info
 debian-distro-info: DebianDistroInfo.hs DistroInfo.hs
 	ghc -Wall -o $@ --make -main-is DebianDistroInfo $<
 
+test-distro-info: TestDistroInfo.hs DistroInfo.hs
+	ghc -Wall -o $@ --make -main-is TestDistroInfo $<
+
 ubuntu-distro-info: UbuntuDistroInfo.hs DistroInfo.hs
 	ghc -Wall -o $@ --make -main-is UbuntuDistroInfo $<
 
@@ -26,9 +29,10 @@ install: debian-distro-info ubuntu-distro-info
 	install -m 644 $(wildcard perl/Debian/*.pm) $(DESTDIR)$(PREFIX)/share/perl5/Debian
 	cd python && python setup.py install --root="$(DESTDIR)" --no-compile --install-layout=deb
 
-test:
-	$(foreach python,$(shell pyversions -r),cd python && $(python) setup.py test$(\n))
+test: test-distro-info
+	./test-distro-info
 	cd perl && ./test.pl
+	$(foreach python,$(shell pyversions -r),cd python && $(python) setup.py test$(\n))
 
 clean:
 	rm -rf *-distro-info *.hi *.o python/build python/*.egg-info

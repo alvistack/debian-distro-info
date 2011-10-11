@@ -122,17 +122,12 @@ debianEntry (heading : content) =
 -- Debian Filter --
 -------------------
 
--- | Return the lastest entry of a given list.
+-- | Return the latest entry of a given list.
 latest :: Int -> [a] -> [a]
 latest i m =
   if length m < i
   then error "Distribution data outdated."
   else [m !! (length m - i)]
-
--- | Evaluates if a given Debian release is already release and still supported.
-debianIsReleased :: Day -> DebianEntry -> Bool
-debianIsReleased date DebianEntry { debRelease = release, debEol = eol } =
-  maybe False (date >=) release && maybe True (date <=) eol
 
 -- | List all known Debian distributions.
 debianAll :: Day -> [DebianEntry] -> [DebianEntry]
@@ -147,11 +142,17 @@ debianDevel date = latest 2 . filter isUnreleased
 
 -- | Get oldstable Debian distribution based on the given date.
 debianOldstable :: Day -> [DebianEntry] -> [DebianEntry]
-debianOldstable date = latest 2 . filter (debianIsReleased date)
+debianOldstable date = latest 2 . filter isReleased
+  where
+    isReleased DebianEntry { debRelease = release } =
+      maybe False (date >=) release
 
 -- | Get latest stable distribution based on the given date.
 debianStable :: Day -> [DebianEntry] -> [DebianEntry]
-debianStable date = latest 1 . filter (debianIsReleased date)
+debianStable date = latest 1 . filter isReleased
+  where
+    isReleased DebianEntry { debRelease = release, debEol = eol } =
+      maybe False (date >=) release && maybe True (date <=) eol
 
 -- | Get list of all supported distributions based on the given date.
 debianSupported :: Day -> [DebianEntry] -> [DebianEntry]

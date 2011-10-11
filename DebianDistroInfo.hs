@@ -113,7 +113,7 @@ main = do
         Nothing -> onlyOneFilter
         Just debianFilter ->
           case maybeCsv of
-            Left errorMsg -> print errorMsg
+            Left errorMsg -> error $ show errorMsg
             Right csvData ->
               let
                 result = map format $ debianFilter date $ debianEntry csvData

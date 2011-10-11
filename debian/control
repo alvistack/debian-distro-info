@@ -6,6 +6,7 @@ Uploaders: Stefano Rivera <stefanor@debian.org>
 Build-Depends: debhelper (>= 8),
                ghc,
                libghc-csv-dev,
+               libghc-hunit-dev,
                liblist-compare-perl,
                pylint,
                python-all (>= 2.6.3-3~),
