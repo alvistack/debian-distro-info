@@ -211,6 +211,13 @@ class UbuntuDistroInfo(DistroInfo):
             raise DistroDataOutdated()
         return distros[-1]["series"]
 
+    def is_lts(self, codename):
+        """Is codename an LTS release?"""
+        distros = [x for x in self._rows if x["series"] == codename]
+        if not distros:
+            return False
+        return "LTS" in distros[0]["version"]
+
     def supported(self, date=None):
         """Get list of all supported Ubuntu distributions based on the given
            date."""

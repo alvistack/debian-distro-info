@@ -277,6 +277,16 @@ sub convert_date {
         return $distros[-1]{'series'};
     }
 
+    sub is_lts {
+        my ($self, $codename) = @_;
+        for my $row (@{$self->{'rows'}}) {
+            if ($row->{'series'} eq $codename) {
+                return ($row->{'version'} =~ m/LTS/);
+            }
+        }
+        return 0;
+    }
+
     sub supported {
         my ($self, $date) = @_;
         $date = $self->{'date'} if (!defined($date));

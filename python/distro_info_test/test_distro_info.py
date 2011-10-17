@@ -129,3 +129,9 @@ class UbuntuDistroInfoTestCase(unittest.TestCase):
         """Test: Check for valid Ubuntu distribution."""
         self.assertTrue(self._distro_info.valid("lucid"))
         self.assertFalse(self._distro_info.valid("42"))
+
+    def test_is_lts(self):
+        """Test: Check if Ubuntu distribution is an LTS."""
+        self.assertTrue(self._distro_info.is_lts("lucid"))
+        self.assertFalse(self._distro_info.is_lts("42"))
+        self.assertFalse(self._distro_info.is_lts("warty"))

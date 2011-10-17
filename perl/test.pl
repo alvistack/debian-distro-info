@@ -16,7 +16,7 @@
 use strict;
 use warnings;
 
-use Test::Simple tests => 20;
+use Test::Simple tests => 23;
 use List::Compare;
 
 use lib '.';
@@ -65,6 +65,9 @@ ok($ubu->lts($date) eq 'lucid', 'Ubuntu LTS');
 ok($ubu->stable($date) eq 'maverick', 'Ubuntu stable');
 ok($ubu->valid('lucid'), 'Ubuntu valid');
 ok(!$ubu->valid(42), 'Ubuntu invalid');
+ok($ubu->is_lts('lucid'), 'Ubuntu is_lts');
+ok(!$ubu->is_lts(42), 'Ubuntu !is_lts');
+ok(!$ubu->is_lts('warty'), 'Ubuntu !is_lts');
 
 @expected = ('dapper', 'hardy', 'karmic', 'lucid', 'maverick', 'natty');
 @returned = $ubu->supported($date);
