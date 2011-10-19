@@ -5,17 +5,18 @@ endef
 
 PREFIX ?= /usr
 VENDOR ?= $(shell dpkg-vendor --query Vendor | tr '[:upper:]' '[:lower:]')
+GHC_FLAGS := -Wall -O2 -fvia-C
 
 build: debian-distro-info ubuntu-distro-info
 
 debian-distro-info: DebianDistroInfo.hs DistroInfo.hs
-	ghc -Wall -o $@ --make -main-is DebianDistroInfo $<
+	ghc $(GHC_FLAGS) -o $@ --make -main-is DebianDistroInfo $<
 
 test-distro-info: TestDistroInfo.hs DistroInfo.hs
-	ghc -Wall -o $@ --make -main-is TestDistroInfo $<
+	ghc $(GHC_FLAGS) -o $@ --make -main-is TestDistroInfo $<
 
 ubuntu-distro-info: UbuntuDistroInfo.hs DistroInfo.hs
-	ghc -Wall -o $@ --make -main-is UbuntuDistroInfo $<
+	ghc $(GHC_FLAGS) -o $@ --make -main-is UbuntuDistroInfo $<
 
 install: debian-distro-info ubuntu-distro-info
 	install -d $(DESTDIR)$(PREFIX)/bin

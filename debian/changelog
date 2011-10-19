@@ -1,8 +1,12 @@
 distro-info (0.4) UNRELEASED; urgency=low
 
+  [ Stefano Rivera ]
   * Add is_lts method to UbuntuDistroInfo
 
- -- Stefano Rivera <stefanor@debian.org>  Mon, 17 Oct 2011 13:11:35 +0200
+  [ Benjamin Drung ]
+  * Enable optimization for Haskell code.
+
+ -- Benjamin Drung <bdrung@debian.org>  Wed, 19 Oct 2011 13:20:58 +0200
 
 distro-info (0.3) unstable; urgency=low
 
