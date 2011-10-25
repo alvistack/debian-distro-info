@@ -21,7 +21,7 @@ Package: distro-info
 Architecture: any
 Depends: distro-info-data, ${misc:Depends}, ${shlibs:Depends}
 Breaks: ubuntu-dev-tools (<< 0.133~)
-Replaces: ubuntu-dev-tools (<< 0.133~)
+Replaces: ubuntu-dev-tools (<< 0.127~)
 Description: provides information about the distributions' releases
  Information about all releases of Debian and Ubuntu. The distro-info script
  will give you the codename for e.g. the latest stable release of your
