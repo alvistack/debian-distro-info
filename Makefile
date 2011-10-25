@@ -5,7 +5,7 @@ endef
 
 PREFIX ?= /usr
 VENDOR ?= $(shell dpkg-vendor --query Vendor | tr '[:upper:]' '[:lower:]')
-GHC_FLAGS := -Wall -O2 -fvia-C
+GHC_FLAGS := -Wall -O2
 
 build: debian-distro-info ubuntu-distro-info
 
