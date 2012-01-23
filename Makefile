@@ -30,13 +30,19 @@ install: debian-distro-info ubuntu-distro-info
 	install -m 644 $(wildcard perl/Debian/*.pm) $(DESTDIR)$(PREFIX)/share/perl5/Debian
 	cd python && python setup.py install --root="$(DESTDIR)" --no-compile --install-layout=deb
 
-test: test-distro-info
+test: test-haskell test-perl test-python
+
+test-haskell: test-distro-info
 	./test-distro-info
+
+test-perl:
 	cd perl && ./test.pl
+
+test-python:
 	$(foreach python,$(shell pyversions -r),cd python && $(python) setup.py test$(\n))
 
 clean:
 	rm -rf *-distro-info *.hi *.o python/build python/*.egg-info
 	find python -name '*.pyc' -delete
 
-.PHONY: build clean install test
+.PHONY: build clean install test test-haskell test-perl test-python
