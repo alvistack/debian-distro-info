@@ -1,3 +1,10 @@
+distro-info (0.5) UNRELEASED; urgency=low
+
+  * Allow retrieving the release version and full name with the Python module.
+    (Closes: #647951)
+
+ -- Benjamin Drung <bdrung@debian.org>  Mon, 23 Jan 2012 19:07:04 +0100
+
 distro-info (0.4) unstable; urgency=low
 
   [ Stefano Rivera ]

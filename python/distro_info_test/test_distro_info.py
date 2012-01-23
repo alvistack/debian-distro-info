@@ -77,6 +77,27 @@ class DebianDistroInfoTestCase(unittest.TestCase):
         self.assertEqual(self._distro_info.codename('testing', self._date),
                          self._distro_info.testing(self._date))
 
+    def test_codename_result(self):
+        """Test: Check result set to codename."""
+        self.assertEqual(self._distro_info.old(self._date, "codename"), "etch")
+        self.assertEqual(self._distro_info.devel(self._date, result="codename"),
+                         "sid")
+
+    def test_fullname(self):
+        """Test: Check result set to fullname."""
+        self.assertEqual(self._distro_info.stable(self._date, "fullname"),
+                         'Debian 5.0 "Lenny"')
+        result = self._distro_info.testing(self._date, result="fullname")
+        self.assertEqual(result, 'Debian 6.0 "Squeeze"')
+
+    def test_release(self):
+        """Test: Check result set to release."""
+        self.assertEqual(self._distro_info.devel(self._date, "release"), "")
+        self.assertEqual(self._distro_info.testing(self._date, "release"),
+                         "6.0")
+        self.assertEqual(self._distro_info.stable(self._date, result="release"),
+                         "5.0")
+
 
 #pylint: disable=R0904
 class UbuntuDistroInfoTestCase(unittest.TestCase):
@@ -135,3 +156,23 @@ class UbuntuDistroInfoTestCase(unittest.TestCase):
         self.assertTrue(self._distro_info.is_lts("lucid"))
         self.assertFalse(self._distro_info.is_lts("42"))
         self.assertFalse(self._distro_info.is_lts("warty"))
+
+    def test_codename(self):
+        """Test: Check result set to codename."""
+        self.assertEqual(self._distro_info.lts(self._date, "codename"), "lucid")
+        self.assertEqual(self._distro_info.devel(self._date, result="codename"),
+                         "natty")
+
+    def test_fullname(self):
+        """Test: Check result set to fullname."""
+        self.assertEqual(self._distro_info.stable(self._date, "fullname"),
+                         'Ubuntu 10.10 "Maverick Meerkat"')
+        self.assertEqual(self._distro_info.lts(self._date, result="fullname"),
+                         'Ubuntu 10.04 LTS "Lucid Lynx"')
+
+    def test_release(self):
+        """Test: Check result set to release."""
+        self.assertEqual(self._distro_info.devel(self._date, "release"),
+                         "11.04")
+        self.assertEqual(self._distro_info.lts(self._date, result="release"),
+                         "10.04 LTS")
