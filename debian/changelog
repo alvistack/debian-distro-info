@@ -1,4 +1,4 @@
-distro-info (0.5.1) UNRELEASED; urgency=low
+distro-info (0.5.1) unstable; urgency=low
 
   [ Stefano Rivera ]
   * Bump Standards-Version to 3.9.3, no changes needed.
