@@ -18,9 +18,10 @@ module DebianDistroInfo where
 import Data.List
 import Data.Time
 import System.Console.GetOpt
+import System.Environment
+import System.Exit
 import System.IO
 import System.Locale
-import System
 
 import Text.CSV
 
