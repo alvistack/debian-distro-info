@@ -22,8 +22,6 @@ install: debian-distro-info ubuntu-distro-info
 	install -d $(DESTDIR)$(PREFIX)/bin
 	install -m 755 $^ $(DESTDIR)$(PREFIX)/bin
 	ln -s $(VENDOR)-distro-info $(DESTDIR)$(PREFIX)/bin/distro-info
-	install -d $(DESTDIR)$(PREFIX)/share/distro-info
-	install -m 644 $(wildcard data/*.csv) $(DESTDIR)$(PREFIX)/share/distro-info
 	install -d $(DESTDIR)$(PREFIX)/share/man/man1
 	install -m 644 $(wildcard doc/*.1) $(DESTDIR)$(PREFIX)/share/man/man1
 	install -d $(DESTDIR)$(PREFIX)/share/perl5/Debian

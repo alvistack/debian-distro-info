@@ -49,10 +49,7 @@ sub convert_date {
     use Time::Piece;
 
     sub _get_data_dir {
-        if ($INC{'Debian/DistroInfo.pm'} =~ m/^\/usr\/share\//) {
-            return '/usr/share/distro-info';
-        }
-        return '../data';
+        return '/usr/share/distro-info';
     }
 
     sub new {

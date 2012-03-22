@@ -141,8 +141,8 @@ tests d u = TestList [
 
 main :: IO ()
 main = do
-  maybeDebianCsv <- parseCSVFromFile "data/debian.csv"
-  maybeUbuntuCsv <- parseCSVFromFile "data/ubuntu.csv"
+  maybeDebianCsv <- parseCSVFromFile "/usr/share/distro-info/debian.csv"
+  maybeUbuntuCsv <- parseCSVFromFile "/usr/share/distro-info/ubuntu.csv"
   case maybeDebianCsv of
     Left errorMsg -> error $ show errorMsg
     Right csvDebianData ->

@@ -39,11 +39,7 @@ def convert_date(string):
 
 def _get_data_dir():
     """Get the data directory based on the module location."""
-    if __file__.startswith("/usr/lib"):
-        data_dir = "/usr/share/distro-info"
-    else:
-        data_dir = os.path.join(os.path.dirname(__file__), "..", "data")
-    return data_dir
+    return "/usr/share/distro-info"
 
 
 class DistroDataOutdated(Exception):
