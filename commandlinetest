@@ -1,0 +1,105 @@
+#!/usr/bin/python
+
+# Copyright (C) 2012, Benjamin Drung <bdrung@debian.org>
+#
+# Permission to use, copy, modify, and/or distribute this software for any
+# purpose with or without fee is hereby granted, provided that the above
+# copyright notice and this permission notice appear in all copies.
+#
+# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+# WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+# MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+# ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+# WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+# ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+"""run commands on the command line and compare the output"""
+
+import optparse
+import os
+import subprocess
+import sys
+
+class CommandlineTest(object):
+    """represents a command line test"""
+
+    def __init__(self, name, command, expected_output):
+        self._name = name
+        self._command = command
+        self._expected_output = expected_output
+
+    def run(self):
+        """runs the given test and returns True on success."""
+        process = subprocess.Popen(self._command, stdout=subprocess.PIPE,
+                                   stderr=subprocess.STDOUT, shell=True)
+        output = process.communicate()[0]
+        success = output == self._expected_output
+        if not success:
+            # Test failed
+            output = output.split("\n")
+            expected = self._expected_output.split("\n")
+            while output and output[-1] == "" and \
+                  expected and expected[-1] == "":
+                del output[-1]
+                del expected[-1]
+            print "=== Test " + self._name + " failed ===\n$ " + self._command,
+            for line, expected_line in zip(output, expected):
+                if line == expected_line:
+                    print "  " + line
+                else:
+                    print "- " + line
+                    print "+ " + expected_line
+            for line in output[len(expected):]:
+                print "- " + line
+            for expected_line in expected[len(output):]:
+                print "+ " + expected_line
+        return success
+
+
+def parse_tests(filenames):
+    """Parses a given list of filenames and returns a the command line tests."""
+    tests = []
+    number = 1
+    for filename in filenames:
+        content = open(filename).readlines()
+        cmd = None
+        output = ""
+        for line in content:
+            if line.startswith("$"):
+                # Command found
+                if cmd:
+                    tests.append(CommandlineTest(str(number), cmd, output))
+                    number += 1
+                cmd = line[1:].lstrip()
+                output = ""
+            else:
+                # Output found
+                output += line
+        if cmd:
+            tests.append(CommandlineTest(str(number), cmd, output))
+            number += 1
+    return tests
+
+def main():
+    script_name = os.path.basename(sys.argv[0])
+    usage = "%s [options] testfile" % (script_name)
+    parser = optparse.OptionParser(usage=usage)
+
+    args = parser.parse_args()[1]
+
+    if len(args) == 0:
+        parser.error("No test file specified.")
+
+    tests = parse_tests(args)
+    failed = 0
+    for test in tests:
+        if not test.run():
+            failed += 1
+    if failed > 0:
+        print "------------------------------------------------------------"
+        print str(failed) + " out of " + str(len(tests)) + " tests failed."
+        sys.exit(1)
+
+if __name__ == "__main__":
+    main()

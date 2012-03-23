@@ -1,3 +1,11 @@
+distro-info (0.7) UNRELEASED; urgency=low
+
+  * Rewrite scripts in Shell. The scripts are smaller than the Haskell binaries
+    and the speed is about the same. This was done because Haskell is not in
+    Ubuntu main. Thanks to Scott Moser for his work. (LP: #963062)
+
+ -- Benjamin Drung <bdrung@debian.org>  Fri, 23 Mar 2012 22:34:46 +0100
+
 distro-info (0.6) unstable; urgency=low
 
   * Put data into separate source package to avoid a full source rebuild for
