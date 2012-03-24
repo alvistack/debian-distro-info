@@ -16,7 +16,7 @@ Vcs-Git: git://git.debian.org/git/collab-maint/distro-info.git
 Vcs-Browser: http://git.debian.org/?p=collab-maint/distro-info.git
 
 Package: distro-info
-Architecture: any
+Architecture: all
 Depends: distro-info-data, ${misc:Depends}
 Breaks: ubuntu-dev-tools (<< 0.133~)
 Replaces: ubuntu-dev-tools (<< 0.127~)
