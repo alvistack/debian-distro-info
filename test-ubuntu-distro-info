@@ -131,9 +131,10 @@ testMissingArgument() {
 }
 
 testDistributionDataOutdated() {
-    failure "--date 2145-10-03 -s" "ubuntu-distro-info: Distribution data outdated."
-    failure "--date 2145-10-03 -d" "ubuntu-distro-info: Distribution data outdated."
-    failure "--date 1900-10-03 --lts" "ubuntu-distro-info: Distribution data outdated."
+    local future_year=$(expr $(date  +"%Y" --date=now) + 7)
+    failure "--date 1970-10-03 --lts" "ubuntu-distro-info: Distribution data outdated."
+    failure "--date ${future_year}-10-03 -s" "ubuntu-distro-info: Distribution data outdated."
+    failure "--date ${future_year}-10-03 -d" "ubuntu-distro-info: Distribution data outdated."
 }
 
 testInvalidDate() {
