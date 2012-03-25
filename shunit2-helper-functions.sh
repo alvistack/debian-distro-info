@@ -17,8 +17,8 @@ runCommand() {
     local exp_stdout="$2"
     local exp_stderr="$3"
     local exp_retval=$4
-    local stdoutF="${shunit_tmpDir}/stdout"
-    local stderrF="${shunit_tmpDir}/stderr"
+    local stdoutF="${SHUNIT_TMPDIR}/stdout"
+    local stderrF="${SHUNIT_TMPDIR}/stderr"
     eval "${COMMAND} $param" > ${stdoutF} 2> ${stderrF}
     retval=$?
     assertEquals "standard output of ${COMMAND} $param\n" "$exp_stdout" "$(cat ${stdoutF})"
