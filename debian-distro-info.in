@@ -1,4 +1,6 @@
 #!/bin/sh
+set -f
+
 # Copyright (C) 2012 Canonical Ltd.
 # Author: Scott Moser <smoser@ubuntu.com>
 #
