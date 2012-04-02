@@ -22,6 +22,6 @@ test: test-distro-info
 	./test-distro-info
 
 clean:
-	rm -rf *-distro-info *.hi *.o
+	rm -f *-distro-info *.hi *.o
 
 .PHONY: build clean install test
