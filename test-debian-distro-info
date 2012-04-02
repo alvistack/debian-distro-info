@@ -93,6 +93,17 @@ testCombinedShortform() {
     success "-rd" "sid"
 }
 
+testReleaseDate() {
+    success "--date 2009-02-13 -o" "sarge"
+    success "--date 2009-02-13 -s" "etch"
+    success "--date 2009-02-13 -t" "lenny"
+    success "--date 2009-02-13 -d" "sid"
+    success "--date 2009-02-14 -o" "etch"
+    success "--date 2009-02-14 -s" "lenny"
+    success "--date 2009-02-14 -t" "squeeze"
+    success "--date 2009-02-14 -d" "sid"
+}
+
 testHelp() {
     local help='Usage: debian-distro-info [options]
 
@@ -129,6 +140,7 @@ testUnrecognizedOption() {
 
 testUnrecognizedArguments() {
     failure "bar" "debian-distro-info: unrecognized arguments: bar"
+    failure "baz -s foo" "debian-distro-info: unrecognized arguments: baz foo"
 }
 
 testMissingArgument() {
@@ -138,6 +150,10 @@ testMissingArgument() {
 testInvalidDate() {
     failure "--date fail -s" "debian-distro-info: invalid date \`fail'"
     failure "--date=2010-02-30 -d" "debian-distro-info: invalid date \`2010-02-30'"
+}
+
+testMultipleDates() {
+    failure "--date 2007-06-05 -s --date 2004-03-02" "debian-distro-info: Date specified multiple times."
 }
 
 . shunit2

@@ -5,8 +5,9 @@ distro-info (0.8) UNRELEASED; urgency=low
     scripts, but they are between four and six times faster. Forking the process
     takes longer than executing it. The plain execution time is around 25 times
     faster than the shell scripts.
+  * Extend command line test cases.
 
- -- Benjamin Drung <bdrung@debian.org>  Tue, 03 Apr 2012 00:59:07 +0200
+ -- Benjamin Drung <bdrung@debian.org>  Tue, 03 Apr 2012 01:24:23 +0200
 
 distro-info (0.7.1) unstable; urgency=low
 

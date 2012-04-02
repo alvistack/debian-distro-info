@@ -88,6 +88,13 @@ testCombinedShortform() {
     success "-fs --date=2011-01-10" 'Ubuntu 10.10 "Maverick Meerkat"'
 }
 
+testReleaseDate() {
+    success "--date 2010-04-28 -s" "karmic"
+    success "--date 2010-04-28 -d" "lucid"
+    success "--date 2010-04-29 -s" "lucid"
+    success "--date 2010-04-29 -d" "maverick"
+}
+
 testHelp() {
     local help='Usage: ubuntu-distro-info [options]
 
@@ -124,6 +131,7 @@ testUnrecognizedOption() {
 
 testUnrecognizedArguments() {
     failure "foo" "ubuntu-distro-info: unrecognized arguments: foo"
+    failure "foo --all bar" "ubuntu-distro-info: unrecognized arguments: foo bar"
 }
 
 testMissingArgument() {
@@ -140,6 +148,10 @@ testDistributionDataOutdated() {
 testInvalidDate() {
     failure "--date fail -s" "ubuntu-distro-info: invalid date \`fail'"
     failure "--date=2010-02-30 -d" "ubuntu-distro-info: invalid date \`2010-02-30'"
+}
+
+testMultipleDates() {
+    failure "--date 2007-06-05 -s --date 2004-03-02" "ubuntu-distro-info: Date specified multiple times."
 }
 
 . shunit2
