@@ -7,7 +7,7 @@ Copyright: 2009-2012, Benjamin Drung <bdrung@debian.org>
            2010-2011, Stefano Rivera <stefanor@debian.org>
 License: ISC
 
-Files: *-distro-info.in distro-info-util.sh
+Files: shell/*-distro-info.in shell/distro-info-util.sh
 Copyright: 2012 Canonical Ltd.
 License: ISC
 

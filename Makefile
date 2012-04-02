@@ -5,14 +5,12 @@ endef
 
 PREFIX ?= /usr
 VENDOR ?= $(shell dpkg-vendor --query Vendor | tr '[:upper:]' '[:lower:]')
+CFLAGS += -Wall -Wextra -Werror -O2 -std=gnu99
 
 build: debian-distro-info ubuntu-distro-info
 
-%-distro-info: %-distro-info.in distro-info-util.sh
-	sed -e '/^\. .*distro-info-util.sh\"$$/r distro-info-util.sh' $< | \
-		sed -e '/^##/d;/^\. .*distro-info-util.sh\"$$/d' | \
-		python -c 'import re,sys;print re.sub("(?<=\n)#BEGIN \w*#\n(.|\n)*?\n#END \w*#\n", "", re.sub("(?<=\n)#(BEGIN|END) $*#\n", "", sys.stdin.read())),' > $@
-	chmod +x $@
+%-distro-info: %-distro-info.c distro-info-util.*
+	gcc $(CFLAGS) -o $@ $<
 
 install: debian-distro-info ubuntu-distro-info
 	install -d $(DESTDIR)$(PREFIX)/bin

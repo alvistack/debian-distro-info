@@ -1,8 +1,12 @@
-distro-info (0.7.2) UNRELEASED; urgency=low
+distro-info (0.8) UNRELEASED; urgency=low
 
   * Run shell scripts with 'set -f' (LP: #965378).
+  * Rewrite scripts in C. The binaries are 2.3 times bigger than the shell
+    scripts, but they are between four and six times faster. Forking the process
+    takes longer than executing it. The plain execution time is around 25 times
+    faster than the shell scripts.
 
- -- Benjamin Drung <bdrung@debian.org>  Tue, 27 Mar 2012 12:21:03 +0200
+ -- Benjamin Drung <bdrung@debian.org>  Tue, 03 Apr 2012 00:59:07 +0200
 
 distro-info (0.7.1) unstable; urgency=low
 

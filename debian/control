@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Benjamin Drung <bdrung@debian.org>
 Uploaders: Stefano Rivera <stefanor@debian.org>
 Build-Depends: debhelper (>= 8),
-               distro-info-data,
+               distro-info-data (>= 0.7~),
                liblist-compare-perl,
                pylint,
                python-all (>= 2.6.3-3~),
@@ -17,8 +17,8 @@ Vcs-Git: git://git.debian.org/git/collab-maint/distro-info.git
 Vcs-Browser: http://git.debian.org/?p=collab-maint/distro-info.git
 
 Package: distro-info
-Architecture: all
-Depends: distro-info-data, ${misc:Depends}
+Architecture: any
+Depends: distro-info-data (>= 0.7~), ${misc:Depends}, ${shlibs:Depends}
 Suggests: shunit2 (>= 2.1.6)
 Breaks: ubuntu-dev-tools (<< 0.133~)
 Replaces: ubuntu-dev-tools (<< 0.127~)
