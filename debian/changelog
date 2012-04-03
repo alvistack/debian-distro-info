@@ -1,4 +1,4 @@
-distro-info (0.8) UNRELEASED; urgency=low
+distro-info (0.8) unstable; urgency=low
 
   * Run shell scripts with 'set -f' (LP: #965378).
   * Rewrite scripts in C. The binaries are 2.3 times bigger than the shell
