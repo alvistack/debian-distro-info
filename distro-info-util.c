@@ -355,11 +355,11 @@ inline int not_exactly_one(void) {
 
 int main(int argc, char *argv[]) {
     char *content;
-    char option;
     date_t *date = NULL;
     distro_elem_t *distro_list;
     const distro_t *selected;
     int i;
+    int option;
     int option_index;
     int return_value = EXIT_SUCCESS;
     bool (*filter_cb)(const date_t*, const distro_t*) = NULL;
