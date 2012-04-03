@@ -45,6 +45,8 @@ testDevel() {
 testOldstable() {
     success "--oldstable --date=2011-01-10" "etch"
     success "-c --date=2008-07-06 -o" "sarge"
+    # Compatibility with 0.2.2
+    success "--old --date=2011-01-10" "etch"
 }
 
 testStable() {
