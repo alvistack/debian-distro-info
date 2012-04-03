@@ -38,25 +38,24 @@ static bool filter_testing(const date_t *date, const distro_t *distro) {
     return created(date, distro) && !released(date, distro);
 }
 
-static const distro_elem_t *select_first(const distro_elem_t *distro_list) {
-    return distro_list;
+static const distro_t *select_first(const distro_elem_t *distro_list) {
+    return distro_list->distro;
 }
 
-static const distro_elem_t *select_oldstable(const distro_elem_t *distro_list) {
-    const distro_elem_t *newest;
-    const distro_elem_t *second = NULL;
+static const distro_t *select_oldstable(const distro_elem_t *distro_list) {
+    const distro_t *newest;
+    const distro_t *second = NULL;
 
-    newest = distro_list;
+    newest = distro_list->distro;
     while(distro_list != NULL) {
         distro_list = distro_list->next;
         if(distro_list) {
-            if(date_ge(((distro_t*)distro_list)->release,
-                       ((distro_t*)newest)->release)) {
+            if(date_ge(distro_list->distro->release, newest->release)) {
                 second = newest;
-                newest = distro_list;
-            } else if(second && date_ge(((distro_t*)distro_list)->release,
-                                        ((distro_t*)second)->release)) {
-                second = distro_list;
+                newest = distro_list->distro;
+            } else if(second && date_ge(distro_list->distro->release,
+                                        second->release)) {
+                second = distro_list->distro;
             }
         }
     }

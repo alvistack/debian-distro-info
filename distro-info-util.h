@@ -47,7 +47,7 @@ typedef struct {
 } distro_t;
 
 typedef struct distro_elem_s {
-    distro_t distro;
+    distro_t *distro;
     struct distro_elem_s *next;
 } distro_elem_t;
 

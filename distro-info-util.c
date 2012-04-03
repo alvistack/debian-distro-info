@@ -73,21 +73,22 @@ inline bool is_valid_date(const date_t *date) {
            date->day >= 1 && date->day <= days_in_month[date->month-1];
 }
 
-static date_t *read_iso_8601_date(const char *s, const char *filename,
-                                  const int lineno, const char *column) {
-    date_t *date;
+// Read an ISO 8601 formatted date
+static date_t *read_date(const char *s, int *failures, const char *filename,
+                         const int lineno, const char *column) {
+    date_t *date = NULL;
     int n;
 
     if(s) {
         date = malloc(sizeof(date_t));
         n = sscanf(s, "%u-%u-%u", &date->year, &date->month, &date->day);
         if(unlikely(n != 3 || !is_valid_date(date))) {
-            fprintf(stderr, NAME ": invalid date `%s' in file `%s' at line %i "
-                    "in column `%s'\n", s, filename, lineno, column);
-            exit(EXIT_FAILURE);
+            fprintf(stderr, NAME ": Invalid date `%s' in file `%s' at line %i "
+                    "in column `%s'.\n", s, filename, lineno, column);
+            (*failures)++;
+            free(date);
+            date = NULL;
         }
-    } else {
-        date = NULL;
     }
     return date;
 }
@@ -133,29 +134,29 @@ static bool filter_unsupported(const date_t *date, const distro_t *distro) {
 
 // Select callbacks
 
-static const distro_elem_t *select_latest_created(const distro_elem_t *distro_list) {
-    const distro_elem_t *selected;
+static const distro_t *select_latest_created(const distro_elem_t *distro_list) {
+    const distro_t *selected;
 
-    selected = distro_list;
+    selected = distro_list->distro;
     while(distro_list != NULL) {
         distro_list = distro_list->next;
-        if(distro_list && date_ge(((distro_t*)distro_list)->created,
-                                  ((distro_t*)selected)->created)) {
-            selected = distro_list;
+        if(distro_list && date_ge(distro_list->distro->created,
+                                  selected->created)) {
+            selected = distro_list->distro;
         }
     }
     return selected;
 }
 
-static const distro_elem_t *select_latest_release(const distro_elem_t *distro_list) {
-    const distro_elem_t *selected;
+static const distro_t *select_latest_release(const distro_elem_t *distro_list) {
+    const distro_t *selected;
 
-    selected = distro_list;
+    selected = distro_list->distro;
     while(distro_list != NULL) {
         distro_list = distro_list->next;
-        if(distro_list && date_ge(((distro_t*)distro_list)->release,
-                                  ((distro_t*)selected)->release)) {
-            selected = distro_list;
+        if(distro_list && date_ge(distro_list->distro->release,
+                                  selected->release)) {
+            selected = distro_list->distro;
         }
     }
     return selected;
@@ -181,106 +182,132 @@ static void print_release(const distro_t *distro) {
 
 // End of callbacks
 
-inline void free_dates(distro_t *distro) {
-    free(distro->created);
-    distro->created = NULL;
-    free(distro->release);
-    distro->release = NULL;
-    free(distro->eol);
-    distro->eol = NULL;
-    free(distro->eol_server);
-    distro->eol_server = NULL;
-}
-
-inline void free_list(distro_elem_t *list) {
+static void free_data(distro_elem_t *list, char **content) {
     distro_elem_t *next;
 
     while(list != NULL) {
         next = list->next;
-        free_dates((distro_t*)list);
+        free(list->distro->created);
+        free(list->distro->release);
+        free(list->distro->eol);
+        free(list->distro->eol_server);
+        free(list->distro);
         free(list);
         list = next;
     }
+
+    free(*content);
+    *content = NULL;
 }
 
-static int filter_data(const char *filename, const date_t *date,
-                      bool (*filter_cb)(const date_t*, const distro_t*),
-                      const distro_elem_t *(*select_cb)(const distro_elem_t*),
-                      void (*print_cb)(const distro_t*)) {
-    char *content;
+static distro_elem_t *read_data(const char *filename, char **content) {
+    char *data;
     char *line;
+    distro_elem_t *current;
     distro_elem_t *distro_list = NULL;
     distro_elem_t *last = NULL;
-    distro_elem_t *current;
-    const distro_elem_t *selected;
     distro_t *distro;
     int lineno;
-    int return_value = EXIT_SUCCESS;
+    int failures = 0;
 
-    content = read_full_file(filename);
-
-    line = strsep(&content, "\n");
+    data = *content = read_full_file(filename);
+    line = strsep(&data, "\n");
     lineno = 1;
     if(unlikely(strcmp(CSV_HEADER, line) != 0)) {
-        fprintf(stderr, NAME ": First line does not match excatly "
-                CSV_HEADER ".\n");
-        free(content);
-        return EXIT_FAILURE;
+        fprintf(stderr, NAME ": Header `%s' in file `%s' does not match "
+                "excatly `" CSV_HEADER "'.\n", line, filename);
+        failures++;
     }
 
-    current = malloc(sizeof(distro_elem_t));
-    distro = (distro_t*)current;
-    while((line = strsep(&content, "\n")) != NULL) {
+    while((line = strsep(&data, "\n")) != NULL) {
         lineno++;
         // Ignore empty lines and comments (starting with #).
         if(likely(*line != '\0' && *line != '#')) {
+            distro = malloc(sizeof(distro_t));
             distro->version = strsep(&line, ",");
             distro->codename = strsep(&line, ",");
             distro->series = strsep(&line, ",");
-            distro->created = read_iso_8601_date(strsep(&line, ","), filename,
-                                                 lineno, "created");
-            distro->release = read_iso_8601_date(strsep(&line, ","), filename,
-                                                 lineno, "release");
-            distro->eol = read_iso_8601_date(strsep(&line, ","), filename,
-                                             lineno, "eol");
-            distro->eol_server = read_iso_8601_date(strsep(&line, ","), filename,
-                                                    lineno, "eol-server");
+            distro->created = read_date(strsep(&line, ","), &failures, filename,
+                                        lineno, "created");
+            distro->release = read_date(strsep(&line, ","), &failures, filename,
+                                        lineno, "release");
+            distro->eol = read_date(strsep(&line, ","), &failures, filename,
+                                    lineno, "eol");
+            distro->eol_server = read_date(strsep(&line, ","), &failures,
+                                           filename, lineno, "eol-server");
 
-            if(filter_cb(date, distro)) {
-                current->next = NULL;
-                if(last == NULL) {
-                    distro_list = current;
-                } else {
-                    last->next = current;
-                }
-                last = current;
-                current = malloc(sizeof(distro_elem_t));
-                distro = (distro_t*)current;
+            current = malloc(sizeof(distro_elem_t));
+            current->distro = distro;
+            current->next = NULL;
+            if(last == NULL) {
+                distro_list = current;
             } else {
-                free_dates(distro);
+                last->next = current;
             }
+            last = current;
         }
     }
-    free(current);
 
-    if(select_cb == NULL) {
-        current = distro_list;
-        while(current != NULL) {
-            print_cb((distro_t*)current);
-            current = current->next;
-        }
-    } else {
-        selected = select_cb(distro_list);
-        if(likely(selected != NULL)) {
-            print_cb((distro_t*)selected);
-        } else {
-            fprintf(stderr, NAME ": Distribution data outdated.\n");
-            return_value = EXIT_FAILURE;
-        }
+    if(unlikely(distro_list == NULL)) {
+        fprintf(stderr, NAME ": No data found in file `%s'.\n", filename);
+        failures++;
     }
-    free_list(distro_list);
-    free(content);
-    return return_value;
+
+    if(unlikely(failures > 0)) {
+        free_data(distro_list, content);
+        distro_list = NULL;
+    }
+
+    return distro_list;
+}
+
+static void filter_data(const distro_elem_t *distro_list, const date_t *date,
+                       bool (*filter_cb)(const date_t*, const distro_t*),
+                       void (*print_cb)(const distro_t*)) {
+    while(distro_list != NULL) {
+        if(filter_cb(date, distro_list->distro)) {
+            print_cb(distro_list->distro);
+        }
+        distro_list = distro_list->next;
+    }
+}
+
+static const distro_t *get_distro(const distro_elem_t *distro_list, const date_t *date,
+                                  bool (*filter_cb)(const date_t*, const distro_t*),
+                                  const distro_t *(*select_cb)(const distro_elem_t*)) {
+    distro_elem_t *current;
+    distro_elem_t *filtered_list = NULL;
+    distro_elem_t *last = NULL;
+    const distro_t *selected;
+
+    while(distro_list != NULL) {
+        if(filter_cb(date, distro_list->distro)) {
+            current = malloc(sizeof(distro_elem_t));
+            current->distro = distro_list->distro;
+            current->next = NULL;
+            if(last == NULL) {
+                filtered_list = current;
+            } else {
+                last->next = current;
+            }
+            last = current;
+        }
+        distro_list = distro_list->next;
+    }
+
+    if(filtered_list == NULL) {
+        selected = NULL;
+    } else {
+        selected = select_cb(filtered_list);
+    }
+
+    while(filtered_list != NULL) {
+        current = filtered_list->next;
+        free(filtered_list);
+        filtered_list = current;
+    }
+
+    return selected;
 }
 
 static void print_help(void) {
@@ -327,12 +354,16 @@ inline int not_exactly_one(void) {
 }
 
 int main(int argc, char *argv[]) {
+    char *content;
     char option;
     date_t *date = NULL;
+    distro_elem_t *distro_list;
+    const distro_t *selected;
     int i;
     int option_index;
+    int return_value = EXIT_SUCCESS;
     bool (*filter_cb)(const date_t*, const distro_t*) = NULL;
-    const distro_elem_t *(*select_cb)(const distro_elem_t*) = NULL;
+    const distro_t *(*select_cb)(const distro_elem_t*) = NULL;
     void (*print_cb)(const distro_t*) = print_codename;
 
     const struct option long_options[] = {
@@ -508,6 +539,22 @@ int main(int argc, char *argv[]) {
         date->day = now->tm_mday;
     }
 
-   return filter_data(DATA_DIR "/" CSV_NAME ".csv", date, filter_cb, select_cb,
-                      print_cb);
+    distro_list = read_data(DATA_DIR "/" CSV_NAME ".csv", &content);
+    if(unlikely(distro_list == NULL)) {
+        return EXIT_FAILURE;
+    }
+
+    if(select_cb == NULL) {
+        filter_data(distro_list, date, filter_cb, print_cb);
+    } else {
+        selected = get_distro(distro_list, date, filter_cb, select_cb);
+        if(selected == NULL) {
+            fprintf(stderr, NAME ": Distribution data outdated.\n");
+            return_value = EXIT_FAILURE;
+        } else {
+            print_cb(selected);
+        }
+    }
+    free_data(distro_list, &content);
+    return return_value;
 }
