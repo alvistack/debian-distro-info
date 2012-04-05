@@ -5,7 +5,6 @@ Maintainer: Benjamin Drung <bdrung@debian.org>
 Uploaders: Stefano Rivera <stefanor@debian.org>
 Build-Depends: debhelper (>= 8),
                distro-info-data (>= 0.7~),
-               liblist-compare-perl,
                pylint,
                python-all (>= 2.6.3-3~),
                python-setuptools,
