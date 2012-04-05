@@ -184,7 +184,7 @@ main() {
 				callback="lts";;
 #END ubuntu#
 #BEGIN debian#
-			-o|--oldstable)
+			-o|--oldstable|--old)
 				[ -z "$callback" ] || { not_exactly_one; return 1; }
 				callback="oldstable";;
 			-t|--testing)
