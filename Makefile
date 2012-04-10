@@ -10,7 +10,7 @@ CFLAGS += -Wall -Wextra -Werror -g -O2 -std=gnu99
 build: debian-distro-info ubuntu-distro-info
 
 %-distro-info: %-distro-info.c distro-info-util.*
-	gcc $(CFLAGS) -o $@ $<
+	$(CC) $(CFLAGS) -o $@ $<
 
 install: debian-distro-info ubuntu-distro-info
 	install -d $(DESTDIR)$(PREFIX)/bin
