@@ -28,7 +28,7 @@ class DebianDistroInfoTestCase(unittest.TestCase):
     #pylint: disable=C0103
     def setUp(self):
         self._distro_info = DebianDistroInfo()
-        self._date = datetime.date(2011, 01, 10)
+        self._date = datetime.date(2011, 1, 10)
 
     #pylint: enable=C0103
     def test_all(self):
@@ -106,7 +106,7 @@ class UbuntuDistroInfoTestCase(unittest.TestCase):
     #pylint: disable=C0103
     def setUp(self):
         self._distro_info = UbuntuDistroInfo()
-        self._date = datetime.date(2011, 01, 10)
+        self._date = datetime.date(2011, 1, 10)
 
     #pylint: enable=C0103
     def test_all(self):

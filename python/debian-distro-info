@@ -74,21 +74,21 @@ def main():
 
     if options.all:
         for distro in DebianDistroInfo().all:
-            print distro
+            sys.stdout.write(distro + "\n")
     elif options.devel:
-        print DebianDistroInfo().devel(date)
+        sys.stdout.write(DebianDistroInfo().devel(date) + "\n")
     elif options.old:
-        print DebianDistroInfo().old(date)
+        sys.stdout.write(DebianDistroInfo().old(date) + "\n")
     elif options.stable:
-        print DebianDistroInfo().stable(date)
+        sys.stdout.write(DebianDistroInfo().stable(date) + "\n")
     elif options.supported:
         for distro in DebianDistroInfo().supported(date):
-            print distro
+            sys.stdout.write(distro + "\n")
     elif options.testing:
-        print DebianDistroInfo().testing(date)
+        sys.stdout.write(DebianDistroInfo().testing(date) + "\n")
     elif options.unsupported:
         for distro in DebianDistroInfo().unsupported(date):
-            print distro
+            sys.stdout.write(distro + "\n")
 
 if __name__ == "__main__":
     main()

@@ -71,19 +71,19 @@ def main():
 
     if options.all:
         for distro in UbuntuDistroInfo().all:
-            print distro
+            sys.stdout.write(distro + "\n")
     elif options.devel:
-        print UbuntuDistroInfo().devel(date)
+        sys.stdout.write(UbuntuDistroInfo().devel(date) + "\n")
     elif options.lts:
-        print UbuntuDistroInfo().lts(date)
+        sys.stdout.write(UbuntuDistroInfo().lts(date) + "\n")
     elif options.stable:
-        print UbuntuDistroInfo().stable(date)
+        sys.stdout.write(UbuntuDistroInfo().stable(date) + "\n")
     elif options.supported:
         for distro in UbuntuDistroInfo().supported(date):
-            print distro
+            sys.stdout.write(distro + "\n")
     elif options.unsupported:
         for distro in UbuntuDistroInfo().unsupported(date):
-            print distro
+            sys.stdout.write(distro + "\n")
 
 if __name__ == "__main__":
     main()
