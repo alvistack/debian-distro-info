@@ -5,7 +5,7 @@ endef
 
 PREFIX ?= /usr
 VENDOR ?= $(shell dpkg-vendor --query Vendor | tr '[:upper:]' '[:lower:]')
-CFLAGS += -Wall -Wextra -Werror -O2 -std=gnu99
+CFLAGS += -Wall -Wextra -Werror -g -O2 -std=gnu99
 
 build: debian-distro-info ubuntu-distro-info
 
