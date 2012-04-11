@@ -59,11 +59,11 @@ static char *read_full_file(const char *filename) {
     return content;
 }
 
-inline bool is_leap_year(const int year) {
+static inline bool is_leap_year(const int year) {
     return (year % 4 == 0 && year % 100 != 0) || year % 400 == 0;
 }
 
-inline bool is_valid_date(const date_t *date) {
+static inline bool is_valid_date(const date_t *date) {
     unsigned int days_in_month[] = {31, 28, 31, 30, 31, 30,
                                     31, 31, 30, 31, 30, 31};
     if(is_leap_year(date->year)) {
@@ -93,23 +93,23 @@ static date_t *read_date(const char *s, int *failures, const char *filename,
     return date;
 }
 
-inline bool date_ge(const date_t *date1, const date_t *date2) {
+static inline bool date_ge(const date_t *date1, const date_t *date2) {
     return date1->year > date2->year ||
            (date1->year == date2->year && date1->month > date2->month) ||
            (date1->year == date2->year && date1->month == date2->month &&
             date1->day >= date2->day);
 }
 
-inline bool created(const date_t *date, const distro_t *distro) {
+static inline bool created(const date_t *date, const distro_t *distro) {
     return distro->created && date_ge(date, distro->created);
 }
 
-inline bool released(const date_t *date, const distro_t *distro) {
+static inline bool released(const date_t *date, const distro_t *distro) {
     return *distro->version != '\0' &&
            distro->release && date_ge(date, distro->release);
 }
 
-inline bool eol(const date_t *date, const distro_t *distro) {
+static inline bool eol(const date_t *date, const distro_t *distro) {
     return distro->eol && date_ge(date, distro->eol) && (!distro->eol_server ||
            (distro->eol_server && date_ge(date, distro->eol_server)));
 }
@@ -339,7 +339,7 @@ Options:\n\
 See " NAME "(1) for more info.\n");
 }
 
-inline int not_exactly_one(void) {
+static inline int not_exactly_one(void) {
     fprintf(stderr, NAME ": You have to select exactly one of --all, --devel, "
 #ifdef UBUNTU
             "--lts, "

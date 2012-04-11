@@ -51,9 +51,9 @@ typedef struct distro_elem_s {
     struct distro_elem_s *next;
 } distro_elem_t;
 
-inline bool date_ge(const date_t *date1, const date_t *date2);
-inline bool created(const date_t *date, const distro_t *distro);
-inline bool released(const date_t *date, const distro_t *distro);
-inline bool eol(const date_t *date, const distro_t *distro);
+static inline bool date_ge(const date_t *date1, const date_t *date2);
+static inline bool created(const date_t *date, const distro_t *distro);
+static inline bool released(const date_t *date, const distro_t *distro);
+static inline bool eol(const date_t *date, const distro_t *distro);
 
 #endif // __DISTRO_INFO_UTIL_H__
