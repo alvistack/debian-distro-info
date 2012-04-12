@@ -403,7 +403,10 @@ int main(int argc, char *argv[]) {
                                  long_options, &option_index)) != -1) {
         switch (option) {
             case 'a':
-                if(unlikely(filter_cb != NULL)) return not_exactly_one();
+                if(unlikely(filter_cb != NULL)) {
+                    free(date);
+                    return not_exactly_one();
+                }
                 filter_cb = filter_all;
                 select_cb = NULL;
                 break;
@@ -413,7 +416,10 @@ int main(int argc, char *argv[]) {
                 break;
 
             case 'd':
-                if(unlikely(filter_cb != NULL)) return not_exactly_one();
+                if(unlikely(filter_cb != NULL)) {
+                    free(date);
+                    return not_exactly_one();
+                }
                 filter_cb = filter_devel;
 #ifdef UBUNTU
                 select_cb = select_latest_created;
@@ -446,12 +452,16 @@ int main(int argc, char *argv[]) {
 
             case 'h':
                 print_help();
+                free(date);
                 return EXIT_SUCCESS;
 
 #ifdef UBUNTU
             case 'L':
                 // Only long option --lts is used
-                if(unlikely(filter_cb != NULL)) return not_exactly_one();
+                if(unlikely(filter_cb != NULL)) {
+                    free(date);
+                    return not_exactly_one();
+                }
                 filter_cb = filter_lts;
                 select_cb = select_latest_release;
                 break;
@@ -459,7 +469,10 @@ int main(int argc, char *argv[]) {
 
 #ifdef DEBIAN
             case 'o':
-                if(unlikely(filter_cb != NULL)) return not_exactly_one();
+                if(unlikely(filter_cb != NULL)) {
+                    free(date);
+                    return not_exactly_one();
+                }
                 filter_cb = filter_oldstable;
                 select_cb = select_oldstable;
                 break;
@@ -470,21 +483,30 @@ int main(int argc, char *argv[]) {
                 break;
 
             case 's':
-                if(unlikely(filter_cb != NULL)) return not_exactly_one();
+                if(unlikely(filter_cb != NULL)) {
+                    free(date);
+                    return not_exactly_one();
+                }
                 filter_cb = filter_stable;
                 select_cb = select_latest_release;
                 break;
 
             case 'S':
                 // Only long option --supported is used
-                if(unlikely(filter_cb != NULL)) return not_exactly_one();
+                if(unlikely(filter_cb != NULL)) {
+                    free(date);
+                    return not_exactly_one();
+                }
                 filter_cb = filter_supported;
                 select_cb = NULL;
                 break;
 
 #ifdef DEBIAN
             case 't':
-                if(unlikely(filter_cb != NULL)) return not_exactly_one();
+                if(unlikely(filter_cb != NULL)) {
+                    free(date);
+                    return not_exactly_one();
+                }
                 filter_cb = filter_testing;
                 select_cb = select_latest_created;
                 break;
@@ -492,7 +514,10 @@ int main(int argc, char *argv[]) {
 
             case 'U':
                 // Only long option --unsupported is used
-                if(unlikely(filter_cb != NULL)) return not_exactly_one();
+                if(unlikely(filter_cb != NULL)) {
+                    free(date);
+                    return not_exactly_one();
+                }
                 filter_cb = filter_unsupported;
                 select_cb = NULL;
                 break;
@@ -509,12 +534,14 @@ int main(int argc, char *argv[]) {
                     fprintf(stderr, NAME ": unrecognized option `-%c'\n",
                             optopt);
                 }
+                free(date);
                 return EXIT_FAILURE;
                 break;
 
             default:
                 fprintf(stderr, NAME ": getopt returned character code %i. "
                         "Please file a bug report.\n", option);
+                free(date);
                 return EXIT_FAILURE;
         }
     }
@@ -525,10 +552,12 @@ int main(int argc, char *argv[]) {
             fprintf(stderr, " %s", argv[i]);
         }
         fprintf(stderr, "\n");
+        free(date);
         return EXIT_FAILURE;
     }
 
     if(unlikely(filter_cb == NULL)) {
+        free(date);
         return not_exactly_one();
     }
 
@@ -543,6 +572,7 @@ int main(int argc, char *argv[]) {
 
     distro_list = read_data(DATA_DIR "/" CSV_NAME ".csv", &content);
     if(unlikely(distro_list == NULL)) {
+        free(date);
         return EXIT_FAILURE;
     }
 
@@ -557,6 +587,7 @@ int main(int argc, char *argv[]) {
             print_cb(selected);
         }
     }
+    free(date);
     free_data(distro_list, &content);
     return return_value;
 }
