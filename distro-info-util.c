@@ -378,6 +378,7 @@ int main(int argc, char *argv[]) {
     int option;
     int option_index;
     int return_value = EXIT_SUCCESS;
+    int selected_filters = 0;
     bool (*filter_cb)(const date_t*, const distro_t*) = NULL;
     const distro_t *(*select_cb)(const distro_elem_t*) = NULL;
     void (*print_cb)(const distro_t*) = print_codename;
@@ -423,10 +424,6 @@ int main(int argc, char *argv[]) {
 #ifdef DEBIAN
             case 'A':
                 // Only long option --alias is used
-                if(unlikely(filter_cb != NULL)) {
-                    free(date);
-                    return not_exactly_one();
-                }
                 if(unlikely(alias_codename != NULL)) {
                     fprintf(stderr, NAME ": --alias requested multiple times.\n");
                     free(date);
@@ -438,15 +435,13 @@ int main(int argc, char *argv[]) {
                     free(date);
                     return EXIT_FAILURE;
                 }
+                selected_filters++;
                 alias_codename = optarg;
                 break;
 #endif
 
             case 'a':
-                if(unlikely(filter_cb != NULL)) {
-                    free(date);
-                    return not_exactly_one();
-                }
+                selected_filters++;
                 filter_cb = filter_all;
                 select_cb = NULL;
                 break;
@@ -456,10 +451,7 @@ int main(int argc, char *argv[]) {
                 break;
 
             case 'd':
-                if(unlikely(filter_cb != NULL)) {
-                    free(date);
-                    return not_exactly_one();
-                }
+                selected_filters++;
                 filter_cb = filter_devel;
 #ifdef UBUNTU
                 select_cb = select_latest_created;
@@ -498,10 +490,7 @@ int main(int argc, char *argv[]) {
 #ifdef UBUNTU
             case 'L':
                 // Only long option --lts is used
-                if(unlikely(filter_cb != NULL)) {
-                    free(date);
-                    return not_exactly_one();
-                }
+                selected_filters++;
                 filter_cb = filter_lts;
                 select_cb = select_latest_release;
                 break;
@@ -509,10 +498,7 @@ int main(int argc, char *argv[]) {
 
 #ifdef DEBIAN
             case 'o':
-                if(unlikely(filter_cb != NULL)) {
-                    free(date);
-                    return not_exactly_one();
-                }
+                selected_filters++;
                 filter_cb = filter_oldstable;
                 select_cb = select_oldstable;
                 break;
@@ -523,30 +509,21 @@ int main(int argc, char *argv[]) {
                 break;
 
             case 's':
-                if(unlikely(filter_cb != NULL)) {
-                    free(date);
-                    return not_exactly_one();
-                }
+                selected_filters++;
                 filter_cb = filter_stable;
                 select_cb = select_latest_release;
                 break;
 
             case 'S':
                 // Only long option --supported is used
-                if(unlikely(filter_cb != NULL)) {
-                    free(date);
-                    return not_exactly_one();
-                }
+                selected_filters++;
                 filter_cb = filter_supported;
                 select_cb = NULL;
                 break;
 
 #ifdef DEBIAN
             case 't':
-                if(unlikely(filter_cb != NULL)) {
-                    free(date);
-                    return not_exactly_one();
-                }
+                selected_filters++;
                 filter_cb = filter_testing;
                 select_cb = select_latest_created;
                 break;
@@ -554,10 +531,7 @@ int main(int argc, char *argv[]) {
 
             case 'U':
                 // Only long option --unsupported is used
-                if(unlikely(filter_cb != NULL)) {
-                    free(date);
-                    return not_exactly_one();
-                }
+                selected_filters++;
                 filter_cb = filter_unsupported;
                 select_cb = NULL;
                 break;
@@ -601,12 +575,7 @@ int main(int argc, char *argv[]) {
         return EXIT_FAILURE;
     }
 
-#ifdef DEBIAN
-    if(unlikely(filter_cb == NULL && !alias_codename) ||
-       unlikely(filter_cb != NULL && alias_codename)) {
-#else
-    if(unlikely(filter_cb == NULL)) {
-#endif
+    if(unlikely(selected_filters != 1)) {
         free(date);
         return not_exactly_one();
     }
