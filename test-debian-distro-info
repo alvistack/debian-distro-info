@@ -20,6 +20,8 @@ COMMAND="${0%/*}/debian-distro-info"
 
 testAlias() {
     success "--alias sid" "unstable"
+    success "--date 2010-10-20 --alias squeeze" "testing"
+    success "--date 2011-11-20 --alias squeeze" "stable"
     success "--alias whatever" "whatever"
 }
 
