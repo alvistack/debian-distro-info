@@ -9,9 +9,12 @@ Build-Depends: debhelper (>= 8),
                python-all (>= 2.6.3-3~),
                python-setuptools,
                python-unittest2,
+               python3-all,
+               python3-setuptools,
                shunit2 (>= 2.1.6)
 Standards-Version: 3.9.3
 X-Python-Version: >= 2.6
+X-Python3-Version: >= 3.0
 Vcs-Git: git://git.debian.org/git/collab-maint/distro-info.git
 Vcs-Browser: http://git.debian.org/?p=collab-maint/distro-info.git
 
@@ -47,5 +50,16 @@ Description: information about distributions' releases (Python module)
  Information about all releases of Debian and Ubuntu.
  .
  This package contains a Python module for parsing the data in
+ distro-info-data. There is also a command line interface in the distro-info
+ package.
+
+Package: python3-distro-info
+Architecture: all
+Section: python
+Depends: distro-info-data, ${misc:Depends}, ${python3:Depends}
+Description: information about distributions' releases (Python 3 module)
+ Information about all releases of Debian and Ubuntu.
+ .
+ This package contains a Python 3 module for parsing the data in
  distro-info-data. There is also a command line interface in the distro-info
  package.

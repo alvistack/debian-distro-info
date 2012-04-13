@@ -26,6 +26,7 @@ install: debian-distro-info ubuntu-distro-info
 	install -d $(DESTDIR)$(PREFIX)/share/perl5/Debian
 	install -m 644 $(wildcard perl/Debian/*.pm) $(DESTDIR)$(PREFIX)/share/perl5/Debian
 	cd python && python setup.py install --root="$(DESTDIR)" --no-compile --install-layout=deb
+	cd python && python3 setup.py install --root="$(DESTDIR)" --no-compile --install-layout=deb
 
 test: test-commandline test-perl test-python
 
@@ -37,7 +38,7 @@ test-perl:
 	cd perl && ./test.pl
 
 test-python:
-	$(foreach python,$(shell pyversions -r),cd python && $(python) setup.py test$(\n))
+	$(foreach python,$(shell pyversions -r && py3version -r),cd python && $(python) setup.py test$(\n))
 
 clean:
 	rm -rf debian-distro-info ubuntu-distro-info python/build python/*.egg-info
