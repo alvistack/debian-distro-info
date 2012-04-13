@@ -134,7 +134,7 @@ testUnrecognizedArguments() {
     failure "foo --all bar" "ubuntu-distro-info: unrecognized arguments: foo bar"
 }
 
-testMissingArgument() {
+testMissingArgumentDate() {
     failure "--date" "ubuntu-distro-info: option \`--date' requires an argument DATE"
 }
 

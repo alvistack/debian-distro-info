@@ -18,6 +18,11 @@ COMMAND="${0%/*}/debian-distro-info"
 
 . "${0%/*}/shunit2-helper-functions.sh"
 
+testAlias() {
+    success "--alias sid" "unstable"
+    success "--alias whatever" "whatever"
+}
+
 testAll() {
     local result="buzz
 rex
@@ -148,8 +153,17 @@ testUnrecognizedArguments() {
     failure "baz -s foo" "debian-distro-info: unrecognized arguments: baz foo"
 }
 
+testMissingArgumentAlias() {
+    failure "--alias" "debian-distro-info: option \`--alias' requires an argument DIST"
+}
+
 testMissingArgumentDate() {
     failure "--date" "debian-distro-info: option \`--date' requires an argument DATE"
+}
+
+testInvalidAlias() {
+    failure "--alias Sid" "debian-distro-info: invalid distribution codename \`Sid'"
+    failure "--alias wr0ng" "debian-distro-info: invalid distribution codename \`wr0ng'"
 }
 
 testInvalidDate() {
@@ -157,26 +171,12 @@ testInvalidDate() {
     failure "--date=2010-02-30 -d" "debian-distro-info: invalid date \`2010-02-30'"
 }
 
-testMultipleDates() {
-    failure "--date 2007-06-05 -s --date 2004-03-02" "debian-distro-info: Date specified multiple times."
-}
-
-testMissingArgumentAlias() {
-    failure "--alias" "debian-distro-info: option \`--alias' requires an argument DIST"
-}
-
-testInvalidAlias() {
-    failure "--alias wr0ng" "debian-distro-info: invalid distribution codename \`wr0ng'"
-}
-
 testMultipleAlias() {
     failure "--alias a --alias b" "debian-distro-info: --alias requested multiple times."
 }
 
-testAlias() {
-    success "--alias sid" "unstable"
-    failure "--alias Sid" "debian-distro-info: invalid distribution codename \`Sid'"
-    success "--alias whatever" "whatever"
+testMultipleDates() {
+    failure "--date 2007-06-05 -s --date 2004-03-02" "debian-distro-info: Date specified multiple times."
 }
 
 . shunit2
