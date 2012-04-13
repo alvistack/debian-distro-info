@@ -1,3 +1,12 @@
+distro-info (0.9) unstable; urgency=low
+
+  * debian-distro-info: Add an --alias option. Thanks to Antonio Ospite
+    for the work. (Closes: #645171)
+  * Make Python code valid Python 2 and 3 code and add a Python 3 module.
+  * Fix one memmory leak in main() function.
+
+ -- Benjamin Drung <bdrung@debian.org>  Fri, 13 Apr 2012 16:02:40 +0200
+
 distro-info (0.8.2) unstable; urgency=low
 
   * Drop liblist-compare-perl from Build-Depends. Use our own list comparison
