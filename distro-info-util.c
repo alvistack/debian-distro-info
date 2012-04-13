@@ -73,6 +73,12 @@ static inline bool is_valid_date(const date_t *date) {
            date->day >= 1 && date->day <= days_in_month[date->month-1];
 }
 
+static inline bool is_valid_codename(const char *codename) {
+    // Only codenames with lowercase ASCII letters are accepted
+    return strlen(codename) > 0 &&
+           strspn(codename, "abcdefghijklmnopqrstuvwxyz") == strlen(codename);
+}
+
 // Read an ISO 8601 formatted date
 static date_t *read_date(const char *s, int *failures, const char *filename,
                          const int lineno, const char *column) {
@@ -317,8 +323,12 @@ static void print_help(void) {
 \n\
 Options:\n\
   -h  --help         show this help message and exit\n\
-      --date=DATE    date for calculating the version (default: today)\n\
-  -a  --all          list all known versions\n\
+      --date=DATE    date for calculating the version (default: today)\n"
+#ifdef DEBIAN
+"      --alias=DIST   print the alias (stable, testing, unstable) relative to\n\
+                     the distribution codename passed as an argument\n"
+#endif
+"  -a  --all          list all known versions\n\
   -d  --devel        latest development version\n"
 #ifdef UBUNTU
 "      --lts          latest long term support (LTS) version\n"
@@ -340,7 +350,11 @@ See " NAME "(1) for more info.\n");
 }
 
 static inline int not_exactly_one(void) {
-    fprintf(stderr, NAME ": You have to select exactly one of --all, --devel, "
+    fprintf(stderr, NAME ": You have to select exactly one of "
+#ifdef DEBIAN
+            "--alias, "
+#endif
+            "--all, --devel, "
 #ifdef UBUNTU
             "--lts, "
 #endif
@@ -367,10 +381,16 @@ int main(int argc, char *argv[]) {
     bool (*filter_cb)(const date_t*, const distro_t*) = NULL;
     const distro_t *(*select_cb)(const distro_elem_t*) = NULL;
     void (*print_cb)(const distro_t*) = print_codename;
+#ifdef DEBIAN
+    char *alias_codename = NULL;
+#endif
 
     const struct option long_options[] = {
         {"help",        no_argument,       NULL, 'h' },
         {"date",        required_argument, NULL, 'D' },
+#ifdef DEBIAN
+        {"alias",       required_argument, NULL, 'A' },
+#endif
         {"all",         no_argument,       NULL, 'a' },
         {"devel",       no_argument,       NULL, 'd' },
         {"stable",      no_argument,       NULL, 's' },
@@ -402,6 +422,28 @@ int main(int argc, char *argv[]) {
     while ((option = getopt_long(argc, argv, short_options,
                                  long_options, &option_index)) != -1) {
         switch (option) {
+#ifdef DEBIAN
+            case 'A':
+                // Only long option --alias is used
+                if(unlikely(filter_cb != NULL)) {
+                    free(date);
+                    return not_exactly_one();
+                }
+                if(unlikely(alias_codename != NULL)) {
+                    fprintf(stderr, NAME ": --alias requested multiple times.\n");
+                    free(date);
+                    return EXIT_FAILURE;
+                }
+                if(!is_valid_codename(optarg)) {
+                    fprintf(stderr, NAME ": invalid distribution codename `%s'\n",
+                            optarg);
+                    free(date);
+                    return EXIT_FAILURE;
+                }
+                alias_codename = optarg;
+                break;
+#endif
+
             case 'a':
                 if(unlikely(filter_cb != NULL)) {
                     free(date);
@@ -527,6 +569,11 @@ int main(int argc, char *argv[]) {
                     // Long option failed
                     fprintf(stderr, NAME ": unrecognized option `%s'\n",
                             argv[optind-1]);
+#ifdef DEBIAN
+                } else if(optopt == 'A') {
+                    fprintf(stderr, NAME ": option `--alias' requires "
+                            "an argument DIST\n");
+#endif
                 } else if(optopt == 'D') {
                     fprintf(stderr, NAME ": option `--date' requires "
                             "an argument DATE\n");
@@ -556,7 +603,12 @@ int main(int argc, char *argv[]) {
         return EXIT_FAILURE;
     }
 
+#ifdef DEBIAN
+    if(unlikely(filter_cb == NULL && !alias_codename) ||
+       unlikely(filter_cb != NULL && alias_codename)) {
+#else
     if(unlikely(filter_cb == NULL)) {
+#endif
         free(date);
         return not_exactly_one();
     }
@@ -575,6 +627,32 @@ int main(int argc, char *argv[]) {
         free(date);
         return EXIT_FAILURE;
     }
+
+#ifdef DEBIAN
+    if(alias_codename) {
+        const distro_t *stable = get_distro(distro_list, date, filter_stable,
+                                            select_latest_release);
+        const distro_t *testing = get_distro(distro_list, date, filter_testing,
+                                             select_latest_created);
+        const distro_t *unstable = get_distro(distro_list, date, filter_devel,
+                                              select_first);
+        if(unlikely(stable == NULL || testing == NULL || unstable == NULL)) {
+            fprintf(stderr, NAME ": Distribution data outdated.\n");
+            return_value = EXIT_FAILURE;
+        } else if(strcmp(stable->series, alias_codename) == 0) {
+            printf("stable\n");
+        } else if(strcmp(testing->series, alias_codename) == 0) {
+            printf("testing\n");
+        } else if(strcmp(unstable->series, alias_codename) == 0) {
+            printf("unstable\n");
+        } else {
+            printf("%s\n", alias_codename);
+        }
+        free(date);
+        free_data(distro_list, &content);
+        return return_value;
+    }
+#endif
 
     if(select_cb == NULL) {
         filter_data(distro_list, date, filter_cb, print_cb);

@@ -112,6 +112,8 @@ testHelp() {
 Options:
   -h  --help         show this help message and exit
       --date=DATE    date for calculating the version (default: today)
+      --alias=DIST   print the alias (stable, testing, unstable) relative to
+                     the distribution codename passed as an argument
   -a  --all          list all known versions
   -d  --devel        latest development version
   -o  --oldstable    latest oldstable version
@@ -129,9 +131,10 @@ See debian-distro-info(1) for more info.'
 }
 
 testExactlyOne() {
-    local result='debian-distro-info: You have to select exactly one of --all, --devel, --oldstable, --stable, --supported, --testing, --unsupported.'
+    local result='debian-distro-info: You have to select exactly one of --alias, --all, --devel, --oldstable, --stable, --supported, --testing, --unsupported.'
     failure "" "$result"
     failure "-ad" "$result"
+    failure "--alias foo -a" "$result"
 }
 
 testUnrecognizedOption() {
@@ -145,7 +148,7 @@ testUnrecognizedArguments() {
     failure "baz -s foo" "debian-distro-info: unrecognized arguments: baz foo"
 }
 
-testMissingArgument() {
+testMissingArgumentDate() {
     failure "--date" "debian-distro-info: option \`--date' requires an argument DATE"
 }
 
@@ -156,6 +159,24 @@ testInvalidDate() {
 
 testMultipleDates() {
     failure "--date 2007-06-05 -s --date 2004-03-02" "debian-distro-info: Date specified multiple times."
+}
+
+testMissingArgumentAlias() {
+    failure "--alias" "debian-distro-info: option \`--alias' requires an argument DIST"
+}
+
+testInvalidAlias() {
+    failure "--alias wr0ng" "debian-distro-info: invalid distribution codename \`wr0ng'"
+}
+
+testMultipleAlias() {
+    failure "--alias a --alias b" "debian-distro-info: --alias requested multiple times."
+}
+
+testAlias() {
+    success "--alias sid" "unstable"
+    failure "--alias Sid" "debian-distro-info: invalid distribution codename \`Sid'"
+    success "--alias whatever" "whatever"
 }
 
 . shunit2

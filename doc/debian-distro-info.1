@@ -26,6 +26,13 @@ date for calculating the version (default: today)
 \fB\-h\fR, \fB\-\-help\fR
 display help message and exit
 .TP
+\fB\-\-alias\fR=\fIDIST
+print the alias (stable, testing, unstable) relative to
+the distribution codename passed as an argument.
+Only distribution codenames composed of lower case ASCII letters are accepted,
+and if the distribution does not qualify as stable, testing or unstable, then
+the same codename passed as argument is returned.
+.TP
 \fB\-a\fR, \fB\-\-all\fR
 list all known versions
 .TP
