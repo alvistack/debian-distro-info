@@ -343,8 +343,8 @@ Options:\n\
 #endif
 "      --unsupported  list of all unsupported stable versions\n\
   -c  --codename     print the codename (default)\n\
-  -r  --release      print the release version\n\
   -f  --fullname     print the full name\n\
+  -r  --release      print the release version\n\
 \n\
 See " NAME "(1) for more info.\n");
 }
@@ -388,23 +388,21 @@ int main(int argc, char *argv[]) {
     const struct option long_options[] = {
         {"help",        no_argument,       NULL, 'h' },
         {"date",        required_argument, NULL, 'D' },
-#ifdef DEBIAN
-        {"alias",       required_argument, NULL, 'A' },
-#endif
         {"all",         no_argument,       NULL, 'a' },
         {"devel",       no_argument,       NULL, 'd' },
         {"stable",      no_argument,       NULL, 's' },
         {"supported",   no_argument,       NULL, 'S' },
         {"unsupported", no_argument,       NULL, 'U' },
         {"codename",    no_argument,       NULL, 'c' },
-        {"release",     no_argument,       NULL, 'r' },
         {"fullname",    no_argument,       NULL, 'f' },
-#ifdef UBUNTU
-        {"lts",         no_argument,       NULL, 'L' },
-#endif
+        {"release",     no_argument,       NULL, 'r' },
 #ifdef DEBIAN
+        {"alias",       required_argument, NULL, 'A' },
         {"oldstable",   no_argument,       NULL, 'o' },
         {"testing",     no_argument,       NULL, 't' },
+#endif
+#ifdef UBUNTU
+        {"lts",         no_argument,       NULL, 'L' },
 #endif
         {NULL,          0,                 NULL, '\0' }
     };

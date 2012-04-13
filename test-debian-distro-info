@@ -129,8 +129,8 @@ Options:
   -t  --testing      current testing version
       --unsupported  list of all unsupported stable versions
   -c  --codename     print the codename (default)
-  -r  --release      print the release version
   -f  --fullname     print the full name
+  -r  --release      print the release version
 
 See debian-distro-info(1) for more info.'
     success "--help" "$help"
