@@ -38,7 +38,7 @@ test-perl:
 	cd perl && ./test.pl
 
 test-python:
-	$(foreach python,$(shell pyversions -r && py3version -r),cd python && $(python) setup.py test$(\n))
+	$(foreach python,$(shell pyversions -r && py3versions -r),cd python && $(python) setup.py test$(\n))
 
 clean:
 	rm -rf debian-distro-info ubuntu-distro-info python/build python/*.egg-info

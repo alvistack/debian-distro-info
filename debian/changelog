@@ -1,6 +1,7 @@
 distro-info (0.10) UNRELEASED; urgency=low
 
   * Add a README.Debian.
+  * Actually test with Python 3 (typo)
 
  -- Stefano Rivera <stefanor@debian.org>  Sun, 06 May 2012 08:55:54 +0200
 
