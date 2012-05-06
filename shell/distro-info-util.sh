@@ -120,7 +120,9 @@ filter_data() {
 }
 
 data_outdated() {
-	error "${0##*/}: Distribution data outdated."
+	error "${0##*/}: Distribution data outdated." \
+	      "Please check for an update for distro-info-data." \
+	      "See /usr/share/doc/distro-info/README.Debian for details."
 }
 
 date_requires_arg() {

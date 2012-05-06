@@ -604,7 +604,7 @@ int main(int argc, char *argv[]) {
         const distro_t *unstable = get_distro(distro_list, date, filter_devel,
                                               select_first);
         if(unlikely(stable == NULL || testing == NULL || unstable == NULL)) {
-            fprintf(stderr, NAME ": Distribution data outdated.\n");
+            fprintf(stderr, NAME ": " OUTDATED_ERROR "\n");
             return_value = EXIT_FAILURE;
         } else if(strcmp(stable->series, alias_codename) == 0) {
             printf("stable\n");
@@ -626,7 +626,7 @@ int main(int argc, char *argv[]) {
     } else {
         selected = get_distro(distro_list, date, filter_cb, select_cb);
         if(selected == NULL) {
-            fprintf(stderr, NAME ": Distribution data outdated.\n");
+            fprintf(stderr, NAME ": " OUTDATED_ERROR "\n");
             return_value = EXIT_FAILURE;
         } else {
             print_cb(selected);

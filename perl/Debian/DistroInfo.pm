@@ -28,6 +28,10 @@ our @EXPORT_OK = qw(convert_date);
 
 our $VERSION = '0.2.2';
 
+my $outdated_error = "Distribution data outdated. "
+    . "Please check for an update for distro-info-data. "
+    . "See /usr/share/doc/distro-info/README.Debian for details.";
+
 sub convert_date {
     my ($date) = @_;
     my @parts = split(/-/, $date);
@@ -122,7 +126,7 @@ sub convert_date {
                 push(@distros, $row);
             }
         }
-        die "Distro data outdated" if (scalar(@distros) == 0);
+        die $outdated_error if (scalar(@distros) == 0);
         return $distros[-1]{'series'};
     }
 
@@ -136,7 +140,7 @@ sub convert_date {
                 push(@distros, $row);
             }
         }
-        die "Distro data outdated" if (scalar(@distros) == 0);
+        die $outdated_error if (scalar(@distros) == 0);
         return $distros[-1]{'series'};
     }
 
@@ -193,7 +197,7 @@ sub convert_date {
                 push(@distros, $row);
             }
         }
-        die "Distro data outdated" if (scalar(@distros) < 2);
+        die $outdated_error if (scalar(@distros) < 2);
         return $distros[-2]{'series'};
     }
 
@@ -206,7 +210,7 @@ sub convert_date {
                 push(@distros, $row);
             }
         }
-        die "Distro data outdated" if (scalar(@distros) < 2);
+        die $outdated_error if (scalar(@distros) < 2);
         return $distros[-2]{'series'};
     }
 
@@ -233,7 +237,7 @@ sub convert_date {
                 push(@distros, $row);
             }
         }
-        die "Distro data outdated" if (scalar(@distros) == 0);
+        die $outdated_error if (scalar(@distros) == 0);
         return $distros[-1]{'series'};
     }
 
@@ -270,7 +274,7 @@ sub convert_date {
                 push(@distros, $row);
             }
         }
-        die "Distro data outdated" if (scalar(@distros) == 0);
+        die $outdated_error if (scalar(@distros) == 0);
         return $distros[-1]{'series'};
     }
 

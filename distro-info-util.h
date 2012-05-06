@@ -30,6 +30,10 @@
 
 #define DATA_DIR "/usr/share/distro-info"
 
+#define OUTDATED_ERROR "Distribution data outdated.\n" \
+    "Please check for an update for distro-info-data. " \
+    "See /usr/share/doc/distro-info/README.Debian for details."
+
 typedef struct {
     unsigned int year;
     unsigned int month;
