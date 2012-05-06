@@ -1,3 +1,9 @@
+distro-info (0.10) UNRELEASED; urgency=low
+
+  * Add a README.Debian.
+
+ -- Stefano Rivera <stefanor@debian.org>  Sun, 06 May 2012 08:55:54 +0200
+
 distro-info (0.9) unstable; urgency=low
 
   * debian-distro-info: Add an --alias option. Thanks to Antonio Ospite
