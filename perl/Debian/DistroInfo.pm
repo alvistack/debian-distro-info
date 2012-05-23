@@ -126,7 +126,10 @@ sub convert_date {
                 push(@distros, $row);
             }
         }
-        die $outdated_error if (scalar(@distros) == 0);
+        if (scalar(@distros) == 0) {
+            printf STDERR $outdated_error;
+            return 0;
+        }
         return $distros[-1]{'series'};
     }
 
@@ -140,7 +143,10 @@ sub convert_date {
                 push(@distros, $row);
             }
         }
-        die $outdated_error if (scalar(@distros) == 0);
+        if (scalar(@distros) == 0) {
+            printf STDERR $outdated_error;
+            return 0;
+        }
         return $distros[-1]{'series'};
     }
 
@@ -197,7 +203,10 @@ sub convert_date {
                 push(@distros, $row);
             }
         }
-        die $outdated_error if (scalar(@distros) < 2);
+        if (scalar(@distros) < 2) {
+            printf STDERR $outdated_error;
+            return 0;
+        }
         return $distros[-2]{'series'};
     }
 
@@ -210,7 +219,10 @@ sub convert_date {
                 push(@distros, $row);
             }
         }
-        die $outdated_error if (scalar(@distros) < 2);
+        if (scalar(@distros) < 2) {
+            printf STDERR $outdated_error;
+            return 0;
+        }
         return $distros[-2]{'series'};
     }
 
@@ -237,7 +249,10 @@ sub convert_date {
                 push(@distros, $row);
             }
         }
-        die $outdated_error if (scalar(@distros) == 0);
+        if (scalar(@distros) == 0) {
+            printf STDERR $outdated_error;
+            return 0;
+        }
         return $distros[-1]{'series'};
     }
 
@@ -274,7 +289,10 @@ sub convert_date {
                 push(@distros, $row);
             }
         }
-        die $outdated_error if (scalar(@distros) == 0);
+        if (scalar(@distros) == 0) {
+            printf STDERR $outdated_error;
+            return 0;
+        }
         return $distros[-1]{'series'};
     }
 
