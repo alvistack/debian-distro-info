@@ -127,7 +127,7 @@ sub convert_date {
             }
         }
         if (scalar(@distros) == 0) {
-            printf STDERR $outdated_error;
+            warn $outdated_error;
             return 0;
         }
         return $distros[-1]{'series'};
@@ -144,7 +144,7 @@ sub convert_date {
             }
         }
         if (scalar(@distros) == 0) {
-            printf STDERR $outdated_error;
+            warn $outdated_error;
             return 0;
         }
         return $distros[-1]{'series'};
@@ -204,7 +204,7 @@ sub convert_date {
             }
         }
         if (scalar(@distros) < 2) {
-            printf STDERR $outdated_error;
+            warn $outdated_error;
             return 0;
         }
         return $distros[-2]{'series'};
@@ -220,7 +220,7 @@ sub convert_date {
             }
         }
         if (scalar(@distros) < 2) {
-            printf STDERR $outdated_error;
+            warn $outdated_error;
             return 0;
         }
         return $distros[-2]{'series'};
@@ -250,7 +250,7 @@ sub convert_date {
             }
         }
         if (scalar(@distros) == 0) {
-            printf STDERR $outdated_error;
+            warn $outdated_error;
             return 0;
         }
         return $distros[-1]{'series'};
@@ -290,7 +290,7 @@ sub convert_date {
             }
         }
         if (scalar(@distros) == 0) {
-            printf STDERR $outdated_error;
+            warn $outdated_error;
             return 0;
         }
         return $distros[-1]{'series'};
