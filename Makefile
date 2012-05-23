@@ -5,12 +5,16 @@ endef
 
 PREFIX ?= /usr
 VENDOR ?= $(shell dpkg-vendor --query Vendor | tr '[:upper:]' '[:lower:]')
+
+CPPFLAGS = $(shell dpkg-buildflags --get CPPFLAGS)
+CFLAGS = $(shell dpkg-buildflags --get CFLAGS)
 CFLAGS += -Wall -Wextra -Werror -g -O2 -std=gnu99
+LDFLAGS = $(shell dpkg-buildflags --get LDFLAGS)
 
 build: debian-distro-info ubuntu-distro-info
 
 %-distro-info: %-distro-info.c distro-info-util.*
-	$(CC) $(CFLAGS) -o $@ $<
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $@ $<
 
 install: debian-distro-info ubuntu-distro-info
 	install -d $(DESTDIR)$(PREFIX)/bin
