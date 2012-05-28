@@ -140,11 +140,8 @@ testMissingArgumentDate() {
 
 testDistributionDataOutdated() {
     local future_year=$(expr $(date  +"%Y" --date=now) + 7)
-    local outdated_e="Distribution data outdated."
-    outdated_e="$outdated_e\nPlease check for an update for distro-info-data."
-    outdated_e="$outdated_e See /usr/share/doc/distro-info/README.Debian"
-    outdated_e="$outdated_e for details."
-    outdated_e=$(printf "$outdated_e")
+    local outdated_e="Distribution data outdated.
+Please check for an update for distro-info-data. See /usr/share/doc/distro-info/README.Debian for details."
 
     failure "--date 1970-10-03 --lts" "ubuntu-distro-info: $outdated_e"
     failure "--date ${future_year}-10-03 -s" "ubuntu-distro-info: $outdated_e"
