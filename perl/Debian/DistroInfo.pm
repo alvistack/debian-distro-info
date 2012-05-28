@@ -30,7 +30,7 @@ our $VERSION = '0.2.2';
 
 my $outdated_error = "Distribution data outdated. "
     . "Please check for an update for distro-info-data. "
-    . "See /usr/share/doc/distro-info/README.Debian for details.";
+    . "See /usr/share/doc/distro-info-data/README.Debian for details.";
 
 sub convert_date {
     my ($date) = @_;

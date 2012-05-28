@@ -1,6 +1,7 @@
 distro-info (0.10) UNRELEASED; urgency=low
 
-  * Add a README.Debian.
+  * Provide more useful errors (pointing to a README in distro-info-data) when
+    the data is outdated.
   * Actually test with Python 3 (typo)
   * libdistro-info-perl: Print a warning and return 0 when data is out of
     date, rather than dying.

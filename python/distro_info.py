@@ -48,8 +48,8 @@ class DistroDataOutdated(Exception):
     def __init__(self):
         super(DistroDataOutdated, self).__init__(
                 "Distribution data outdated. "
-                "Please check for an update for distro-info-data. "
-                "See /usr/share/doc/distro-info/README.Debian for details.")
+                "Please check for an update for distro-info-data. See "
+                "/usr/share/doc/distro-info-data/README.Debian for details.")
 
 
 class DistroInfo(object):
