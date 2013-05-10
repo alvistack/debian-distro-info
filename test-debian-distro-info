@@ -117,20 +117,22 @@ testHelp() {
     local help='Usage: debian-distro-info [options]
 
 Options:
-  -h  --help         show this help message and exit
-      --date=DATE    date for calculating the version (default: today)
-      --alias=DIST   print the alias (stable, testing, unstable) relative to
-                     the distribution codename passed as an argument
-  -a  --all          list all known versions
-  -d  --devel        latest development version
-  -o  --oldstable    latest oldstable version
-  -s  --stable       latest stable version
-      --supported    list of all supported stable versions
-  -t  --testing      current testing version
-      --unsupported  list of all unsupported stable versions
-  -c  --codename     print the codename (default)
-  -f  --fullname     print the full name
-  -r  --release      print the release version
+  -h  --help             show this help message and exit
+      --date=DATE        date for calculating the version (default: today)
+  -y[MILESTONE]          additionally, display days until milestone
+      --days=[MILESTONE]
+      --alias=DIST       print the alias (stable, testing, unstable) relative to
+                         the distribution codename passed as an argument
+  -a  --all              list all known versions
+  -d  --devel            latest development version
+  -o  --oldstable        latest oldstable version
+  -s  --stable           latest stable version
+      --supported        list of all supported stable versions
+  -t  --testing          current testing version
+      --unsupported      list of all unsupported stable versions
+  -c  --codename         print the codename (default)
+  -f  --fullname         print the full name
+  -r  --release          print the release version
 
 See debian-distro-info(1) for more info.'
     success "--help" "$help"

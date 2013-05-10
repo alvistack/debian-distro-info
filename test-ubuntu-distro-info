@@ -76,11 +76,70 @@ jaunty"
 
 testFullname() {
     success "--date=2011-01-10 --stable -f" 'Ubuntu 10.10 "Maverick Meerkat"'
-    success "--date=2011-01-10 --fullname --lts" 'Ubuntu 10.04 LTS "Lucid Lynx"'
+    success "--date=2011-01-10 --stable -f -ycreated" \
+        'Ubuntu 10.10 "Maverick Meerkat" -256'
+    success "--date=2011-01-10 --stable -f --days=created" \
+        'Ubuntu 10.10 "Maverick Meerkat" -256'
+    success "--date=2011-01-10 --stable -f -y" \
+        'Ubuntu 10.10 "Maverick Meerkat" -92'
+    success "--date=2011-01-10 --stable -f --days" \
+        'Ubuntu 10.10 "Maverick Meerkat" -92'
+    success "--date=2011-01-10 --stable -f -yrelease" \
+        'Ubuntu 10.10 "Maverick Meerkat" -92'
+    success "--date=2011-01-10 --stable -f --days=release" \
+        'Ubuntu 10.10 "Maverick Meerkat" -92'
+    success "--date=2011-01-10 --stable -f -yeol" \
+        'Ubuntu 10.10 "Maverick Meerkat" 456'
+    success "--date=2011-01-10 --stable -f --days=eol" \
+        'Ubuntu 10.10 "Maverick Meerkat" 456'
+
+    success "--date=2011-01-10 --fullname --lts" \
+        'Ubuntu 10.04 LTS "Lucid Lynx"'
+    success "--date=2011-01-10 --fullname --lts -y" \
+        'Ubuntu 10.04 LTS "Lucid Lynx" -256'
+    success "--date=2011-01-10 --fullname --lts --days" \
+        'Ubuntu 10.04 LTS "Lucid Lynx" -256'
+    success "--date=2011-01-10 --fullname --lts -ycreated" \
+        'Ubuntu 10.04 LTS "Lucid Lynx" -438'
+    success "--date=2011-01-10 --fullname --lts --days=created" \
+        'Ubuntu 10.04 LTS "Lucid Lynx" -438'
+    success "--date=2011-01-10 --fullname --lts -yrelease" \
+        'Ubuntu 10.04 LTS "Lucid Lynx" -256'
+    success "--date=2011-01-10 --fullname --lts --days=release" \
+        'Ubuntu 10.04 LTS "Lucid Lynx" -256'
+    success "--date=2011-01-10 --fullname --lts -yeol" \
+        'Ubuntu 10.04 LTS "Lucid Lynx" 850'
+    success "--date=2011-01-10 --fullname --lts --days=eol" \
+        'Ubuntu 10.04 LTS "Lucid Lynx" 850'
+    success "--date=2011-01-10 --fullname --lts -yeol-server" \
+        'Ubuntu 10.04 LTS "Lucid Lynx" 1570'
+    success "--date=2011-01-10 --fullname --lts --days=eol-server" \
+        'Ubuntu 10.04 LTS "Lucid Lynx" 1570'
 }
 
 testRelease() {
     success "--date=2011-01-10 --lts --release" "10.04 LTS"
+    success "--date=2011-01-10 --lts --release -ycreated" \
+        "10.04 LTS -438"
+    success "--date=2011-01-10 --lts --release --days=created" \
+        "10.04 LTS -438"
+    success "--date=2011-01-10 --lts --release --days" \
+        "10.04 LTS -256"
+    success "--date=2011-01-10 --lts --release -y" \
+        "10.04 LTS -256"
+    success "--date=2011-01-10 --lts --release --days=release" \
+        "10.04 LTS -256"
+    success "--date=2011-01-10 --lts --release -yrelease" \
+        "10.04 LTS -256"
+    success "--date=2011-01-10 --lts --release --days=eol" \
+        "10.04 LTS 850"
+    success "--date=2011-01-10 --lts --release -yeol" \
+        "10.04 LTS 850"
+    success "--date=2011-01-10 --lts --release --days=eol-server" \
+        "10.04 LTS 1570"
+    success "--date=2011-01-10 --lts --release -yeol-server" \
+        "10.04 LTS 1570"
+
     success "--date=2011-01-10 -r --stable" "10.10"
 }
 
@@ -99,17 +158,19 @@ testHelp() {
     local help='Usage: ubuntu-distro-info [options]
 
 Options:
-  -h  --help         show this help message and exit
-      --date=DATE    date for calculating the version (default: today)
-  -a  --all          list all known versions
-  -d  --devel        latest development version
-      --lts          latest long term support (LTS) version
-  -s  --stable       latest stable version
-      --supported    list of all supported stable versions
-      --unsupported  list of all unsupported stable versions
-  -c  --codename     print the codename (default)
-  -f  --fullname     print the full name
-  -r  --release      print the release version
+  -h  --help             show this help message and exit
+      --date=DATE        date for calculating the version (default: today)
+  -y[MILESTONE]          additionally, display days until milestone
+      --days=[MILESTONE]
+  -a  --all              list all known versions
+  -d  --devel            latest development version
+      --lts              latest long term support (LTS) version
+  -s  --stable           latest stable version
+      --supported        list of all supported stable versions
+      --unsupported      list of all unsupported stable versions
+  -c  --codename         print the codename (default)
+  -f  --fullname         print the full name
+  -r  --release          print the release version
 
 See ubuntu-distro-info(1) for more info.'
     success "--help" "$help"
@@ -124,7 +185,7 @@ testExactlyOne() {
 
 testUnrecognizedOption() {
     failure "--bar" "ubuntu-distro-info: unrecognized option \`--bar'"
-    failure "-y" "ubuntu-distro-info: unrecognized option \`-y'"
+    failure "-z" "ubuntu-distro-info: unrecognized option \`-z'"
     failure "--testing" "ubuntu-distro-info: unrecognized option \`--testing'"
     failure "--oldstable" "ubuntu-distro-info: unrecognized option \`--oldstable'"
 }
@@ -155,6 +216,39 @@ testInvalidDate() {
 
 testMultipleDates() {
     failure "--date 2007-06-05 -s --date 2004-03-02" "ubuntu-distro-info: Date specified multiple times."
+}
+
+testDays() {
+    # day after lucid released
+    date=2010-04-30
+
+    success "--date=$date --lts" "lucid"
+    success "--date=$date --lts --days=created" "lucid -183"
+    success "--date=$date --lts --days=release" "lucid -1"
+    success "--date=$date --lts --days" "lucid -1"
+    success "--date=$date --lts --days=eol" "lucid 1105"
+    success "--date=$date --lts --days=eol-server" "lucid 1825"
+
+    # date precise released
+    date=2012-04-26
+
+    success "--date=$date --lts" "precise"
+    success "--date=$date --lts --days=created" "precise -196"
+    success "--date=$date --lts --days=release" "precise 0"
+    success "--date=$date --lts --days" "precise 0"
+    success "--date=$date --lts --days=eol" "precise 1826"
+    failure "--date=$date --lts --days=eol-server" \
+        "ubuntu-distro-info: no eol-server milestone for release codename precise"
+
+    # day before raring was released
+    date=2013-04-24
+
+    success "--devel --date=$date" "raring"
+    success "--devel --date=$date --days=created" "raring -188"
+    success "--devel --date=$date --days" "raring 1"
+    success "--devel --date=$date --days=release" "raring 1"
+    success "--devel --date=$date --days=eol" "raring 276"
+
 }
 
 . shunit2

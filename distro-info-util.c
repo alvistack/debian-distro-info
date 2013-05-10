@@ -21,6 +21,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <assert.h>
 
 #include <getopt.h>
 #include <sys/stat.h>
@@ -28,6 +29,36 @@
 #include <unistd.h>
 
 #include "distro-info-util.h"
+
+/* All recognised dated database tags for milestones
+ * (corresponding to distro_t date_t's).
+ */
+static char *milestones[] = {MILESTONE_CREATED,
+                             MILESTONE_RELEASE,
+                             MILESTONE_EOL,
+                             MILESTONE_EOL_SERVER};
+
+#define MILESTONE_COUNT ARRAY_SIZE(milestones)
+
+static unsigned int days_in_month[] = {31, 28, 31, 30, 31, 30,
+                                       31, 31, 30, 31, 30, 31};
+
+static inline int milestone_to_index(const char *milestone) {
+    int i;
+
+    assert(milestone);
+
+    for(i = 0; i < (int)MILESTONE_COUNT; i++) {
+        if (! strcmp(milestone, milestones[i]))
+            return i;
+    }
+
+    return -1;
+}
+
+static inline char *index_to_milestone(unsigned int i) {
+    return milestones[i];
+}
 
 static char *read_full_file(const char *filename) {
     char *content;
@@ -64,13 +95,45 @@ static inline bool is_leap_year(const int year) {
 }
 
 static inline bool is_valid_date(const date_t *date) {
-    unsigned int days_in_month[] = {31, 28, 31, 30, 31, 30,
-                                    31, 31, 30, 31, 30, 31};
-    if(is_leap_year(date->year)) {
-        days_in_month[1] = 29;
-    }
     return date->month >= 1 && date->month <= 12 &&
-           date->day >= 1 && date->day <= days_in_month[date->month-1];
+           date->day >= 1 &&
+           date->day <= (is_leap_year(date->year) &&
+           date->month == 1 ? 29 : days_in_month[date->month-1]);
+}
+
+
+static time_t date_to_secs(const date_t *date) {
+    time_t seconds = 0;
+    struct tm tm;
+
+    assert(date);
+
+    memset(&tm, '\0', sizeof(struct tm));
+
+    tm.tm_year = date->year - 1900;
+    tm.tm_mon = date->month - 1;
+    tm.tm_mday = date->day;
+
+    seconds = mktime(&tm);
+
+    return seconds;
+}
+
+static inline size_t date_diff(const date_t *date1, const date_t *date2) {
+
+        time_t time1;
+        time_t time2;
+        time_t diff;
+        unsigned int days;
+
+        time1 = date_to_secs(date1);
+        time2 = date_to_secs(date2);
+
+        diff = (time_t)difftime(time1, time2);
+
+        days = (unsigned int)diff / (60 * 60 * 24);
+
+        return days;
 }
 
 static inline bool is_valid_codename(const char *codename) {
@@ -107,17 +170,22 @@ static inline bool date_ge(const date_t *date1, const date_t *date2) {
 }
 
 static inline bool created(const date_t *date, const distro_t *distro) {
-    return distro->created && date_ge(date, distro->created);
+    return MILESTONE(distro, MILESTONE_CREATED)
+        && date_ge(date, MILESTONE(distro, MILESTONE_CREATED));
 }
 
 static inline bool released(const date_t *date, const distro_t *distro) {
     return *distro->version != '\0' &&
-           distro->release && date_ge(date, distro->release);
+           MILESTONE(distro, MILESTONE_RELEASE) &&
+           date_ge(date, MILESTONE(distro, MILESTONE_RELEASE));
 }
 
 static inline bool eol(const date_t *date, const distro_t *distro) {
-    return distro->eol && date_ge(date, distro->eol) && (!distro->eol_server ||
-           (distro->eol_server && date_ge(date, distro->eol_server)));
+    return MILESTONE(distro, MILESTONE_EOL) &&
+        date_ge(date, MILESTONE(distro, MILESTONE_EOL)) &&
+        (!MILESTONE(distro, MILESTONE_EOL_SERVER) ||
+           (MILESTONE(distro, MILESTONE_EOL_SERVER) &&
+            date_ge(date, MILESTONE(distro, MILESTONE_EOL_SERVER))));
 }
 
 // Filter callbacks
@@ -148,8 +216,8 @@ static const distro_t *select_latest_created(const distro_elem_t *distro_list) {
     selected = distro_list->distro;
     while(distro_list != NULL) {
         distro_list = distro_list->next;
-        if(distro_list && date_ge(distro_list->distro->created,
-                                  selected->created)) {
+        if(distro_list && date_ge(MILESTONE(distro_list->distro, MILESTONE_CREATED),
+                                  MILESTONE(selected, MILESTONE_CREATED))) {
             selected = distro_list->distro;
         }
     }
@@ -162,30 +230,103 @@ static const distro_t *select_latest_release(const distro_elem_t *distro_list) {
     selected = distro_list->distro;
     while(distro_list != NULL) {
         distro_list = distro_list->next;
-        if(distro_list && date_ge(distro_list->distro->release,
-                                  selected->release)) {
+        if(distro_list && date_ge(MILESTONE(distro_list->distro, MILESTONE_RELEASE),
+                                  MILESTONE(selected, MILESTONE_RELEASE))) {
             selected = distro_list->distro;
         }
     }
     return selected;
 }
 
+static bool calculate_days(const distro_t *distro, const date_t *date, int date_index, ssize_t *days) {
+    const date_t *first;
+    const date_t *second;
+    date_t *milestone = NULL;
+    int direction;
+
+    if (date_index == milestone_to_index(MILESTONE_CREATED))
+        milestone = MILESTONE(distro, MILESTONE_CREATED);
+    else if (date_index == milestone_to_index(MILESTONE_RELEASE))
+        milestone = MILESTONE(distro, MILESTONE_RELEASE);
+    else if (date_index == milestone_to_index(MILESTONE_EOL))
+        milestone = MILESTONE(distro, MILESTONE_EOL);
+    else if (date_index == milestone_to_index(MILESTONE_EOL_SERVER)) {
+        milestone = MILESTONE(distro, MILESTONE_EOL_SERVER);
+        if (!milestone) {
+            fprintf(stderr, NAME ": no %s milestone for release codename %s\n",
+                    MILESTONE_EOL_SERVER, distro->series);
+            return false;
+        }
+    }
+
+    assert(milestone);
+
+    if (date_ge(date, milestone)) {
+        first = date;
+        second = milestone;
+        direction = -1;
+    } else {
+        first = milestone;
+        second = date;
+        direction = 1;
+    }
+
+    *days = (ssize_t)date_diff(first, second) * direction;
+    return true;
+}
+
 // Print callbacks
 
-static void print_codename(const distro_t *distro) {
-    printf("%s\n", distro->series);
-}
+static bool print_codename(const distro_t *distro,
+                           const date_t *date,
+                           int date_index) {
+    ssize_t days;
 
-static void print_fullname(const distro_t *distro) {
-    printf(DISTRO_NAME " %s \"%s\"\n", distro->version, distro->codename);
-}
-
-static void print_release(const distro_t *distro) {
-    if(unlikely(*distro->version == '\0')) {
+    if (date_index == -1)
         printf("%s\n", distro->series);
-    } else {
-        printf("%s\n", distro->version);
+    else {
+        if (! calculate_days(distro, date, date_index, &days))
+            return false;
+        printf("%s %ld\n", distro->series, (long int)days);
+    } 
+
+    return true;
+}
+
+static bool print_fullname(const distro_t *distro,
+                           const date_t *date,
+                           int date_index) {
+    ssize_t days;
+
+    if (date_index == -1)
+        printf(DISTRO_NAME " %s \"%s\"\n", distro->version, distro->codename);
+    else {
+        if (!calculate_days(distro, date, date_index, &days))
+            return false;
+        printf(DISTRO_NAME " %s \"%s\" %ld\n", distro->version, distro->codename,
+                (long int)days);
     }
+    return true;
+}
+
+static bool print_release(const distro_t *distro,
+                           const date_t *date,
+                           int date_index) {
+    ssize_t days;
+    char *str;
+
+    str = unlikely(*distro->version == '\0')
+        ? distro->series : distro->version;
+
+    if (date_index == -1)
+        printf("%s\n", str);
+    else {
+        if (!calculate_days(distro, date, date_index, &days))
+            return false;
+        printf("%s %ld\n", str, (long int)days);
+    }
+
+    return true;
 }
 
 // End of callbacks
@@ -195,10 +336,10 @@ static void free_data(distro_elem_t *list, char **content) {
 
     while(list != NULL) {
         next = list->next;
-        free(list->distro->created);
-        free(list->distro->release);
-        free(list->distro->eol);
-        free(list->distro->eol_server);
+        free(MILESTONE(list->distro, MILESTONE_CREATED));
+        free(MILESTONE(list->distro, MILESTONE_RELEASE));
+        free(MILESTONE(list->distro, MILESTONE_EOL));
+        free(MILESTONE(list->distro, MILESTONE_EOL_SERVER));
         free(list->distro);
         free(list);
         list = next;
@@ -231,18 +372,19 @@ static distro_elem_t *read_data(const char *filename, char **content) {
         lineno++;
         // Ignore empty lines and comments (starting with #).
         if(likely(*line != '\0' && *line != '#')) {
+            int milestone_index;
+
             distro = malloc(sizeof(distro_t));
             distro->version = strsep(&line, ",");
             distro->codename = strsep(&line, ",");
             distro->series = strsep(&line, ",");
-            distro->created = read_date(strsep(&line, ","), &failures, filename,
-                                        lineno, "created");
-            distro->release = read_date(strsep(&line, ","), &failures, filename,
-                                        lineno, "release");
-            distro->eol = read_date(strsep(&line, ","), &failures, filename,
-                                    lineno, "eol");
-            distro->eol_server = read_date(strsep(&line, ","), &failures,
-                                           filename, lineno, "eol-server");
+
+            for(milestone_index = 0; milestone_index < (int)MILESTONE_COUNT;
+                   milestone_index++) {
+                distro->milestones[milestone_index] =
+                    read_date(strsep(&line, ","), &failures, filename,
+                            lineno, index_to_milestone(milestone_index));
+            }
 
             current = malloc(sizeof(distro_elem_t));
             current->distro = distro;
@@ -269,20 +411,24 @@ static distro_elem_t *read_data(const char *filename, char **content) {
     return distro_list;
 }
 
-static void filter_data(const distro_elem_t *distro_list, const date_t *date,
-                       bool (*filter_cb)(const date_t*, const distro_t*),
-                       void (*print_cb)(const distro_t*)) {
+static bool filter_data(const distro_elem_t *distro_list, const date_t *date,
+        int date_index,
+        bool (*filter_cb)(const date_t*, const distro_t*),
+        bool (*print_cb)(const distro_t*, const date_t*, int)) {
     while(distro_list != NULL) {
         if(filter_cb(date, distro_list->distro)) {
-            print_cb(distro_list->distro);
+            if (print_cb(distro_list->distro, date, date_index) != true)
+                goto error;
         }
         distro_list = distro_list->next;
     }
+error:
+    return false;
 }
 
 static const distro_t *get_distro(const distro_elem_t *distro_list, const date_t *date,
-                                  bool (*filter_cb)(const date_t*, const distro_t*),
-                                  const distro_t *(*select_cb)(const distro_elem_t*)) {
+        bool (*filter_cb)(const date_t*, const distro_t*),
+        const distro_t *(*select_cb)(const distro_elem_t*)) {
     distro_elem_t *current;
     distro_elem_t *filtered_list = NULL;
     distro_elem_t *last = NULL;
@@ -319,34 +465,36 @@ static const distro_t *get_distro(const distro_elem_t *distro_list, const date_t
 }
 
 static void print_help(void) {
-    printf("Usage: " NAME " [options]\n\
-\n\
-Options:\n\
-  -h  --help         show this help message and exit\n\
-      --date=DATE    date for calculating the version (default: today)\n"
+    printf("Usage: " NAME " [options]\n"
+            "\n"
+            "Options:\n"
+            "  -h  --help             show this help message and exit\n"
+            "      --date=DATE        date for calculating the version (default: today)\n"
+            "  -y[MILESTONE]          additionally, display days until milestone\n"
+            "      --days=[MILESTONE]\n"
 #ifdef DEBIAN
-"      --alias=DIST   print the alias (stable, testing, unstable) relative to\n\
-                     the distribution codename passed as an argument\n"
+            "      --alias=DIST       print the alias (stable, testing, unstable) relative to\n"
+            "                         the distribution codename passed as an argument\n"
 #endif
-"  -a  --all          list all known versions\n\
-  -d  --devel        latest development version\n"
+            "  -a  --all              list all known versions\n"
+            "  -d  --devel            latest development version\n"
 #ifdef UBUNTU
-"      --lts          latest long term support (LTS) version\n"
+            "      --lts              latest long term support (LTS) version\n"
 #endif
 #ifdef DEBIAN
-"  -o  --oldstable    latest oldstable version\n"
+            "  -o  --oldstable        latest oldstable version\n"
 #endif
-"  -s  --stable       latest stable version\n\
-      --supported    list of all supported stable versions\n"
+            "  -s  --stable           latest stable version\n"
+            "      --supported        list of all supported stable versions\n"
 #ifdef DEBIAN
-"  -t  --testing      current testing version\n"
+            "  -t  --testing          current testing version\n"
 #endif
-"      --unsupported  list of all unsupported stable versions\n\
-  -c  --codename     print the codename (default)\n\
-  -f  --fullname     print the full name\n\
-  -r  --release      print the release version\n\
-\n\
-See " NAME "(1) for more info.\n");
+            "      --unsupported      list of all unsupported stable versions\n"
+            "  -c  --codename         print the codename (default)\n"
+            "  -f  --fullname         print the full name\n"
+            "  -r  --release          print the release version\n"
+            "\n"
+            "See " NAME "(1) for more info.\n");
 }
 
 static inline int not_exactly_one(void) {
@@ -381,15 +529,18 @@ int main(int argc, char *argv[]) {
     int selected_filters = 0;
     bool (*filter_cb)(const date_t*, const distro_t*) = NULL;
     const distro_t *(*select_cb)(const distro_elem_t*) = NULL;
-    void (*print_cb)(const distro_t*) = print_codename;
+    bool (*print_cb)(const distro_t*, const date_t*, int) = print_codename;
 #ifdef DEBIAN
     char *alias_codename = NULL;
 #endif
+    int date_index = -1;
+    bool show_days = false;
 
     const struct option long_options[] = {
         {"help",        no_argument,       NULL, 'h' },
         {"date",        required_argument, NULL, 'D' },
         {"all",         no_argument,       NULL, 'a' },
+        {"days",        optional_argument, NULL, 'y' },
         {"devel",       no_argument,       NULL, 'd' },
         {"stable",      no_argument,       NULL, 's' },
         {"supported",   no_argument,       NULL, 'S' },
@@ -409,132 +560,143 @@ int main(int argc, char *argv[]) {
     };
 
 #ifdef UBUNTU
-    const char *short_options = "hadscrf";
+    const char *short_options = "hadscrfy::";
 #endif
 #ifdef DEBIAN
-    const char *short_options = "hadscrfot";
+    const char *short_options = "hadscrfoty:";
 #endif
 
     // Suppress error messages from getopt_long
     opterr = 0;
 
     while ((option = getopt_long(argc, argv, short_options,
-                                 long_options, &option_index)) != -1) {
+                    long_options, &option_index)) != -1) {
         switch (option) {
 #ifdef DEBIAN
-            case 'A':
-                // Only long option --alias is used
-                if(unlikely(alias_codename != NULL)) {
-                    fprintf(stderr, NAME ": --alias requested multiple times.\n");
-                    free(date);
-                    return EXIT_FAILURE;
-                }
-                if(!is_valid_codename(optarg)) {
-                    fprintf(stderr, NAME ": invalid distribution codename `%s'\n",
-                            optarg);
-                    free(date);
-                    return EXIT_FAILURE;
-                }
-                selected_filters++;
-                alias_codename = optarg;
-                break;
-#endif
-
-            case 'a':
-                selected_filters++;
-                filter_cb = filter_all;
-                select_cb = NULL;
-                break;
-
-            case 'c':
-                print_cb = print_codename;
-                break;
-
-            case 'd':
-                selected_filters++;
-                filter_cb = filter_devel;
-#ifdef UBUNTU
-                select_cb = select_latest_created;
-#endif
-#ifdef DEBIAN
-                select_cb = select_first;
-#endif
-                break;
-
-            case 'D':
-                // Only long option --date is used
-                if(unlikely(date != NULL)) {
-                    fprintf(stderr, NAME ": Date specified multiple times.\n");
-                    free(date);
-                    return EXIT_FAILURE;
-                }
-                date = malloc(sizeof(date_t));
-                i = sscanf(optarg, "%u-%u-%u", &date->year, &date->month,
-                           &date->day);
-                if(i != 3 || !is_valid_date(date)) {
-                    fprintf(stderr, NAME ": invalid date `%s'\n", optarg);
-                    free(date);
-                    return EXIT_FAILURE;
-                }
-                break;
-
-            case 'f':
-                print_cb = print_fullname;
-                break;
-
-            case 'h':
-                print_help();
+        case 'A':
+            // Only long option --alias is used
+            if(unlikely(alias_codename != NULL)) {
+                fprintf(stderr, NAME ": --alias requested multiple times.\n");
                 free(date);
-                return EXIT_SUCCESS;
+                return EXIT_FAILURE;
+            }
+            if(!is_valid_codename(optarg)) {
+                fprintf(stderr, NAME ": invalid distribution codename `%s'\n",
+                        optarg);
+                free(date);
+                return EXIT_FAILURE;
+            }
+            selected_filters++;
+            alias_codename = optarg;
+            break;
+#endif
+
+        case 'a':
+            selected_filters++;
+            filter_cb = filter_all;
+            select_cb = NULL;
+            break;
+
+        case 'c':
+            print_cb = print_codename;
+            break;
+
+        case 'd':
+            selected_filters++;
+            filter_cb = filter_devel;
+#ifdef UBUNTU
+            select_cb = select_latest_created;
+#endif
+#ifdef DEBIAN
+            select_cb = select_first;
+#endif
+            break;
+
+        case 'D':
+            // Only long option --date is used
+            if(unlikely(date != NULL)) {
+                fprintf(stderr, NAME ": Date specified multiple times.\n");
+                free(date);
+                return EXIT_FAILURE;
+            }
+            date = malloc(sizeof(date_t));
+            i = sscanf(optarg, "%u-%u-%u", &date->year, &date->month,
+                    &date->day);
+            if(i != 3 || !is_valid_date(date)) {
+                fprintf(stderr, NAME ": invalid date `%s'\n", optarg);
+                free(date);
+                return EXIT_FAILURE;
+            }
+            break;
+
+        case 'f':
+            print_cb = print_fullname;
+            break;
+
+        case 'h':
+            print_help();
+            free(date);
+            return EXIT_SUCCESS;
 
 #ifdef UBUNTU
-            case 'L':
-                // Only long option --lts is used
-                selected_filters++;
-                filter_cb = filter_lts;
-                select_cb = select_latest_release;
-                break;
+        case 'L':
+            // Only long option --lts is used
+            selected_filters++;
+            filter_cb = filter_lts;
+            select_cb = select_latest_release;
+            break;
 #endif
 
 #ifdef DEBIAN
-            case 'o':
-                selected_filters++;
-                filter_cb = filter_oldstable;
-                select_cb = select_oldstable;
-                break;
+        case 'o':
+            selected_filters++;
+            filter_cb = filter_oldstable;
+            select_cb = select_oldstable;
+            break;
 #endif
 
-            case 'r':
-                print_cb = print_release;
-                break;
+        case 'r':
+            print_cb = print_release;
+            break;
 
-            case 's':
-                selected_filters++;
-                filter_cb = filter_stable;
-                select_cb = select_latest_release;
-                break;
+        case 's':
+            selected_filters++;
+            filter_cb = filter_stable;
+            select_cb = select_latest_release;
+            break;
 
-            case 'S':
-                // Only long option --supported is used
-                selected_filters++;
-                filter_cb = filter_supported;
-                select_cb = NULL;
-                break;
+        case 'S':
+            // Only long option --supported is used
+            selected_filters++;
+            filter_cb = filter_supported;
+            select_cb = NULL;
+            break;
 
 #ifdef DEBIAN
-            case 't':
-                selected_filters++;
-                filter_cb = filter_testing;
-                select_cb = select_latest_created;
-                break;
+        case 't':
+            selected_filters++;
+            filter_cb = filter_testing;
+            select_cb = select_latest_created;
+            break;
 #endif
 
-            case 'U':
-                // Only long option --unsupported is used
-                selected_filters++;
-                filter_cb = filter_unsupported;
-                select_cb = NULL;
-                break;
+        case 'U':
+            // Only long option --unsupported is used
+            selected_filters++;
+            filter_cb = filter_unsupported;
+            select_cb = NULL;
+            break;
+
+        case 'y':
+            show_days = true;
+            if (optarg) {
+                date_index = milestone_to_index (optarg);
+                if (date_index < 0) {
+                    fprintf(stderr, NAME ": invalid milestone: %s\n", optarg);
+                    return EXIT_FAILURE;
+                }
+            }
+            break;
 
             case '?':
                 if(optopt == '\0') {
@@ -564,6 +726,9 @@ int main(int argc, char *argv[]) {
                 return EXIT_FAILURE;
         }
     }
+
+    if (show_days && date_index < 0)
+        date_index = milestone_to_index(MILESTONE_RELEASE);
 
     if(unlikely(optind < argc)) {
         fprintf(stderr, NAME ": unrecognized arguments: %s", argv[optind]);
@@ -622,14 +787,15 @@ int main(int argc, char *argv[]) {
 #endif
 
     if(select_cb == NULL) {
-        filter_data(distro_list, date, filter_cb, print_cb);
+        filter_data(distro_list, date, date_index, filter_cb, print_cb);
     } else {
         selected = get_distro(distro_list, date, filter_cb, select_cb);
         if(selected == NULL) {
             fprintf(stderr, NAME ": " OUTDATED_ERROR "\n");
             return_value = EXIT_FAILURE;
         } else {
-            print_cb(selected);
+            if (print_cb(selected, date, date_index) != true)
+                return_value = EXIT_FAILURE;
         }
     }
     free(date);

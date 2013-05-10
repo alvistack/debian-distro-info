@@ -28,6 +28,17 @@
 #define unlikely(x) (x)
 #endif
 
+#define ARRAY_SIZE(array) \
+    (sizeof(array)/sizeof(array[0]))
+
+#define MILESTONE_CREATED     "created"
+#define MILESTONE_RELEASE     "release"
+#define MILESTONE_EOL         "eol"
+#define MILESTONE_EOL_SERVER  "eol-server"
+
+#define MILESTONE(distro, name) \
+    (distro)->milestones[milestone_to_index(name)]
+
 #define DATA_DIR "/usr/share/distro-info"
 
 #define OUTDATED_ERROR "Distribution data outdated.\n" \
@@ -44,10 +55,7 @@ typedef struct {
     char *version;
     char *codename;
     char *series;
-    date_t *created;
-    date_t *release;
-    date_t *eol;
-    date_t *eol_server;
+    date_t *milestones[4];
 } distro_t;
 
 typedef struct distro_elem_s {
@@ -59,5 +67,6 @@ static inline bool date_ge(const date_t *date1, const date_t *date2);
 static inline bool created(const date_t *date, const distro_t *distro);
 static inline bool released(const date_t *date, const distro_t *distro);
 static inline bool eol(const date_t *date, const distro_t *distro);
+static inline int milestone_to_index(const char *milestone);
 
 #endif // __DISTRO_INFO_UTIL_H__
