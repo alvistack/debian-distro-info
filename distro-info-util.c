@@ -189,9 +189,8 @@ static inline bool eol(const date_t *date, const distro_t *distro) {
 
 // Filter callbacks
 
-static bool filter_all(const date_t *date, const distro_t *distro) {
-    (void)date;
-    (void)distro;
+static bool filter_all(unused(const date_t *date),
+                       unused(const distro_t *distro)) {
     return true;
 }
 

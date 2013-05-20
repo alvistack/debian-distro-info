@@ -23,9 +23,11 @@
 #ifdef __GNUC__
 #define likely(x)   __builtin_expect((x),1)
 #define unlikely(x) __builtin_expect((x),0)
+#define unused(x) x __attribute ((unused))
 #else
 #define likely(x)   (x)
 #define unlikely(x) (x)
+#define unused(x) x
 #endif
 
 #define ARRAY_SIZE(array) \
