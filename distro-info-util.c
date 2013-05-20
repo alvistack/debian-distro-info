@@ -566,7 +566,7 @@ int main(int argc, char *argv[]) {
     const char *short_options = "hadscrfy::";
 #endif
 #ifdef DEBIAN
-    const char *short_options = "hadscrfoty:";
+    const char *short_options = "hadscrfoty::";
 #endif
 
     // Suppress error messages from getopt_long
