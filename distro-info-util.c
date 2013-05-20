@@ -419,12 +419,12 @@ static bool filter_data(const distro_elem_t *distro_list, const date_t *date,
     while(distro_list != NULL) {
         if(filter_cb(date, distro_list->distro)) {
             if(print_cb(distro_list->distro, date, date_index) != true) {
-                goto error;
+                return false;
             }
         }
         distro_list = distro_list->next;
     }
-error:
+
     return false;
 }
 
