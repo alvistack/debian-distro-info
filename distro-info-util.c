@@ -418,7 +418,7 @@ static bool filter_data(const distro_elem_t *distro_list, const date_t *date,
                         bool (*print_cb)(const distro_t*, const date_t*, int)) {
     while(distro_list != NULL) {
         if(filter_cb(date, distro_list->distro)) {
-            if(print_cb(distro_list->distro, date, date_index) != true) {
+            if(!print_cb(distro_list->distro, date, date_index)) {
                 return false;
             }
         }
@@ -799,7 +799,7 @@ int main(int argc, char *argv[]) {
             fprintf(stderr, NAME ": " OUTDATED_ERROR "\n");
             return_value = EXIT_FAILURE;
         } else {
-            if(print_cb(selected, date, date_index) != true) {
+            if(!print_cb(selected, date, date_index)) {
                 return_value = EXIT_FAILURE;
             }
         }
