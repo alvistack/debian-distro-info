@@ -248,7 +248,6 @@ testDays() {
     success "--devel --date=$date --days" "raring 1"
     success "--devel --date=$date --days=release" "raring 1"
     success "--devel --date=$date --days=eol" "raring 276"
-
 }
 
 . shunit2
