@@ -161,7 +161,7 @@ Options:
   -h  --help             show this help message and exit
       --date=DATE        date for calculating the version (default: today)
   -y[MILESTONE]          additionally, display days until milestone
-      --days=[MILESTONE]
+      --days=[MILESTONE] (created, release, eol, eol-server)
   -a  --all              list all known versions
   -d  --devel            latest development version
       --lts              latest long term support (LTS) version
@@ -237,8 +237,7 @@ testDays() {
     success "--date=$date --lts --days=release" "precise 0"
     success "--date=$date --lts --days" "precise 0"
     success "--date=$date --lts --days=eol" "precise 1826"
-    failure "--date=$date --lts --days=eol-server" \
-        "ubuntu-distro-info: no eol-server milestone for release codename precise"
+    success "--date=$date --lts --days=eol-server" "precise (unknown)"
 
     # day before raring was released
     date=2013-04-24

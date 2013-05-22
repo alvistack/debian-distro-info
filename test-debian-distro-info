@@ -89,7 +89,40 @@ testTesting() {
 
 testFullname() {
     success "--date=2011-01-10 --stable --fullname" 'Debian 5.0 "Lenny"'
+    success "--date=2011-01-10 --stable --fullname -ycreated" \
+        'Debian 5.0 "Lenny" -1373'
+    success "--date=2011-01-10 --stable --fullname --days=created" \
+        'Debian 5.0 "Lenny" -1373'
+    success "--date=2011-01-10 --stable --fullname -y" \
+        'Debian 5.0 "Lenny" -695'
+    success "--date=2011-01-10 --stable --fullname --days" \
+        'Debian 5.0 "Lenny" -695'
+    success "--date=2011-01-10 --stable --fullname -yrelease" \
+        'Debian 5.0 "Lenny" -695'
+    success "--date=2011-01-10 --stable --fullname --days=release" \
+        'Debian 5.0 "Lenny" -695'
+    success "--date=2011-01-10 --stable --fullname -yeol" \
+        'Debian 5.0 "Lenny" 392'
+    success "--date=2011-01-10 --stable --fullname --days=eol" \
+        'Debian 5.0 "Lenny" 392'
+
     success "--date=2011-01-10 -f --testing" 'Debian 6.0 "Squeeze"'
+    success "--date=2011-01-10 -f --testing -ycreated" \
+        'Debian 6.0 "Squeeze" -695'
+    success "--date=2011-01-10 -f --testing --days=created" \
+        'Debian 6.0 "Squeeze" -695'
+    success "--date=2011-01-10 -f --testing -y" \
+        'Debian 6.0 "Squeeze" 27'
+    success "--date=2011-01-10 -f --testing --days" \
+        'Debian 6.0 "Squeeze" 27'
+    success "--date=2011-01-10 -f --testing -yrelease" \
+        'Debian 6.0 "Squeeze" 27'
+    success "--date=2011-01-10 -f --testing --days=release" \
+        'Debian 6.0 "Squeeze" 27'
+    success "--date=2011-01-10 -f --testing -yeol" \
+        'Debian 6.0 "Squeeze" (unknown)'
+    success "--date=2011-01-10 -f --testing --days=eol" \
+        'Debian 6.0 "Squeeze" (unknown)'
 }
 
 testRelease() {
@@ -120,7 +153,7 @@ Options:
   -h  --help             show this help message and exit
       --date=DATE        date for calculating the version (default: today)
   -y[MILESTONE]          additionally, display days until milestone
-      --days=[MILESTONE]
+      --days=[MILESTONE] (created, release, eol)
       --alias=DIST       print the alias (stable, testing, unstable) relative to
                          the distribution codename passed as an argument
   -a  --all              list all known versions
@@ -181,6 +214,35 @@ testMultipleAlias() {
 
 testMultipleDates() {
     failure "--date 2007-06-05 -s --date 2004-03-02" "debian-distro-info: Date specified multiple times."
+}
+
+testDays() {
+    # day after lenny released
+    date=2009-02-15
+
+    success "--date=$date --stable " "lenny"
+    success "--date=$date --stable --days=created" "lenny -679"
+    success "--date=$date --stable --days=release" "lenny -1"
+    success "--date=$date --stable --days" "lenny -1"
+    success "--date=$date --stable --days=eol" "lenny 1086"
+
+    # date woody released
+    date=2002-07-19
+
+    success "--date=$date --stable" "woody"
+    success "--date=$date --stable --days=created" "woody -703"
+    success "--date=$date --stable --days=release" "woody 0"
+    success "--date=$date --stable --days" "woody 0"
+    success "--date=$date --stable --days=eol" "woody 1442"
+
+    # day before etch was released
+    date=2007-04-07
+
+    success "--testing --date=$date" "etch"
+    success "--testing --date=$date --days=created" "etch -670"
+    success "--testing --date=$date --days" "etch 1"
+    success "--testing --date=$date --days=release" "etch 1"
+    success "--testing --date=$date --days=eol" "etch 1045"
 }
 
 . shunit2

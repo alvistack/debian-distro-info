@@ -17,9 +17,10 @@
 // C standard libraries
 #include <stdlib.h>
 
+#define DEBIAN
+
 #include "distro-info-util.h"
 
-#define DEBIAN
 #define CSV_NAME "debian"
 #define CSV_HEADER "version,codename,series,created,release,eol"
 #define DISTRO_NAME "Debian"

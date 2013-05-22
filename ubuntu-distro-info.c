@@ -17,9 +17,10 @@
 // C standard libraries
 #include <string.h>
 
+#define UBUNTU
+
 #include "distro-info-util.h"
 
-#define UBUNTU
 #define CSV_NAME "ubuntu"
 #define CSV_HEADER "version,codename,series,created,release,eol,eol-server"
 #define DISTRO_NAME "Ubuntu"

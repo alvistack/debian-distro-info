@@ -33,10 +33,13 @@
 /* All recognised dated database tags for milestones
  * (corresponding to distro_t date_t's).
  */
-static char *milestones[] = {MILESTONE_CREATED,
-                             MILESTONE_RELEASE,
-                             MILESTONE_EOL,
-                             MILESTONE_EOL_SERVER};
+static char *milestones[] = {MILESTONE_CREATED
+                            ,MILESTONE_RELEASE
+                            ,MILESTONE_EOL
+#ifdef UBUNTU
+                            ,MILESTONE_EOL_SERVER
+#endif
+};
 
 #define MILESTONE_COUNT ARRAY_SIZE(milestones)
 
@@ -181,10 +184,13 @@ static inline bool released(const date_t *date, const distro_t *distro) {
 
 static inline bool eol(const date_t *date, const distro_t *distro) {
     return MILESTONE(distro, MILESTONE_EOL) &&
-           date_ge(date, MILESTONE(distro, MILESTONE_EOL)) &&
-           (!MILESTONE(distro, MILESTONE_EOL_SERVER) ||
-            (MILESTONE(distro, MILESTONE_EOL_SERVER) &&
-             date_ge(date, MILESTONE(distro, MILESTONE_EOL_SERVER))));
+           date_ge(date, MILESTONE(distro, MILESTONE_EOL))
+#ifdef UBUNTU
+           && (!MILESTONE(distro, MILESTONE_EOL_SERVER) ||
+              (MILESTONE(distro, MILESTONE_EOL_SERVER) &&
+               date_ge(date, MILESTONE(distro, MILESTONE_EOL_SERVER))))
+#endif
+    ;
 }
 
 // Filter callbacks
@@ -251,16 +257,20 @@ static bool calculate_days(const distro_t *distro, const date_t *date,
         milestone = MILESTONE(distro, MILESTONE_RELEASE);
     } else if(date_index == milestone_to_index(MILESTONE_EOL)) {
         milestone = MILESTONE(distro, MILESTONE_EOL);
-    } else if(date_index == milestone_to_index(MILESTONE_EOL_SERVER)) {
-        milestone = MILESTONE(distro, MILESTONE_EOL_SERVER);
-        if(!milestone) {
-            fprintf(stderr, NAME ": no %s milestone for release codename %s\n",
-                    MILESTONE_EOL_SERVER, distro->series);
-            return false;
-        }
     }
+#ifdef UBUNTU
+    else if(date_index == milestone_to_index(MILESTONE_EOL_SERVER)) {
+        milestone = MILESTONE(distro, MILESTONE_EOL_SERVER);
+        if(!milestone)
+            return false;
+    }
+#endif
 
-    assert(milestone);
+    /* distro may not have specified a particular milestone date
+     * (yet).
+     */
+    if (!milestone)
+        return false;
 
     if(date_ge(date, milestone)) {
         first = date;
@@ -286,9 +296,10 @@ static bool print_codename(const distro_t *distro, const date_t *date,
         printf("%s\n", distro->series);
     } else {
         if(!calculate_days(distro, date, date_index, &days)) {
-            return false;
+            printf("%s %s\n", distro->series, UNKNOWN_DAYS);
+        } else {
+            printf("%s %ld\n", distro->series, (long int)days);
         }
-        printf("%s %ld\n", distro->series, (long int)days);
     }
 
     return true;
@@ -302,10 +313,12 @@ static bool print_fullname(const distro_t *distro, const date_t *date,
         printf(DISTRO_NAME " %s \"%s\"\n", distro->version, distro->codename);
     } else {
         if(!calculate_days(distro, date, date_index, &days)) {
-            return false;
+            printf(DISTRO_NAME " %s \"%s\" %s\n", distro->version,
+                    distro->codename, UNKNOWN_DAYS);
+        } else {
+            printf(DISTRO_NAME " %s \"%s\" %ld\n", distro->version,
+                    distro->codename, (long int)days);
         }
-        printf(DISTRO_NAME " %s \"%s\" %ld\n", distro->version,
-               distro->codename, (long int)days);
     }
     return true;
 }
@@ -321,9 +334,10 @@ static bool print_release(const distro_t *distro, const date_t *date,
         printf("%s\n", str);
     } else {
         if(!calculate_days(distro, date, date_index, &days)) {
-            return false;
+            printf("%s %s\n", distro->series, UNKNOWN_DAYS);
+        } else {
+            printf("%s %ld\n", str, (long int)days);
         }
-        printf("%s %ld\n", str, (long int)days);
     }
 
     return true;
@@ -339,7 +353,9 @@ static void free_data(distro_elem_t *list, char **content) {
         free(MILESTONE(list->distro, MILESTONE_CREATED));
         free(MILESTONE(list->distro, MILESTONE_RELEASE));
         free(MILESTONE(list->distro, MILESTONE_EOL));
+#ifdef UBUNTU
         free(MILESTONE(list->distro, MILESTONE_EOL_SERVER));
+#endif
         free(list->distro);
         free(list);
         list = next;
@@ -467,13 +483,22 @@ static const distro_t *get_distro(const distro_elem_t *distro_list,
 }
 
 static void print_help(void) {
+    int i;
+
     printf("Usage: " NAME " [options]\n"
            "\n"
            "Options:\n"
            "  -h  --help             show this help message and exit\n"
            "      --date=DATE        date for calculating the version (default: today)\n"
            "  -y[MILESTONE]          additionally, display days until milestone\n"
-           "      --days=[MILESTONE]\n"
+           "      --days=[MILESTONE] ("
+          );
+
+    for(i = 0; i < (int)MILESTONE_COUNT; i++)
+        printf("%s%s", milestones[i],
+                i+1 == MILESTONE_COUNT ? ")\n" : ", ");
+
+    printf(""
 #ifdef DEBIAN
            "      --alias=DIST       print the alias (stable, testing, unstable) relative to\n"
            "                         the distribution codename passed as an argument\n"

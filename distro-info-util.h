@@ -36,7 +36,14 @@
 #define MILESTONE_CREATED     "created"
 #define MILESTONE_RELEASE     "release"
 #define MILESTONE_EOL         "eol"
+#ifdef UBUNTU
 #define MILESTONE_EOL_SERVER  "eol-server"
+#define NUMBER_MILESTONES 4
+#else
+#define NUMBER_MILESTONES 3
+#endif
+
+#define UNKNOWN_DAYS "(unknown)"
 
 #define MILESTONE(distro, name) \
     (distro)->milestones[milestone_to_index(name)]
@@ -57,7 +64,7 @@ typedef struct {
     char *version;
     char *codename;
     char *series;
-    date_t *milestones[4];
+    date_t *milestones[NUMBER_MILESTONES];
 } distro_t;
 
 typedef struct distro_elem_s {
