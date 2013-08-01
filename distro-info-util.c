@@ -261,16 +261,18 @@ static bool calculate_days(const distro_t *distro, const date_t *date,
 #ifdef UBUNTU
     else if(date_index == milestone_to_index(MILESTONE_EOL_SERVER)) {
         milestone = MILESTONE(distro, MILESTONE_EOL_SERVER);
-        if(!milestone)
+        if(!milestone) {
             return false;
+        }
     }
 #endif
 
     /* distro may not have specified a particular milestone date
      * (yet).
      */
-    if (!milestone)
+    if(!milestone) {
         return false;
+    }
 
     if(date_ge(date, milestone)) {
         first = date;
@@ -314,10 +316,10 @@ static bool print_fullname(const distro_t *distro, const date_t *date,
     } else {
         if(!calculate_days(distro, date, date_index, &days)) {
             printf(DISTRO_NAME " %s \"%s\" %s\n", distro->version,
-                    distro->codename, UNKNOWN_DAYS);
+                   distro->codename, UNKNOWN_DAYS);
         } else {
             printf(DISTRO_NAME " %s \"%s\" %ld\n", distro->version,
-                    distro->codename, (long int)days);
+                   distro->codename, (long int)days);
         }
     }
     return true;
@@ -494,9 +496,9 @@ static void print_help(void) {
            "      --days=[MILESTONE] ("
           );
 
-    for(i = 0; i < (int)MILESTONE_COUNT; i++)
-        printf("%s%s", milestones[i],
-                i+1 == MILESTONE_COUNT ? ")\n" : ", ");
+    for(i = 0; i < (int)MILESTONE_COUNT; i++) {
+        printf("%s%s", milestones[i], i + 1 == MILESTONE_COUNT ? ")\n" : ", ");
+    }
 
     printf(""
 #ifdef DEBIAN
