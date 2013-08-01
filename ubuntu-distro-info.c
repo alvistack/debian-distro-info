@@ -14,17 +14,16 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-// C standard libraries
-#include <string.h>
-
 #define UBUNTU
-
-#include "distro-info-util.h"
-
 #define CSV_NAME "ubuntu"
 #define CSV_HEADER "version,codename,series,created,release,eol,eol-server"
 #define DISTRO_NAME "Ubuntu"
 #define NAME "ubuntu-distro-info"
+
+// C standard libraries
+#include <string.h>
+
+#include "distro-info-util.h"
 
 static bool filter_devel(const date_t *date, const distro_t *distro) {
     return created(date, distro) && !released(date, distro);
