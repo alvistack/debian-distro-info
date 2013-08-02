@@ -8,7 +8,7 @@ VENDOR ?= $(shell dpkg-vendor --query Vendor | tr '[:upper:]' '[:lower:]')
 
 CPPFLAGS = $(shell dpkg-buildflags --get CPPFLAGS)
 CFLAGS = $(shell dpkg-buildflags --get CFLAGS)
-CFLAGS += -Wall -Wextra -Werror -g -O2 -std=gnu99
+CFLAGS += -Wall -Wextra -g -O2 -std=gnu99
 LDFLAGS = $(shell dpkg-buildflags --get LDFLAGS)
 
 build: debian-distro-info ubuntu-distro-info
