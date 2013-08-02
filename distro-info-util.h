@@ -30,23 +30,20 @@
 #define unused(x) x
 #endif
 
-#define ARRAY_SIZE(array) \
-    (sizeof(array)/sizeof(array[0]))
-
-#define MILESTONE_CREATED     "created"
-#define MILESTONE_RELEASE     "release"
-#define MILESTONE_EOL         "eol"
+/*XXX: Must be kept in sync with milestones array! */
+enum MILESTONE {MILESTONE_CREATED
+               ,MILESTONE_RELEASE
+               ,MILESTONE_EOL
 #ifdef UBUNTU
-#define MILESTONE_EOL_SERVER  "eol-server"
-#define NUMBER_MILESTONES 4
-#else
-#define NUMBER_MILESTONES 3
+               ,MILESTONE_EOL_SERVER
 #endif
+               ,MILESTONE_COUNT
+};
 
 #define UNKNOWN_DAYS "(unknown)"
 
 #define MILESTONE(distro, name) \
-    (distro)->milestones[milestone_to_index(name)]
+    (distro)->milestones[name]
 
 #define DATA_DIR "/usr/share/distro-info"
 
@@ -64,7 +61,7 @@ typedef struct {
     char *version;
     char *codename;
     char *series;
-    date_t *milestones[NUMBER_MILESTONES];
+    date_t *milestones[MILESTONE_COUNT];
 } distro_t;
 
 typedef struct distro_elem_s {

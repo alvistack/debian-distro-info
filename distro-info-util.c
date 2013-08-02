@@ -1,3 +1,8 @@
+/* TODO:
+ *
+ * - make tests pass as squeeze has now been released.
+ */
+
 /*
  * Copyright (C) 2012, Benjamin Drung <bdrung@debian.org>
  *
@@ -32,16 +37,16 @@
 
 /* All recognised dated database tags for milestones
  * (corresponding to distro_t date_t's).
+ *
+ * XXX: Must be kept in sync with MILESTONE enum!
  */
-static char *milestones[] = {MILESTONE_CREATED
-                            ,MILESTONE_RELEASE
-                            ,MILESTONE_EOL
+static char *milestones[] = {"created"
+                            ,"release"
+                            ,"eol"
 #ifdef UBUNTU
-                            ,MILESTONE_EOL_SERVER
+                            ,"eol-server"
 #endif
 };
-
-#define MILESTONE_COUNT ARRAY_SIZE(milestones)
 
 static unsigned int days_in_month[] = {31, 28, 31, 30, 31, 30,
                                        31, 31, 30, 31, 30, 31};
@@ -251,15 +256,15 @@ static bool calculate_days(const distro_t *distro, const date_t *date,
     date_t *milestone = NULL;
     int direction;
 
-    if(date_index == milestone_to_index(MILESTONE_CREATED)) {
+    if(date_index == MILESTONE_CREATED) {
         milestone = MILESTONE(distro, MILESTONE_CREATED);
-    } else if(date_index == milestone_to_index(MILESTONE_RELEASE)) {
+    } else if(date_index == MILESTONE_RELEASE) {
         milestone = MILESTONE(distro, MILESTONE_RELEASE);
-    } else if(date_index == milestone_to_index(MILESTONE_EOL)) {
+    } else if(date_index == MILESTONE_EOL) {
         milestone = MILESTONE(distro, MILESTONE_EOL);
     }
 #ifdef UBUNTU
-    else if(date_index == milestone_to_index(MILESTONE_EOL_SERVER)) {
+    else if(date_index == MILESTONE_EOL_SERVER) {
         milestone = MILESTONE(distro, MILESTONE_EOL_SERVER);
         if(!milestone) {
             return false;
@@ -291,16 +296,22 @@ static bool calculate_days(const distro_t *distro, const date_t *date,
 // Print callbacks
 
 static bool print_codename(const distro_t *distro, const date_t *date,
-                           int date_index) {
+                           int date_index, int just_days) {
     ssize_t days;
 
     if(date_index == -1) {
         printf("%s\n", distro->series);
     } else {
         if(!calculate_days(distro, date, date_index, &days)) {
-            printf("%s %s\n", distro->series, UNKNOWN_DAYS);
+            printf("%s%s%s\n",
+                    just_days ? "" : distro->series,
+                    just_days ? "" : " ",
+                    UNKNOWN_DAYS);
         } else {
-            printf("%s %zd\n", distro->series, days);
+            printf("%s%s%zd\n",
+                    just_days ? "" : distro->series,
+                    just_days ? "" : " ",
+                    days);
         }
     }
 
@@ -308,25 +319,35 @@ static bool print_codename(const distro_t *distro, const date_t *date,
 }
 
 static bool print_fullname(const distro_t *distro, const date_t *date,
-                           int date_index) {
+                           int date_index, int just_days) {
     ssize_t days;
 
     if(date_index == -1) {
         printf(DISTRO_NAME " %s \"%s\"\n", distro->version, distro->codename);
     } else {
         if(!calculate_days(distro, date, date_index, &days)) {
-            printf(DISTRO_NAME " %s \"%s\" %s\n", distro->version,
-                   distro->codename, UNKNOWN_DAYS);
+            if(just_days) {
+                printf("%s\n", UNKNOWN_DAYS);
+            } else {
+                printf(DISTRO_NAME " %s \"%s\" %s\n",
+                        distro->version, distro->codename, UNKNOWN_DAYS);
+            }
         } else {
-            printf(DISTRO_NAME " %s \"%s\" %zd\n", distro->version,
-                   distro->codename, days);
+            if(just_days) {
+                printf("%zd\n", days);
+            } else {
+                printf(DISTRO_NAME " %s \"%s\" %zd\n",
+                        distro->version,
+                        distro->codename,
+                        days);
+            }
         }
     }
     return true;
 }
 
 static bool print_release(const distro_t *distro, const date_t *date,
-                          int date_index) {
+                          int date_index, int just_days) {
     ssize_t days;
     char *str;
 
@@ -336,9 +357,15 @@ static bool print_release(const distro_t *distro, const date_t *date,
         printf("%s\n", str);
     } else {
         if(!calculate_days(distro, date, date_index, &days)) {
-            printf("%s %s\n", distro->series, UNKNOWN_DAYS);
+            printf("%s%s%s\n",
+                    just_days ? "" : distro->series,
+                    just_days ? "" : " ",
+                    UNKNOWN_DAYS);
         } else {
-            printf("%s %zd\n", str, days);
+            printf("%s%s%zd\n",
+                    just_days ? "" : str,
+                    just_days ? "" : " ",
+                    days);
         }
     }
 
@@ -401,7 +428,7 @@ static distro_elem_t *read_data(const char *filename, char **content) {
                 milestone_index++) {
                 distro->milestones[milestone_index] =
                     read_date(strsep(&line, ","), &failures, filename,
-                              lineno, index_to_milestone(milestone_index));
+                              lineno, milestones[milestone_index]);
             }
 
             current = malloc(sizeof(distro_elem_t));
@@ -430,12 +457,12 @@ static distro_elem_t *read_data(const char *filename, char **content) {
 }
 
 static bool filter_data(const distro_elem_t *distro_list, const date_t *date,
-                        int date_index,
+                        int date_index, int just_days,
                         bool (*filter_cb)(const date_t*, const distro_t*),
-                        bool (*print_cb)(const distro_t*, const date_t*, int)) {
+                        bool (*print_cb)(const distro_t*, const date_t*, int, int)) {
     while(distro_list != NULL) {
         if(filter_cb(date, distro_list->distro)) {
-            if(!print_cb(distro_list->distro, date, date_index)) {
+            if(!print_cb(distro_list->distro, date, date_index, just_days)) {
                 return false;
             }
         }
@@ -548,6 +575,7 @@ static inline int not_exactly_one(void) {
 
 int main(int argc, char *argv[]) {
     bool show_days = false;
+    bool just_days = true;
     char *content;
     date_t *date = NULL;
     distro_elem_t *distro_list;
@@ -560,7 +588,7 @@ int main(int argc, char *argv[]) {
     int selected_filters = 0;
     bool (*filter_cb)(const date_t*, const distro_t*) = NULL;
     const distro_t *(*select_cb)(const distro_elem_t*) = NULL;
-    bool (*print_cb)(const distro_t*, const date_t*, int) = print_codename;
+    bool (*print_cb)(const distro_t*, const date_t*, int, int) = print_codename;
 #ifdef DEBIAN
     char *alias_codename = NULL;
 #endif
@@ -627,6 +655,7 @@ int main(int argc, char *argv[]) {
                 break;
 
             case 'c':
+                just_days = false;
                 print_cb = print_codename;
                 break;
 
@@ -659,6 +688,7 @@ int main(int argc, char *argv[]) {
                 break;
 
             case 'f':
+                just_days = false;
                 print_cb = print_fullname;
                 break;
 
@@ -685,6 +715,7 @@ int main(int argc, char *argv[]) {
 #endif
 
             case 'r':
+                just_days = false;
                 print_cb = print_release;
                 break;
 
@@ -758,7 +789,7 @@ int main(int argc, char *argv[]) {
     }
 
     if(show_days && date_index < 0) {
-        date_index = milestone_to_index(MILESTONE_RELEASE);
+        date_index = MILESTONE_RELEASE;
     }
 
     if(unlikely(optind < argc)) {
@@ -818,14 +849,14 @@ int main(int argc, char *argv[]) {
 #endif
 
     if(select_cb == NULL) {
-        filter_data(distro_list, date, date_index, filter_cb, print_cb);
+        filter_data(distro_list, date, date_index, just_days, filter_cb, print_cb);
     } else {
         selected = get_distro(distro_list, date, filter_cb, select_cb);
         if(selected == NULL) {
             fprintf(stderr, NAME ": " OUTDATED_ERROR "\n");
             return_value = EXIT_FAILURE;
         } else {
-            if(!print_cb(selected, date, date_index)) {
+            if(!print_cb(selected, date, date_index, just_days)) {
                 return_value = EXIT_FAILURE;
             }
         }

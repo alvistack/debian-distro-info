@@ -40,6 +40,12 @@ may be one of
 If no milestone is specified, assume \fIrelease\fP.
 For options that return a list, display the normal output followed by
 whitespace and the number of days until the specified milestone.
+If milestone cannot be calculated (for example if the
+.I eol\-server
+milestone is specified for a non-server release), the string \(aq(unknown)\(aq
+is displayed.
+Unless one of \fB\-c\fP, \fB\-f\fP or \fB\-r\fP
+is specified, only the number of days will be displayed.
 .TP
 \fB\-d\fR, \fB\-\-devel\fR
 latest development version
