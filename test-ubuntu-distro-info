@@ -223,30 +223,87 @@ testDays() {
     date=2010-04-30
 
     success "--date=$date --lts" "lucid"
-    success "--date=$date --lts --days=created" "lucid -183"
-    success "--date=$date --lts --days=release" "lucid -1"
-    success "--date=$date --lts --days" "lucid -1"
-    success "--date=$date --lts --days=eol" "lucid 1105"
-    success "--date=$date --lts --days=eol-server" "lucid 1825"
+
+    success "--date=$date --lts --days=created" "-183"
+    success "--date=$date --lts --days=created -c" "lucid -183"
+    success "--date=$date --lts --days=created -f" "Ubuntu 10.04 LTS \"Lucid Lynx\" -183"
+    success "--date=$date --lts --days=created -r" "10.04 LTS -183"
+
+    success "--date=$date --lts --days=release" "-1"
+    success "--date=$date --lts --days=release -c" "lucid -1"
+    success "--date=$date --lts --days=release -f" "Ubuntu 10.04 LTS \"Lucid Lynx\" -1"
+    success "--date=$date --lts --days=release -r" "10.04 LTS -1"
+
+    success "--date=$date --lts --days" "-1"
+    success "--date=$date --lts --days -c" "lucid -1"
+    success "--date=$date --lts --days -f" "Ubuntu 10.04 LTS \"Lucid Lynx\" -1"
+    success "--date=$date --lts --days -r" "10.04 LTS -1"
+
+    success "--date=$date --lts --days=eol" "1105"
+    success "--date=$date --lts --days=eol -c" "lucid 1105"
+    success "--date=$date --lts --days=eol -f" "Ubuntu 10.04 LTS \"Lucid Lynx\" 1105"
+    success "--date=$date --lts --days=eol -r" "10.04 LTS 1105"
+
+    success "--date=$date --lts --days=eol-server" "1825"
+    success "--date=$date --lts --days=eol-server -c" "lucid 1825"
+    success "--date=$date --lts --days=eol-server -f" "Ubuntu 10.04 LTS \"Lucid Lynx\" 1825"
+    success "--date=$date --lts --days=eol-server -r" "10.04 LTS 1825"
 
     # date precise released
     date=2012-04-26
 
     success "--date=$date --lts" "precise"
-    success "--date=$date --lts --days=created" "precise -196"
-    success "--date=$date --lts --days=release" "precise 0"
-    success "--date=$date --lts --days" "precise 0"
-    success "--date=$date --lts --days=eol" "precise 1826"
-    success "--date=$date --lts --days=eol-server" "precise (unknown)"
+
+    success "--date=$date --lts --days=created" "-196"
+    success "--date=$date --lts --days=created -c" "precise -196"
+    success "--date=$date --lts --days=created -f" "Ubuntu 12.04 LTS \"Precise Pangolin\" -196"
+    success "--date=$date --lts --days=created -r" "12.04 LTS -196"
+
+    success "--date=$date --lts --days=release" "0"
+    success "--date=$date --lts --days=release -c" "precise 0"
+    success "--date=$date --lts --days=release -f" "Ubuntu 12.04 LTS \"Precise Pangolin\" 0"
+    success "--date=$date --lts --days=release -r" "12.04 LTS 0"
+
+    success "--date=$date --lts --days" "0"
+    success "--date=$date --lts --days -c" "precise 0"
+    success "--date=$date --lts --days -f" "Ubuntu 12.04 LTS \"Precise Pangolin\" 0"
+    success "--date=$date --lts --days -r" "12.04 LTS 0"
+
+    success "--date=$date --lts --days=eol" "1826"
+    success "--date=$date --lts --days=eol -c" "precise 1826"
+    success "--date=$date --lts --days=eol -f" "Ubuntu 12.04 LTS \"Precise Pangolin\" 1826"
+    success "--date=$date --lts --days=eol -r" "12.04 LTS 1826"
+
+    success "--date=$date --lts --days=eol-server" "(unknown)"
+    success "--date=$date --lts --days=eol-server -c" "precise (unknown)"
+    success "--date=$date --lts --days=eol-server -f" "Ubuntu 12.04 LTS \"Precise Pangolin\" (unknown)"
+    success "--date=$date --lts --days=eol-server -r" "12.04 LTS (unknown)"
 
     # day before raring was released
     date=2013-04-24
 
     success "--devel --date=$date" "raring"
-    success "--devel --date=$date --days=created" "raring -188"
-    success "--devel --date=$date --days" "raring 1"
-    success "--devel --date=$date --days=release" "raring 1"
-    success "--devel --date=$date --days=eol" "raring 276"
+
+    success "--devel --date=$date --days=created" "-188"
+    success "--devel --date=$date --days=created -c" "raring -188"
+    success "--devel --date=$date --days=created -r" "13.04 -188"
+    success "--devel --date=$date --days=created -f" "Ubuntu 13.04 \"Raring Ringtail\" -188"
+
+    success "--devel --date=$date --days" "1"
+
+    success "--devel --date=$date --days -c" "raring 1"
+    success "--devel --date=$date --days -r" "13.04 1"
+    success "--devel --date=$date --days -f" "Ubuntu 13.04 \"Raring Ringtail\" 1"
+
+    success "--devel --date=$date --days=release" "1"
+    success "--devel --date=$date --days=release -c" "raring 1"
+    success "--devel --date=$date --days=release -r" "13.04 1"
+    success "--devel --date=$date --days=release -f" "Ubuntu 13.04 \"Raring Ringtail\" 1"
+
+    success "--devel --date=$date --days=eol" "276"
+    success "--devel --date=$date --days=eol -c" "raring 276"
+    success "--devel --date=$date --days=eol -r" "13.04 276"
+    success "--devel --date=$date --days=eol -f" "Ubuntu 13.04 \"Raring Ringtail\" 276"
 }
 
 . shunit2

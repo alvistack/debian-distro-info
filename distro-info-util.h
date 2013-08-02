@@ -30,7 +30,7 @@
 #define unused(x) x
 #endif
 
-/*XXX: Must be kept in sync with milestones array! */
+/* NOTE: Must be kept in sync with milestones array. */
 enum MILESTONE {MILESTONE_CREATED
                ,MILESTONE_RELEASE
                ,MILESTONE_EOL
@@ -41,9 +41,6 @@ enum MILESTONE {MILESTONE_CREATED
 };
 
 #define UNKNOWN_DAYS "(unknown)"
-
-#define MILESTONE(distro, name) \
-    (distro)->milestones[name]
 
 #define DATA_DIR "/usr/share/distro-info"
 

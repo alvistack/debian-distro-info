@@ -33,7 +33,7 @@
 /* All recognised dated database tags for milestones
  * (corresponding to distro_t date_t's).
  *
- * XXX: Must be kept in sync with MILESTONE enum!
+ * NOTE: Must be kept in sync with MILESTONE enum.
  */
 static char *milestones[] = {"created"
                             ,"release"
@@ -172,23 +172,23 @@ static inline bool date_ge(const date_t *date1, const date_t *date2) {
 }
 
 static inline bool created(const date_t *date, const distro_t *distro) {
-    return MILESTONE(distro, MILESTONE_CREATED) &&
-           date_ge(date, MILESTONE(distro, MILESTONE_CREATED));
+    return distro->milestones[MILESTONE_CREATED] &&
+           date_ge(date, distro->milestones[MILESTONE_CREATED]);
 }
 
 static inline bool released(const date_t *date, const distro_t *distro) {
     return *distro->version != '\0' &&
-           MILESTONE(distro, MILESTONE_RELEASE) &&
-           date_ge(date, MILESTONE(distro, MILESTONE_RELEASE));
+           distro->milestones[MILESTONE_RELEASE] &&
+           date_ge(date, distro->milestones[MILESTONE_RELEASE]);
 }
 
 static inline bool eol(const date_t *date, const distro_t *distro) {
-    return MILESTONE(distro, MILESTONE_EOL) &&
-           date_ge(date, MILESTONE(distro, MILESTONE_EOL))
+    return distro->milestones[MILESTONE_EOL] &&
+           date_ge(date, distro->milestones[MILESTONE_EOL])
 #ifdef UBUNTU
-           && (!MILESTONE(distro, MILESTONE_EOL_SERVER) ||
-              (MILESTONE(distro, MILESTONE_EOL_SERVER) &&
-               date_ge(date, MILESTONE(distro, MILESTONE_EOL_SERVER))))
+           && (!distro->milestones[MILESTONE_EOL_SERVER] ||
+              (distro->milestones[MILESTONE_EOL_SERVER] &&
+               date_ge(date, distro->milestones[MILESTONE_EOL_SERVER])))
 #endif
     ;
 }
@@ -220,9 +220,8 @@ static const distro_t *select_latest_created(const distro_elem_t *distro_list) {
     selected = distro_list->distro;
     while(distro_list != NULL) {
         distro_list = distro_list->next;
-        if(distro_list && date_ge(MILESTONE(distro_list->distro,
-                                            MILESTONE_CREATED),
-                                  MILESTONE(selected, MILESTONE_CREATED))) {
+        if(distro_list && date_ge(distro_list->distro->milestones[MILESTONE_CREATED],
+                                  selected->milestones[MILESTONE_CREATED])) {
             selected = distro_list->distro;
         }
     }
@@ -235,9 +234,8 @@ static const distro_t *select_latest_release(const distro_elem_t *distro_list) {
     selected = distro_list->distro;
     while(distro_list != NULL) {
         distro_list = distro_list->next;
-        if(distro_list && date_ge(MILESTONE(distro_list->distro,
-                                            MILESTONE_RELEASE),
-                                  MILESTONE(selected, MILESTONE_RELEASE))) {
+        if(distro_list && date_ge(distro_list->distro->milestones[MILESTONE_RELEASE],
+                                  selected->milestones[MILESTONE_RELEASE])) {
             selected = distro_list->distro;
         }
     }
@@ -252,15 +250,15 @@ static bool calculate_days(const distro_t *distro, const date_t *date,
     int direction;
 
     if(date_index == MILESTONE_CREATED) {
-        milestone = MILESTONE(distro, MILESTONE_CREATED);
+        milestone = distro->milestones[MILESTONE_CREATED];
     } else if(date_index == MILESTONE_RELEASE) {
-        milestone = MILESTONE(distro, MILESTONE_RELEASE);
+        milestone = distro->milestones[MILESTONE_RELEASE];
     } else if(date_index == MILESTONE_EOL) {
-        milestone = MILESTONE(distro, MILESTONE_EOL);
+        milestone = distro->milestones[MILESTONE_EOL];
     }
 #ifdef UBUNTU
     else if(date_index == MILESTONE_EOL_SERVER) {
-        milestone = MILESTONE(distro, MILESTONE_EOL_SERVER);
+        milestone = distro->milestones[MILESTONE_EOL_SERVER];
         if(!milestone) {
             return false;
         }
@@ -353,7 +351,7 @@ static bool print_release(const distro_t *distro, const date_t *date,
     } else {
         if(!calculate_days(distro, date, date_index, &days)) {
             printf("%s%s%s\n",
-                    just_days ? "" : distro->series,
+                    just_days ? "" : str,
                     just_days ? "" : " ",
                     UNKNOWN_DAYS);
         } else {
@@ -374,11 +372,11 @@ static void free_data(distro_elem_t *list, char **content) {
 
     while(list != NULL) {
         next = list->next;
-        free(MILESTONE(list->distro, MILESTONE_CREATED));
-        free(MILESTONE(list->distro, MILESTONE_RELEASE));
-        free(MILESTONE(list->distro, MILESTONE_EOL));
+        free(list->distro->milestones[MILESTONE_CREATED]);
+        free(list->distro->milestones[MILESTONE_RELEASE]);
+        free(list->distro->milestones[MILESTONE_EOL]);
 #ifdef UBUNTU
-        free(MILESTONE(list->distro, MILESTONE_EOL_SERVER));
+        free(list->distro->milestones[MILESTONE_EOL_SERVER]);
 #endif
         free(list->distro);
         free(list);

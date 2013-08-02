@@ -50,13 +50,12 @@ static const distro_t *select_oldstable(const distro_elem_t *distro_list) {
     while(distro_list != NULL) {
         distro_list = distro_list->next;
         if(distro_list) {
-            if(date_ge(MILESTONE(distro_list->distro, MILESTONE_RELEASE),
-                       MILESTONE(newest, MILESTONE_RELEASE))) {
+            if(date_ge(distro_list->distro->milestones[MILESTONE_RELEASE],
+                       newest->milestones[MILESTONE_RELEASE])) {
                 second = newest;
                 newest = distro_list->distro;
-            } else if(second && date_ge(MILESTONE(distro_list->distro,
-                                                  MILESTONE_RELEASE),
-                                        MILESTONE(second, MILESTONE_RELEASE))) {
+            } else if(second && date_ge(distro_list->distro->milestones[MILESTONE_RELEASE],
+                                        second->milestones[MILESTONE_RELEASE])) {
                 second = distro_list->distro;
             }
         }

@@ -119,10 +119,12 @@ testFullname() {
         'Debian 6.0 "Squeeze" 27'
     success "--date=2011-01-10 -f --testing --days=release" \
         'Debian 6.0 "Squeeze" 27'
-    success "--date=2011-01-10 -f --testing -yeol" \
-        'Debian 6.0 "Squeeze" (unknown)'
-    success "--date=2011-01-10 -f --testing --days=eol" \
-        'Debian 6.0 "Squeeze" (unknown)'
+
+    # sid is never released so can never go eol
+    success "--date=2011-01-10 -f --devel -yeol" \
+        'Debian  "Sid" (unknown)'
+    success "--date=2011-01-10 -f --devel --days=eol" \
+        'Debian  "Sid" (unknown)'
 }
 
 testRelease() {
@@ -221,28 +223,76 @@ testDays() {
     date=2009-02-15
 
     success "--date=$date --stable " "lenny"
-    success "--date=$date --stable --days=created" "lenny -679"
-    success "--date=$date --stable --days=release" "lenny -1"
-    success "--date=$date --stable --days" "lenny -1"
-    success "--date=$date --stable --days=eol" "lenny 1086"
+
+    success "--date=$date --stable --days=created" "-679"
+    success "--date=$date --stable --days=created -c" "lenny -679"
+    success "--date=$date --stable --days=created -f" "Debian 5.0 \"Lenny\" -679"
+    success "--date=$date --stable --days=created -r" "5.0 -679"
+
+    success "--date=$date --stable --days=release" "-1"
+    success "--date=$date --stable --days=release -c" "lenny -1"
+    success "--date=$date --stable --days=release -f" "Debian 5.0 \"Lenny\" -1"
+    success "--date=$date --stable --days=release -r" "5.0 -1"
+
+    success "--date=$date --stable --days" "-1"
+    success "--date=$date --stable --days -c" "lenny -1"
+    success "--date=$date --stable --days -f" "Debian 5.0 \"Lenny\" -1"
+    success "--date=$date --stable --days -r" "5.0 -1"
+
+    success "--date=$date --stable --days=eol" "1086"
+    success "--date=$date --stable --days=eol -c" "lenny 1086"
+    success "--date=$date --stable --days=eol -f" "Debian 5.0 \"Lenny\" 1086"
+    success "--date=$date --stable --days=eol -r" "5.0 1086"
 
     # date woody released
     date=2002-07-19
 
     success "--date=$date --stable" "woody"
-    success "--date=$date --stable --days=created" "woody -703"
-    success "--date=$date --stable --days=release" "woody 0"
-    success "--date=$date --stable --days" "woody 0"
-    success "--date=$date --stable --days=eol" "woody 1442"
+
+    success "--date=$date --stable --days=created" "-703"
+    success "--date=$date --stable --days=created -c" "woody -703"
+    success "--date=$date --stable --days=created -f" "Debian 3.0 \"Woody\" -703"
+    success "--date=$date --stable --days=created -r" "3.0 -703"
+
+    success "--date=$date --stable --days=release" "0"
+    success "--date=$date --stable --days=release -c" "woody 0"
+    success "--date=$date --stable --days=release -f" "Debian 3.0 \"Woody\" 0"
+    success "--date=$date --stable --days=release -r" "3.0 0"
+
+    success "--date=$date --stable --days" "0"
+    success "--date=$date --stable --days -c" "woody 0"
+    success "--date=$date --stable --days -f" "Debian 3.0 \"Woody\" 0"
+    success "--date=$date --stable --days -r" "3.0 0"
+
+    success "--date=$date --stable --days=eol" "1442"
+    success "--date=$date --stable --days=eol -c" "woody 1442"
+    success "--date=$date --stable --days=eol -f" "Debian 3.0 \"Woody\" 1442"
+    success "--date=$date --stable --days=eol -r" "3.0 1442"
 
     # day before etch was released
     date=2007-04-07
 
     success "--testing --date=$date" "etch"
-    success "--testing --date=$date --days=created" "etch -670"
-    success "--testing --date=$date --days" "etch 1"
-    success "--testing --date=$date --days=release" "etch 1"
-    success "--testing --date=$date --days=eol" "etch 1045"
+
+    success "--testing --date=$date --days=created" "-670"
+    success "--testing --date=$date --days=created -c" "etch -670"
+    success "--testing --date=$date --days=created -f" "Debian 4.0 \"Etch\" -670"
+    success "--testing --date=$date --days=created -r" "4.0 -670"
+
+    success "--testing --date=$date --days" "1"
+    success "--testing --date=$date --days -c" "etch 1"
+    success "--testing --date=$date --days -f" "Debian 4.0 \"Etch\" 1"
+    success "--testing --date=$date --days -r" "4.0 1"
+
+    success "--testing --date=$date --days=release" "1"
+    success "--testing --date=$date --days=release -c" "etch 1"
+    success "--testing --date=$date --days=release -f" "Debian 4.0 \"Etch\" 1"
+    success "--testing --date=$date --days=release -r" "4.0 1"
+
+    success "--testing --date=$date --days=eol" "1045"
+    success "--testing --date=$date --days=eol -c" "etch 1045"
+    success "--testing --date=$date --days=eol -f" "Debian 4.0 \"Etch\" 1045"
+    success "--testing --date=$date --days=eol -r" "4.0 1045"
 }
 
 . shunit2
