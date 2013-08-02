@@ -308,16 +308,14 @@ static bool print_fullname(const distro_t *distro, const date_t *date,
                 printf("%s\n", UNKNOWN_DAYS);
             } else {
                 printf(DISTRO_NAME " %s \"%s\" %s\n",
-                        distro->version, distro->codename, UNKNOWN_DAYS);
+                       distro->version, distro->codename, UNKNOWN_DAYS);
             }
         } else {
             if(just_days) {
                 printf("%zd\n", days);
             } else {
                 printf(DISTRO_NAME " %s \"%s\" %zd\n",
-                        distro->version,
-                        distro->codename,
-                        days);
+                       distro->version, distro->codename, days);
             }
         }
     }
@@ -336,14 +334,14 @@ static bool print_release(const distro_t *distro, const date_t *date,
     } else {
         if(!calculate_days(distro, date, date_index, &days)) {
             printf("%s%s%s\n",
-                    just_days ? "" : str,
-                    just_days ? "" : " ",
-                    UNKNOWN_DAYS);
+                   just_days ? "" : str,
+                   just_days ? "" : " ",
+                   UNKNOWN_DAYS);
         } else {
             printf("%s%s%zd\n",
-                    just_days ? "" : str,
-                    just_days ? "" : " ",
-                    days);
+                   just_days ? "" : str,
+                   just_days ? "" : " ",
+                   days);
         }
     }
 
