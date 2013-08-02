@@ -68,6 +68,7 @@ class DistroInfo(object):
                 if column in row:
                     row[column] = convert_date(row[column])
             self._rows.append(row)
+        csvfile.close()
         self._date = datetime.date.today()
 
     @property
