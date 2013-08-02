@@ -1,8 +1,3 @@
-/* TODO:
- *
- * - make tests pass as squeeze has now been released.
- */
-
 /*
  * Copyright (C) 2012, Benjamin Drung <bdrung@debian.org>
  *
