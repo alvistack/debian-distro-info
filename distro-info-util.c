@@ -246,38 +246,23 @@ static bool calculate_days(const distro_t *distro, const date_t *date,
                            int date_index, ssize_t *days) {
     const date_t *first;
     const date_t *second;
-    date_t *milestone = NULL;
     int direction;
 
-    if(date_index == MILESTONE_CREATED) {
-        milestone = distro->milestones[MILESTONE_CREATED];
-    } else if(date_index == MILESTONE_RELEASE) {
-        milestone = distro->milestones[MILESTONE_RELEASE];
-    } else if(date_index == MILESTONE_EOL) {
-        milestone = distro->milestones[MILESTONE_EOL];
-    }
-#ifdef UBUNTU
-    else if(date_index == MILESTONE_EOL_SERVER) {
-        milestone = distro->milestones[MILESTONE_EOL_SERVER];
-        if(!milestone) {
-            return false;
-        }
-    }
-#endif
+    assert(date_index >= 0 && date_index < MILESTONE_COUNT);
 
     /* distro may not have specified a particular milestone date
      * (yet).
      */
-    if(!milestone) {
+    if(!distro->milestones[date_index]) {
         return false;
     }
 
-    if(date_ge(date, milestone)) {
+    if(date_ge(date, distro->milestones[date_index])) {
         first = date;
-        second = milestone;
+        second = distro->milestones[date_index];
         direction = -1;
     } else {
-        first = milestone;
+        first = distro->milestones[date_index];
         second = date;
         direction = 1;
     }
