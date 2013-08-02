@@ -3,7 +3,7 @@ Section: devel
 Priority: optional
 Maintainer: Benjamin Drung <bdrung@debian.org>
 Uploaders: Stefano Rivera <stefanor@debian.org>
-Build-Depends: debhelper (>= 8),
+Build-Depends: debhelper (>= 9),
                distro-info-data (>= 0.7~),
                pylint,
                python-all (>= 2.6.3-3~),
