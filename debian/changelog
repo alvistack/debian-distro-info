@@ -1,3 +1,11 @@
+distro-info (0.12) unstable; urgency=medium
+
+  * Fix Ubuntu EOL test cases (The EOL date of raring is two days later).
+    (Closes: #735801)
+  * Bump Standards-Version to 3.9.5.
+
+ -- Benjamin Drung <bdrung@debian.org>  Sat, 18 Jan 2014 11:45:43 +0100
+
 distro-info (0.11) unstable; urgency=low
 
   * Added ability to specify --days[=MILESTONE] option.
