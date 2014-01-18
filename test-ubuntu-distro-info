@@ -300,10 +300,10 @@ testDays() {
     success "--devel --date=$date --days=release -r" "13.04 1"
     success "--devel --date=$date --days=release -f" "Ubuntu 13.04 \"Raring Ringtail\" 1"
 
-    success "--devel --date=$date --days=eol" "276"
-    success "--devel --date=$date --days=eol -c" "raring 276"
-    success "--devel --date=$date --days=eol -r" "13.04 276"
-    success "--devel --date=$date --days=eol -f" "Ubuntu 13.04 \"Raring Ringtail\" 276"
+    success "--devel --date=$date --days=eol" "278"
+    success "--devel --date=$date --days=eol -c" "raring 278"
+    success "--devel --date=$date --days=eol -r" "13.04 278"
+    success "--devel --date=$date --days=eol -f" "Ubuntu 13.04 \"Raring Ringtail\" 278"
 }
 
 . shunit2
