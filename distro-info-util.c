@@ -242,6 +242,20 @@ static const distro_t *select_latest_release(const distro_elem_t *distro_list) {
     return selected;
 }
 
+static const distro_t *select_series(const distro_elem_t *distro_list, const char *series) {
+    const distro_t *selected;
+
+    selected = NULL;
+    while(distro_list != NULL) {
+        if(distro_list && (strcmp(distro_list->distro->series, series) == 0)) {
+            selected = distro_list->distro;
+            break;
+        }
+        distro_list = distro_list->next;
+    }
+    return selected;
+}
+
 static bool calculate_days(const distro_t *distro, const date_t *date,
                            int date_index, ssize_t *days) {
     const date_t *first;
@@ -495,6 +509,7 @@ static void print_help(void) {
            "Options:\n"
            "  -h  --help             show this help message and exit\n"
            "      --date=DATE        date for calculating the version (default: today)\n"
+           "      --series=SERIES    series to calculate the version for\n"
            "  -y[MILESTONE]          additionally, display days until milestone\n"
            "      --days=[MILESTONE] ("
           );
@@ -542,6 +557,7 @@ static inline int not_exactly_one(void) {
             "--oldstable, "
 #endif
             "--stable, --supported, "
+            "--series, "
 #ifdef DEBIAN
             "--testing, "
 #endif
@@ -558,6 +574,7 @@ int main(int argc, char *argv[]) {
     const distro_t *selected;
     int i;
     int date_index = -1;
+    char *series_name = NULL;
     int option;
     int option_index;
     int return_value = EXIT_SUCCESS;
@@ -575,6 +592,7 @@ int main(int argc, char *argv[]) {
     const struct option long_options[] = {
         {"help",        no_argument,       NULL, 'h' },
         {"date",        required_argument, NULL, 'D' },
+        {"series",      required_argument, NULL, 'R' },
         {"all",         no_argument,       NULL, 'a' },
         {"days",        optional_argument, NULL, 'y' },
         {"devel",       no_argument,       NULL, 'd' },
@@ -665,6 +683,22 @@ int main(int argc, char *argv[]) {
                     free(date);
                     return EXIT_FAILURE;
                 }
+                break;
+
+            case 'R':
+                // Only long option --series is used
+                if(unlikely(series_name != NULL)) {
+                    fprintf(stderr, NAME ": series requested multiple times.\n");
+                    return EXIT_FAILURE;
+                }
+                if(!optarg || !is_valid_codename(optarg)) {
+                    fprintf(stderr, NAME ": invalid distribution series `%s'\n",
+                            optarg);
+                    free(date);
+                    return EXIT_FAILURE;
+                }
+                selected_filters++;
+                series_name = optarg;
                 break;
 
             case 'f':
@@ -759,6 +793,9 @@ int main(int argc, char *argv[]) {
                 } else if(optopt == 'D') {
                     fprintf(stderr, NAME ": option `--date' requires "
                             "an argument DATE\n");
+                } else if(optopt == 'R') {
+                    fprintf(stderr, NAME ": option `--series' requires "
+                            "an argument SERIES\n");
                 } else {
                     fprintf(stderr, NAME ": unrecognized option `-%c'\n",
                             optopt);
@@ -835,15 +872,19 @@ int main(int argc, char *argv[]) {
     }
 #endif
 
-    if(select_cb == NULL) {
+    if(select_cb == NULL && !series_name) {
         filter_data(distro_list, date, date_index, just_days, filter_cb, print_cb);
     } else {
-        selected = get_distro(distro_list, date, filter_cb, select_cb);
+        if (series_name) {
+            selected = select_series(distro_list, series_name);
+        } else {
+            selected = get_distro(distro_list, date, filter_cb, select_cb);
 #ifdef UBUNTU
-        if(selected == NULL && filter_latest) {
-            selected = get_distro(distro_list, date, filter_stable, select_latest_release);
-        }
+            if(selected == NULL && filter_latest) {
+                selected = get_distro(distro_list, date, filter_stable, select_latest_release);
+            }
 #endif
+        }
         if(selected == NULL) {
             fprintf(stderr, NAME ": " OUTDATED_ERROR "\n");
             return_value = EXIT_FAILURE;

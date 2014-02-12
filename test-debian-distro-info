@@ -133,6 +133,10 @@ testRelease() {
     success "--date=2011-01-10 --release --stable" "5.0"
 }
 
+testSeries() {
+    success "-r --series rex" "1.2"
+}
+
 testCombinedShortform() {
     success "-rd" "sid"
 }
@@ -154,6 +158,7 @@ testHelp() {
 Options:
   -h  --help             show this help message and exit
       --date=DATE        date for calculating the version (default: today)
+      --series=SERIES    series to calculate the version for
   -y[MILESTONE]          additionally, display days until milestone
       --days=[MILESTONE] (created, release, eol)
       --alias=DIST       print the alias (stable, testing, unstable) relative to
@@ -175,7 +180,7 @@ See debian-distro-info(1) for more info.'
 }
 
 testExactlyOne() {
-    local result='debian-distro-info: You have to select exactly one of --alias, --all, --devel, --oldstable, --stable, --supported, --testing, --unsupported.'
+    local result='debian-distro-info: You have to select exactly one of --alias, --all, --devel, --oldstable, --stable, --supported, --series, --testing, --unsupported.'
     failure "" "$result"
     failure "-ad" "$result"
     failure "--alias foo -a" "$result"
@@ -198,6 +203,10 @@ testMissingArgumentAlias() {
 
 testMissingArgumentDate() {
     failure "--date" "debian-distro-info: option \`--date' requires an argument DATE"
+}
+
+testMissingArgumentSeries() {
+    failure "--series" "debian-distro-info: option \`--series' requires an argument SERIES"
 }
 
 testInvalidAlias() {
