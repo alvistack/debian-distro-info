@@ -536,7 +536,7 @@ static inline int not_exactly_one(void) {
 #endif
             "--all, --devel, "
 #ifdef UBUNTU
-            "--lts, "
+            "--latest, --lts, "
 #endif
 #ifdef DEBIAN
             "--oldstable, "
@@ -568,6 +568,9 @@ int main(int argc, char *argv[]) {
 #ifdef DEBIAN
     char *alias_codename = NULL;
 #endif
+#ifdef UBUNTU
+    bool filter_latest = false;
+#endif
 
     const struct option long_options[] = {
         {"help",        no_argument,       NULL, 'h' },
@@ -587,13 +590,14 @@ int main(int argc, char *argv[]) {
         {"testing",     no_argument,       NULL, 't' },
 #endif
 #ifdef UBUNTU
+        {"latest",      no_argument,       NULL, 'l' },
         {"lts",         no_argument,       NULL, 'L' },
 #endif
         {NULL,          0,                 NULL, '\0' }
     };
 
 #ifdef UBUNTU
-    const char *short_options = "hadscrfy::";
+    const char *short_options = "hadscrfly::";
 #endif
 #ifdef DEBIAN
     const char *short_options = "hadscrfoty::";
@@ -674,6 +678,13 @@ int main(int argc, char *argv[]) {
                 return EXIT_SUCCESS;
 
 #ifdef UBUNTU
+            case 'l':
+                selected_filters++;
+                filter_latest = true;
+                filter_cb = filter_devel;
+                select_cb = select_latest_created;
+                break;
+
             case 'L':
                 // Only long option --lts is used
                 selected_filters++;
@@ -828,6 +839,11 @@ int main(int argc, char *argv[]) {
         filter_data(distro_list, date, date_index, just_days, filter_cb, print_cb);
     } else {
         selected = get_distro(distro_list, date, filter_cb, select_cb);
+#ifdef UBUNTU
+        if(selected == NULL && filter_latest) {
+            selected = get_distro(distro_list, date, filter_stable, select_latest_release);
+        }
+#endif
         if(selected == NULL) {
             fprintf(stderr, NAME ": " OUTDATED_ERROR "\n");
             return_value = EXIT_FAILURE;
