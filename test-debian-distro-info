@@ -219,12 +219,25 @@ testInvalidDate() {
     failure "--date=2010-02-30 -d" "debian-distro-info: invalid date \`2010-02-30'"
 }
 
+testInvalidSeries() {
+    failure "--series wr0ng" "debian-distro-info: invalid distribution series \`wr0ng'"
+}
+
+
 testMultipleAlias() {
     failure "--alias a --alias b" "debian-distro-info: --alias requested multiple times."
 }
 
 testMultipleDates() {
     failure "--date 2007-06-05 -s --date 2004-03-02" "debian-distro-info: Date specified multiple times."
+}
+
+testMultipleSeries() {
+    failure "--series wheezy --series jessie" "debian-distro-info: series requested multiple times."
+}
+
+testUnknownSeries() {
+    failure "--series foobar" "debian-distro-info: unknown distribution series \`foobar'"
 }
 
 testDays() {

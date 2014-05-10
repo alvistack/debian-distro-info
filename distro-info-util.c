@@ -875,7 +875,7 @@ int main(int argc, char *argv[]) {
     if(select_cb == NULL && !series_name) {
         filter_data(distro_list, date, date_index, just_days, filter_cb, print_cb);
     } else {
-        if (series_name) {
+        if(series_name) {
             selected = select_series(distro_list, series_name);
         } else {
             selected = get_distro(distro_list, date, filter_cb, select_cb);
@@ -886,7 +886,11 @@ int main(int argc, char *argv[]) {
 #endif
         }
         if(selected == NULL) {
-            fprintf(stderr, NAME ": " OUTDATED_ERROR "\n");
+            if(series_name) {
+                fprintf(stderr, NAME ": unknown distribution series `%s'\n", series_name);
+            } else {
+                fprintf(stderr, NAME ": " OUTDATED_ERROR "\n");
+            }
             return_value = EXIT_FAILURE;
         } else {
             if(!print_cb(selected, date, date_index, just_days)) {
