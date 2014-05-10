@@ -72,4 +72,6 @@ class HelpTestCase(unittest.TestCase):
                              "%s failed to return usage within %i seconds.\n"
                              "Output:\n%s"
                              % (script, TIMEOUT, ''.encode('ascii').join(out)))
+            process.stdout.close()
+            process.stderr.close()
         return tester
