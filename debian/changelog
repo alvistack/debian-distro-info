@@ -1,3 +1,10 @@
+distro-info (0.14) unstable; urgency=medium
+
+  * Fix days in month calculation for leap years (Closes: #766142)
+  * Bump Standards-Version to 3.9.6
+
+ -- Benjamin Drung <bdrung@debian.org>  Tue, 21 Oct 2014 10:09:57 +0200
+
 distro-info (0.13) unstable; urgency=medium
 
   [ Benjamin Drung ]
