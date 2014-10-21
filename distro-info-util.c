@@ -102,7 +102,7 @@ static inline bool is_valid_date(const date_t *date) {
     return date->month >= 1 && date->month <= 12 &&
            date->day >= 1 &&
            date->day <= (is_leap_year(date->year) &&
-           date->month == 1 ? 29 : days_in_month[date->month-1]);
+           date->month == 2 ? 29 : days_in_month[date->month-1]);
 }
 
 static time_t date_to_secs(const date_t *date) {
