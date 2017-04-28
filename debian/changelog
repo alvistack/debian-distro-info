@@ -1,3 +1,17 @@
+distro-info (0.15) unstable; urgency=medium
+
+  [ Mike Miller ]
+  * debian-distro-info: Support oldstable with --alias. (Closes: #784284)
+
+  [ Benjamin Drung ]
+  * Fix flake8 and pylint issues found in Python code
+  * Run flake8 and pylint checks on Python code in test suite
+  * Python: Add DistroInfo.get_all() method
+  * Bump Standard-Version to 3.9.8 (no changes required)
+  * Use https for Vcs-Git and Vcs-Browser URLs
+
+ -- Benjamin Drung <bdrung@debian.org>  Fri, 28 Apr 2017 19:45:36 +0200
+
 distro-info (0.14) unstable; urgency=medium
 
   * Fix days in month calculation for leap years (Closes: #766142)
