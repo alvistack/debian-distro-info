@@ -74,7 +74,11 @@ class DistroInfo(object):
         self._date = datetime.date.today()
 
     @property
-    def all(self, result="codename"):
+    def all(self):
+        """List codenames of all known distributions."""
+        return [x['series'] for x in self._rows]
+
+    def get_all(self, result="codename"):
         """List all known distributions."""
         return [self._format(result, x) for x in self._rows]
 
