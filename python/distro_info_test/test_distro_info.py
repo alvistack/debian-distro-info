@@ -21,16 +21,14 @@ import datetime
 from distro_info_test import unittest
 from distro_info import DebianDistroInfo, UbuntuDistroInfo
 
-#pylint: disable=R0904
-class DebianDistroInfoTestCase(unittest.TestCase):
+
+class DebianDistroInfoTestCase(unittest.TestCase):  # pylint: disable=too-many-public-methods
     """TestCase object for distro_info.DebianDistroInfo"""
 
-    #pylint: disable=C0103
-    def setUp(self):
+    def setUp(self):  # pylint: disable=invalid-name
         self._distro_info = DebianDistroInfo()
         self._date = datetime.date(2011, 1, 10)
 
-    #pylint: enable=C0103
     def test_all(self):
         """Test: List all known Debian distributions."""
         all_distros = set(["buzz", "rex", "bo", "hamm", "slink", "potato",
@@ -99,16 +97,13 @@ class DebianDistroInfoTestCase(unittest.TestCase):
                          "5.0")
 
 
-#pylint: disable=R0904
-class UbuntuDistroInfoTestCase(unittest.TestCase):
+class UbuntuDistroInfoTestCase(unittest.TestCase):  # pylint: disable=too-many-public-methods
     """TestCase object for distro_info.UbuntuDistroInfo"""
 
-    #pylint: disable=C0103
-    def setUp(self):
+    def setUp(self):  # pylint: disable=invalid-name
         self._distro_info = UbuntuDistroInfo()
         self._date = datetime.date(2011, 1, 10)
 
-    #pylint: enable=C0103
     def test_all(self):
         """Test: List all known Ubuntu distributions."""
         all_distros = set(["warty", "hoary", "breezy", "dapper", "edgy",

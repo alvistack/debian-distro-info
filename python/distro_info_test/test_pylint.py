@@ -21,6 +21,7 @@ from distro_info_test import unittest
 
 WHITELIST = []
 
+
 class PylintTestCase(unittest.TestCase):
     def test_pylint(self):
         "Test: Run pylint on Python source code"
