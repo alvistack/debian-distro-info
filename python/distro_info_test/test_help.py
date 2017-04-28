@@ -27,14 +27,6 @@ from distro_info_test import unittest
 TIMEOUT = 5
 
 
-def load_tests(loader, tests, pattern):
-    "Give HelpTestCase a chance to populate before loading its test cases"
-    suite = unittest.TestSuite()
-    HelpTestCase.populate()
-    suite.addTests(loader.loadTestsFromTestCase(HelpTestCase))
-    return suite
-
-
 class HelpTestCase(unittest.TestCase):
     @classmethod
     def populate(cls):
@@ -53,13 +45,13 @@ class HelpTestCase(unittest.TestCase):
             out = []
 
             fds = [process.stdout.fileno(), process.stderr.fileno()]
-            for fd in fds:
-                fcntl.fcntl(fd, fcntl.F_SETFL,
-                            fcntl.fcntl(fd, fcntl.F_GETFL) | os.O_NONBLOCK)
+            for file_descriptor in fds:
+                fcntl.fcntl(file_descriptor, fcntl.F_SETFL,
+                            fcntl.fcntl(file_descriptor, fcntl.F_GETFL) | os.O_NONBLOCK)
 
             while time.time() - started < TIMEOUT:
-                for fd in select.select(fds, [], fds, TIMEOUT)[0]:
-                    out.append(os.read(fd, 1024))
+                for file_descriptor in select.select(fds, [], fds, TIMEOUT)[0]:
+                    out.append(os.read(file_descriptor, 1024))
                 if process.poll() is not None:
                     break
 

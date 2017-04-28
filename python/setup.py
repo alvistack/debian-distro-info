@@ -18,7 +18,7 @@ def get_debian_version():
     changelog = "../debian/changelog"
     if os.path.exists(changelog):
         head = open(changelog).readline()
-        match = re.compile(".*\((.*)\).*").match(head)
+        match = re.compile(r".*\((.*)\).*").match(head)
         if match:
             version = match.group(1)
     return version

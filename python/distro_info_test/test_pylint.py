@@ -27,10 +27,10 @@ class PylintTestCase(unittest.TestCase):
         "Test: Run pylint on Python source code"
         files = ['distro_info.py']
         for script in setup.SCRIPTS:
-            f = open(script, 'r')
-            if 'python' in f.readline():
+            script_file = open(script, 'r')
+            if 'python' in script_file.readline():
                 files.append(script)
-            f.close()
+            script_file.close()
         cmd = ['pylint', '--rcfile=distro_info_test/pylint.conf', '-E',
                '--include-ids=y', '--'] + files
         process = subprocess.Popen(cmd, stdout=subprocess.PIPE,
@@ -42,9 +42,7 @@ class PylintTestCase(unittest.TestCase):
 
         filtered_out = []
         detected_in = ''
-        # pylint: disable=E1103
         for line in out.splitlines():
-            # pylint: enable=E1103
             if line.startswith('************* '):
                 detected_in = line
                 continue

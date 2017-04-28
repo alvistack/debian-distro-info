@@ -84,6 +84,7 @@ class DistroInfo(object):
 
     def codename(self, release, date=None, default=None):
         """Map codename aliases to the codename they describe."""
+        # pylint: disable=no-self-use,unused-argument
         return release
 
     def devel(self, date=None, result="codename"):
