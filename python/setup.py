@@ -6,6 +6,8 @@ import re
 from setuptools import setup
 
 
+PACKAGES = ['distro_info_test']
+PY_MODULES = ['distro_info']
 SCRIPTS = [
     'debian-distro-info',
     'ubuntu-distro-info',
@@ -28,7 +30,7 @@ if __name__ == '__main__':
     setup(
         name='distro-info',
         version=get_debian_version(),
-        py_modules=['distro_info'],
-        packages=['distro_info_test'],
+        py_modules=PY_MODULES,
+        packages=PACKAGES,
         test_suite='distro_info_test.discover',
     )

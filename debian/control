@@ -6,6 +6,7 @@ Uploaders: Stefano Rivera <stefanor@debian.org>
 Build-Depends: debhelper (>= 9),
                distro-info-data (>= 0.7~),
                pylint,
+               pylint3,
                python-all (>= 2.6.3-3~),
                python-setuptools,
                python-unittest2,

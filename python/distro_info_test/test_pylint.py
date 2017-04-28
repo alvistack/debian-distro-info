@@ -1,6 +1,7 @@
-# test_pylint.py - Run pylint in errors-only mode.
+# test_pylint.py - Run pylint
 #
 # Copyright (C) 2010, Stefano Rivera <stefanor@debian.org>
+# Copyright (C) 2017, Benjamin Drung <bdrung@debian.org>
 #
 # Permission to use, copy, modify, and/or distribute this software for any
 # purpose with or without fee is hereby granted, provided that the above
@@ -15,45 +16,29 @@
 # PERFORMANCE OF THIS SOFTWARE.
 
 import subprocess
+import sys
 
 import setup
 from distro_info_test import unittest
-
-WHITELIST = []
 
 
 class PylintTestCase(unittest.TestCase):
     def test_pylint(self):
         "Test: Run pylint on Python source code"
-        files = ['distro_info.py']
+        files = setup.PACKAGES + [m + '.py' for m in setup.PY_MODULES] + ['setup.py']
         for script in setup.SCRIPTS:
             script_file = open(script, 'r')
             if 'python' in script_file.readline():
                 files.append(script)
             script_file.close()
-        cmd = ['pylint', '--rcfile=distro_info_test/pylint.conf', '-E',
-               '--include-ids=y', '--'] + files
-        process = subprocess.Popen(cmd, stdout=subprocess.PIPE,
+        if sys.version_info[0] == 3:
+            pylint_binary = 'pylint3'
+        else:
+            pylint_binary = 'pylint'
+        cmd = [pylint_binary, '--rcfile=distro_info_test/pylint.conf', '--reports=n', '--'] + files
+        process = subprocess.Popen(cmd, env={'PYLINTHOME': '.pylint.d'}, stdout=subprocess.PIPE,
                                    stderr=subprocess.PIPE, close_fds=True)
 
         out, err = process.communicate()
-        if err != '':
-            raise unittest.SkipTest('pylint crashed :/')
-
-        filtered_out = []
-        detected_in = ''
-        for line in out.splitlines():
-            if line.startswith('************* '):
-                detected_in = line
-                continue
-
-            for reg_exp in WHITELIST:
-                if reg_exp.search(line):
-                    break
-            else:
-                filtered_out.append(detected_in)
-                filtered_out.append(line)
-
-        self.assertEqual(filtered_out, [],
-                         "pylint found errors.\n"
-                         "Filtered Output:\n" + '\n'.join(filtered_out))
+        self.assertFalse(err, pylint_binary + ' crashed. Error output:\n' + err.decode())
+        self.assertFalse(out, pylint_binary + " found errors:\n" + out.decode())
