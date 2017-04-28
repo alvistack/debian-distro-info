@@ -16,79 +16,71 @@
 
 """provides information about Debian's distributions"""
 
-import optparse
+import argparse
 import os
 import sys
 
 from distro_info import convert_date, DebianDistroInfo
 
 
-def main():
+def parse_args():
     script_name = os.path.basename(sys.argv[0])
     usage = "%s [options]" % (script_name)
     epilog = "See %s(1) for more info." % (script_name)
-    parser = optparse.OptionParser(usage=usage, epilog=epilog)
+    parser = argparse.ArgumentParser(usage=usage, epilog=epilog)
 
-    parser.add_option("--date", dest="date", default=None,
-                      help="date for calculating the version (default: today).")
-    parser.add_option("-a", "--all", dest="all",
-                      help="list all known versions",
-                      action="store_true", default=False)
-    parser.add_option("-d", "--devel", dest="devel",
-                      help="latest development version",
-                      action="store_true", default=False)
-    parser.add_option("-o", "--old", dest="old",
-                      help="latest old (stable) version",
-                      action="store_true", default=False)
-    parser.add_option("-s", "--stable", dest="stable",
-                      help="latest stable version",
-                      action="store_true", default=False)
-    parser.add_option("--supported", dest="supported",
-                      help="list of all supported stable versions",
-                      action="store_true", default=False)
-    parser.add_option("-t", "--testing", dest="testing",
-                      help="current testing version",
-                      action="store_true", default=False)
-    parser.add_option("--unsupported", dest="unsupported",
-                      help="list of all unsupported stable versions",
-                      action="store_true", default=False)
+    parser.add_argument("--date", dest="date", default=None,
+                        help="date for calculating the version (default: today).")
+    parser.add_argument("-a", "--all", dest="all", action="store_true",
+                        help="list all known versions")
+    parser.add_argument("-d", "--devel", dest="devel", action="store_true",
+                        help="latest development version")
+    parser.add_argument("-o", "--old", dest="old", action="store_true",
+                        help="latest old (stable) version")
+    parser.add_argument("-s", "--stable", dest="stable", action="store_true",
+                        help="latest stable version")
+    parser.add_argument("--supported", dest="supported", action="store_true",
+                        help="list of all supported stable versions")
+    parser.add_argument("-t", "--testing", dest="testing", action="store_true",
+                        help="current testing version")
+    parser.add_argument("--unsupported", dest="unsupported",
+                        help="list of all unsupported stable versions")
 
-    (options, args) = parser.parse_args()
+    args = parser.parse_args()
 
-    if len(args) != 0:
-        parser.error("This script does not take any additional parameters.")
-
-    versions = [options.all, options.devel, options.old, options.stable,
-                options.supported, options.testing, options.unsupported]
+    versions = [args.all, args.devel, args.old, args.stable,
+                args.supported, args.testing, args.unsupported]
     if len([x for x in versions if x]) != 1:
         parser.error("You have to select exactly one of --all, --devel, --old, "
                      "--stable, --supported, --testing, --unsupported.")
 
-    if options.date is None:
-        date = None
-    else:
+    if args.date is not None:
         try:
-            date = convert_date(options.date)
+            args.date = convert_date(args.date)
         except ValueError:
             parser.error("Option --date needs to be a date in ISO 8601 "
                          "format.")
+    return args
 
-    if options.all:
+
+def main():
+    args = parse_args()
+    if args.all:
         for distro in DebianDistroInfo().all:
             sys.stdout.write(distro + "\n")
-    elif options.devel:
-        sys.stdout.write(DebianDistroInfo().devel(date) + "\n")
-    elif options.old:
-        sys.stdout.write(DebianDistroInfo().old(date) + "\n")
-    elif options.stable:
-        sys.stdout.write(DebianDistroInfo().stable(date) + "\n")
-    elif options.supported:
-        for distro in DebianDistroInfo().supported(date):
+    elif args.devel:
+        sys.stdout.write(DebianDistroInfo().devel(args.date) + "\n")
+    elif args.old:
+        sys.stdout.write(DebianDistroInfo().old(args.date) + "\n")
+    elif args.stable:
+        sys.stdout.write(DebianDistroInfo().stable(args.date) + "\n")
+    elif args.supported:
+        for distro in DebianDistroInfo().supported(args.date):
             sys.stdout.write(distro + "\n")
-    elif options.testing:
-        sys.stdout.write(DebianDistroInfo().testing(date) + "\n")
-    elif options.unsupported:
-        for distro in DebianDistroInfo().unsupported(date):
+    elif args.testing:
+        sys.stdout.write(DebianDistroInfo().testing(args.date) + "\n")
+    elif args.unsupported:
+        for distro in DebianDistroInfo().unsupported(args.date):
             sys.stdout.write(distro + "\n")
 
 
