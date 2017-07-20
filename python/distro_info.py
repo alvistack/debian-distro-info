@@ -128,7 +128,9 @@ class DistroInfo(object):
 
     def _format(self, format_string, release):
         """Format a given distribution entry."""
-        if format_string == "codename":
+        if format_string == "object":
+            return release
+        elif format_string == "codename":
             return release.series
         elif format_string == "fullname":
             return self._distro + " " + release.version + ' "' + \
@@ -136,7 +138,7 @@ class DistroInfo(object):
         elif format_string == "release":
             return release.version
         else:
-            raise ValueError("Only codename, fullname, and release are allowed "
+            raise ValueError("Only codename, fullname, object, and release are allowed "
                              "result values, but not '" + format_string + "'.")
 
     def stable(self, date=None, result="codename"):
