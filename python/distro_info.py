@@ -133,8 +133,7 @@ class DistroInfo(object):
         elif format_string == "codename":
             return release.series
         elif format_string == "fullname":
-            return self._distro + " " + release.version + ' "' + \
-                   release.codename + '"'
+            return self._distro + " " + release.version + ' "' + release.codename + '"'
         elif format_string == "release":
             return release.version
         else:
