@@ -4,6 +4,7 @@ Priority: optional
 Maintainer: Benjamin Drung <bdrung@debian.org>
 Uploaders: Stefano Rivera <stefanor@debian.org>
 Build-Depends: debhelper (>= 9),
+               dh-python,
                distro-info-data (>= 0.7~),
                pylint,
                pylint3,
