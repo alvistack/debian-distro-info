@@ -15,6 +15,7 @@
 # OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 # PERFORMANCE OF THIS SOFTWARE.
 
+import re
 import subprocess
 import sys
 
@@ -38,7 +39,15 @@ class PylintTestCase(unittest.TestCase):
         cmd = [pylint_binary, '--rcfile=distro_info_test/pylint.conf', '--reports=n', '--'] + files
         process = subprocess.Popen(cmd, env={'PYLINTHOME': '.pylint.d'}, stdout=subprocess.PIPE,
                                    stderr=subprocess.PIPE, close_fds=True)
-
         out, err = process.communicate()
+
+        # Strip trailing summary (introduced in pylint 1.7). This summary might look like:
+        #
+        # ------------------------------------
+        # Your code has been rated at 10.00/10
+        #
+        out = re.sub('^(-+|Your code has been rated at .*)$', '', out.decode(),
+                     flags=re.MULTILINE).rstrip()
+
         self.assertFalse(err, pylint_binary + ' crashed. Error output:\n' + err.decode())
-        self.assertFalse(out, pylint_binary + " found errors:\n" + out.decode())
+        self.assertFalse(out, pylint_binary + " found errors:\n" + out)
