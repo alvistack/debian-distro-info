@@ -1,3 +1,10 @@
+distro-info (0.17) unstable; urgency=medium
+
+  * python: Strip trailing summary from pylint output
+    (to fix build failure on Ubuntu 17.10)
+
+ -- Benjamin Drung <bdrung@debian.org>  Fri, 21 Jul 2017 17:49:07 +0200
+
 distro-info (0.16) unstable; urgency=medium
 
   * python: Introduce DistroRelease object and support returning it
