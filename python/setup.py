@@ -32,5 +32,5 @@ if __name__ == '__main__':
         version=get_debian_version(),
         py_modules=PY_MODULES,
         packages=PACKAGES,
-        test_suite='distro_info_test.discover',
+        test_suite="distro_info_test",
     )
