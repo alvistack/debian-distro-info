@@ -1,3 +1,9 @@
+distro-info (0.19) UNRELEASED; urgency=medium
+
+  * Migrate VCS to salsa.debian.org.
+
+ -- Stefano Rivera <stefanor@debian.org>  Sat, 24 Feb 2018 23:27:56 +0100
+
 distro-info (0.18) unstable; urgency=medium
 
   * Update Python unittests to support pylint 1.8 (Closes: #889537)
