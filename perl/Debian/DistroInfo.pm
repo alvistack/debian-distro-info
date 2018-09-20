@@ -114,6 +114,17 @@ sub convert_date {
         return $release;
     }
 
+    sub version {
+        my ($self, $codename, $default) = @_;
+        for my $row (@{$self->{'rows'}}) {
+            if ($row->{'codename'} eq $codename
+                || $row->{'series'} eq $codename) {
+                return $row->{'version'};
+            }
+        }
+        return $default;
+    }
+
     sub devel {
         my ($self, $date) = @_;
         $date = $self->{'date'} if (!defined($date));
