@@ -1,6 +1,10 @@
 distro-info (0.19) UNRELEASED; urgency=medium
 
+  [ Stefano Rivera ]
   * Migrate VCS to salsa.debian.org.
+
+  [ Ondřej Nový ]
+  * d/control: Remove ancient X-Python-Version field
 
  -- Stefano Rivera <stefanor@debian.org>  Sat, 24 Feb 2018 23:27:56 +0100
 
