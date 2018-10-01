@@ -5,6 +5,7 @@ distro-info (0.19) UNRELEASED; urgency=medium
 
   [ Ondřej Nový ]
   * d/control: Remove ancient X-Python-Version field
+  * d/control: Remove ancient X-Python3-Version field
 
  -- Stefano Rivera <stefanor@debian.org>  Sat, 24 Feb 2018 23:27:56 +0100
 
