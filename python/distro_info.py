@@ -130,15 +130,15 @@ class DistroInfo(object):
         """Format a given distribution entry."""
         if format_string == "object":
             return release
-        elif format_string == "codename":
+        if format_string == "codename":
             return release.series
-        elif format_string == "fullname":
+        if format_string == "fullname":
             return self._distro + " " + release.version + ' "' + release.codename + '"'
-        elif format_string == "release":
+        if format_string == "release":
             return release.version
-        else:
-            raise ValueError("Only codename, fullname, object, and release are allowed "
-                             "result values, but not '" + format_string + "'.")
+
+        raise ValueError("Only codename, fullname, object, and release are allowed "
+                         "result values, but not '" + format_string + "'.")
 
     def stable(self, date=None, result="codename"):
         """Get latest stable distribution based on the given date."""
@@ -246,7 +246,7 @@ class UbuntuDistroInfo(DistroInfo):
         if date is None:
             date = self._date
         distros = [x for x in self._releases if x.version.find("LTS") >= 0 and
-                   date >= x.release and date <= x.eol]
+                   x.release <= date <= x.eol]
         if not distros:
             raise DistroDataOutdated()
         return self._format(result, distros[-1])
