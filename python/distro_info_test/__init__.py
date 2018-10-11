@@ -16,6 +16,7 @@
 
 import inspect
 import os
+import site
 import sys
 import unittest
 
@@ -30,9 +31,13 @@ def get_source_files():
     for code_file in scripts + modules + py_files:
         is_script = code_file in scripts
         if not os.path.exists(code_file):  # pragma: no cover
-            # The alternative path is needed for Debian's pybuild
-            alternative = os.path.join(os.environ.get("OLDPWD", ""), code_file)
-            code_file = alternative if os.path.exists(alternative) else code_file
+            # The alternative path in the OLDPWD environment is needed for Debian's pybuild
+            # Use installed files as fallback
+            for alternative_path in [os.environ.get("OLDPWD", "")] + site.getsitepackages():
+                alternative = os.path.join(alternative_path, code_file)
+                if os.path.exists(alternative):
+                    code_file = alternative
+                    break
         if is_script:
             with open(code_file, "rb") as script_file:
                 shebang = script_file.readline().decode("utf-8")
