@@ -17,8 +17,8 @@
 """Test suite for distro_info"""
 
 import datetime
+import unittest
 
-from distro_info_test import unittest
 from distro_info import DebianDistroInfo, UbuntuDistroInfo
 
 
