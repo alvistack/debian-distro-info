@@ -1,4 +1,4 @@
-distro-info (0.19) UNRELEASED; urgency=medium
+distro-info (0.19) unstable; urgency=medium
 
   [ Stefano Rivera ]
   * Migrate VCS to salsa.debian.org.
@@ -16,7 +16,17 @@ distro-info (0.19) UNRELEASED; urgency=medium
       instead.
     + Use chained comparison x <= y <= z instead of x <= y and y <= z.
 
- -- Stefano Rivera <stefanor@debian.org>  Sat, 24 Feb 2018 23:27:56 +0100
+  [ Benjamin Drung ]
+  * Update pylint/flake8 unittests to latest version from
+    https://github.com/bdrung/snippets
+  * Support running tests against installed binaries and libraries
+  * Add autopkgtest test suite
+  * Set Rules-Requires-Root: no
+  * Bump Standards-Version to 4.2.1
+  * Do not install distro_info_test into Python libraries
+  * Do not install test-*-distro-info scripts
+
+ -- Benjamin Drung <bdrung@debian.org>  Fri, 12 Oct 2018 01:30:13 +0200
 
 distro-info (0.18) unstable; urgency=medium
 
