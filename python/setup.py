@@ -6,7 +6,7 @@ import re
 from setuptools import setup
 
 
-PACKAGES = ['distro_info_test']
+PACKAGES = []
 PY_MODULES = ['distro_info']
 SCRIPTS = [
     'debian-distro-info',
