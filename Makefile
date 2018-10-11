@@ -20,11 +20,6 @@ install: debian-distro-info ubuntu-distro-info
 	install -d $(DESTDIR)$(PREFIX)/bin
 	install -m 755 $^ $(DESTDIR)$(PREFIX)/bin
 	ln -s $(VENDOR)-distro-info $(DESTDIR)$(PREFIX)/bin/distro-info
-	install -d $(DESTDIR)$(PREFIX)/share/distro-info
-	install -m 644 shunit2-helper-functions.sh $(DESTDIR)$(PREFIX)/share/distro-info
-	$(foreach distro,debian ubuntu,sed -e 's@^\(COMMAND=\"\).*/\(.*-distro-info\"\)$$@\1\2@' \
-	    test-$(distro)-distro-info > $(DESTDIR)$(PREFIX)/share/distro-info/test-$(distro)-distro-info$(\n) \
-	    chmod 755 $(DESTDIR)$(PREFIX)/share/distro-info/test-$(distro)-distro-info$(\n))
 	install -d $(DESTDIR)$(PREFIX)/share/man/man1
 	install -m 644 $(wildcard doc/*.1) $(DESTDIR)$(PREFIX)/share/man/man1
 	install -d $(DESTDIR)$(PREFIX)/share/perl5/Debian
