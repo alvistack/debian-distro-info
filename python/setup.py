@@ -19,7 +19,7 @@ def get_debian_version():
     version = None
     changelog = "../debian/changelog"
     if os.path.exists(changelog):
-        head = open(changelog).readline()
+        head = open(changelog, "rb").readline().decode("utf-8")
         match = re.compile(r".*\((.*)\).*").match(head)
         if match:
             version = match.group(1)
