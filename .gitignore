@@ -4,3 +4,4 @@
 *.pyc
 debian-distro-info
 ubuntu-distro-info
+__pycache__/
