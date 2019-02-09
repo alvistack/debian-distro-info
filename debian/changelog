@@ -1,3 +1,16 @@
+distro-info (0.21) unstable; urgency=medium
+
+  [ Benjamin Drung ]
+  * Fix spelling mistake of exactly.
+    Thanks to Brian Murray <brian@ubuntu.com> (Closes: #921581)
+  * Bump Standards-Version to 4.3.0 (no changes needed)
+
+  [ Balint Reczey ]
+  * Support getting release version by codename in the Perl and Python API
+    (Closes: #896640)
+
+ -- Benjamin Drung <bdrung@debian.org>  Sun, 10 Feb 2019 00:29:24 +0100
+
 distro-info (0.20) unstable; urgency=medium
 
   * Fix build failure with LC_ALL=POSIX by explicitly opening
