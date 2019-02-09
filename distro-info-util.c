@@ -399,7 +399,7 @@ static distro_elem_t *read_data(const char *filename, char **content) {
     lineno = 1;
     if(unlikely(strcmp(CSV_HEADER, line) != 0)) {
         fprintf(stderr, NAME ": Header `%s' in file `%s' does not match "
-                "excatly `" CSV_HEADER "'.\n", line, filename);
+                "exactly `" CSV_HEADER "'.\n", line, filename);
         failures++;
     }
 
