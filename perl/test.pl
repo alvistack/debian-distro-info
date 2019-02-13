@@ -16,7 +16,7 @@
 use strict;
 use warnings;
 
-use Test::Simple tests => 28;
+use Test::Simple tests => 32;
 
 use lib '.';
 use Debian::DistroInfo;
@@ -86,12 +86,17 @@ ok(!defined($deb->codename('foo')), 'Debian codename, invalid');
 ok($deb->codename('testing', $date) eq $deb->testing($date),
    'Debian codename');
 
+ok(!defined($deb->version('foo')), 'Debian version, invalid');
+ok($deb->version('lenny') eq '5.0', 'Debian version');
 
 my $ubu = UbuntuDistroInfo->new();
 @all = ('warty', 'hoary', 'breezy', 'dapper', 'edgy', 'feisty', 'gutsy',
         'hardy', 'intrepid', 'jaunty', 'karmic', 'lucid', 'maverick', 'natty');
 @returned = $ubu->all($date);
 ok(unique(\@all, \@returned) == 0, 'Ubuntu all');
+
+ok($ubu->version('Maverick Meerkat') eq '10.10', 'Ubuntu version');
+ok($ubu->version('lucid') eq '10.04 LTS', 'Ubuntu LTS version');
 
 ok($ubu->devel($date) eq 'natty', 'Ubuntu devel');
 ok($ubu->lts($date) eq 'lucid', 'Ubuntu LTS');

@@ -75,6 +75,11 @@ class DebianDistroInfoTestCase(unittest.TestCase):  # pylint: disable=too-many-p
         self.assertEqual(self._distro_info.codename('testing', self._date),
                          self._distro_info.testing(self._date))
 
+    def test_version(self):
+        """Test: Version decoding"""
+        self.assertIsNone(self._distro_info.version('foobar'))
+        self.assertEqual(self._distro_info.version('lenny'), '5.0')
+
     def test_codename_result(self):
         """Test: Check result set to codename."""
         self.assertEqual(self._distro_info.old(self._date, "codename"), "etch")
@@ -157,6 +162,11 @@ class UbuntuDistroInfoTestCase(unittest.TestCase):  # pylint: disable=too-many-p
         self.assertEqual(self._distro_info.lts(self._date, "codename"), "lucid")
         self.assertEqual(self._distro_info.devel(self._date, result="codename"),
                          "natty")
+
+    def test_version(self):
+        """Test: Check result set to version."""
+        self.assertEqual(self._distro_info.version("lucid"), '10.04 LTS')
+        self.assertEqual(self._distro_info.version("Maverick Meerkat"), '10.10')
 
     def test_fullname(self):
         """Test: Check result set to fullname."""

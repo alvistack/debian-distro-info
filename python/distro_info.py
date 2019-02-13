@@ -116,6 +116,13 @@ class DistroInfo(object):
         # pylint: disable=no-self-use,unused-argument
         return release
 
+    def version(self, name, default=None):
+        """Map codename or series to version"""
+        for release in self._releases:
+            if name in (release.codename, release.series):
+                return release.version
+        return default
+
     def devel(self, date=None, result="codename"):
         """Get latest development distribution based on the given date."""
         if date is None:
