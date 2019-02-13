@@ -1,3 +1,9 @@
+distro-info (0.21~bpo9+1) stretch-backports; urgency=medium
+
+  * Rebuild for stretch-backports.
+
+ -- Stefano Rivera <stefanor@debian.org>  Wed, 13 Feb 2019 13:19:42 -0800
+
 distro-info (0.21) unstable; urgency=medium
 
   [ Benjamin Drung ]
