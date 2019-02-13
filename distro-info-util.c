@@ -520,8 +520,8 @@ static void print_help(void) {
 
     printf(""
 #ifdef DEBIAN
-           "      --alias=DIST       print the alias (stable, testing, unstable) relative to\n"
-           "                         the distribution codename passed as an argument\n"
+           "      --alias=DIST       print the alias (oldstable, stable, testing, unstable)\n"
+           "                         relative to the given distribution codename\n"
 #endif
            "  -a  --all              list all known versions\n"
            "  -d  --devel            latest development version\n"
@@ -848,15 +848,20 @@ int main(int argc, char *argv[]) {
 
 #ifdef DEBIAN
     if(alias_codename) {
+        const distro_t *oldstable = get_distro(distro_list, date, filter_oldstable,
+                                               select_oldstable);
         const distro_t *stable = get_distro(distro_list, date, filter_stable,
                                             select_latest_release);
         const distro_t *testing = get_distro(distro_list, date, filter_testing,
                                              select_latest_created);
         const distro_t *unstable = get_distro(distro_list, date, filter_devel,
                                               select_first);
-        if(unlikely(stable == NULL || testing == NULL || unstable == NULL)) {
+        if(unlikely(oldstable == NULL || stable == NULL || testing == NULL ||
+                    unstable == NULL)) {
             fprintf(stderr, NAME ": " OUTDATED_ERROR "\n");
             return_value = EXIT_FAILURE;
+        } else if(strcmp(oldstable->series, alias_codename) == 0) {
+            printf("oldstable\n");
         } else if(strcmp(stable->series, alias_codename) == 0) {
             printf("stable\n");
         } else if(strcmp(testing->series, alias_codename) == 0) {

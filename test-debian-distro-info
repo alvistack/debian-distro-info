@@ -14,7 +14,7 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-COMMAND="${0%/*}/debian-distro-info"
+COMMAND="${COMMAND:-${0%/*}/debian-distro-info}"
 
 . "${0%/*}/shunit2-helper-functions.sh"
 
@@ -161,8 +161,8 @@ Options:
       --series=SERIES    series to calculate the version for
   -y[MILESTONE]          additionally, display days until milestone
       --days=[MILESTONE] (created, release, eol)
-      --alias=DIST       print the alias (stable, testing, unstable) relative to
-                         the distribution codename passed as an argument
+      --alias=DIST       print the alias (oldstable, stable, testing, unstable)
+                         relative to the given distribution codename
   -a  --all              list all known versions
   -d  --devel            latest development version
   -o  --oldstable        latest oldstable version
