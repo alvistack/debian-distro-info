@@ -57,9 +57,10 @@ class DistroDataOutdated(Exception):
 class DistroRelease(object):
     """Represents a distributions release"""
     # pylint: disable=too-few-public-methods
+    # pylint: disable=too-many-instance-attributes
 
     def __init__(self, version, codename, series, created=None, release=None, eol=None,
-                 eol_server=None):
+                 eol_server=None, eol_esm=None):
         # pylint: disable=too-many-arguments
         self.version = version
         self.codename = codename
@@ -68,6 +69,7 @@ class DistroRelease(object):
         self.release = release
         self.eol = eol
         self.eol_server = eol_server
+        self.eol_esm = eol_esm
 
     def is_supported(self, date):
         """Check whether this release is supported on the given date."""
@@ -93,7 +95,8 @@ class DistroInfo(object):
         for row in csv_reader:
             release = DistroRelease(row['version'], row['codename'], row['series'],
                                     _get_date(row, 'created'), _get_date(row, 'release'),
-                                    _get_date(row, 'eol'), _get_date(row, 'eol-server'))
+                                    _get_date(row, 'eol'), _get_date(row, 'eol-server'),
+                                    _get_date(row, 'eol-esm'))
             self._releases.append(release)
         csvfile.close()
         self._date = datetime.date.today()
@@ -273,4 +276,13 @@ class UbuntuDistroInfo(DistroInfo):
         distros = [self._format(result, x) for x in self._avail(date)
                    if date <= x.eol or
                    (x.eol_server is not None and date <= x.eol_server)]
+        return distros
+
+    def supported_esm(self, date=None, result="codename"):
+        """Get list of all ESM supported Ubuntu distributions based on the
+           given date."""
+        if date is None:
+            date = self._date
+        distros = [self._format(result, x) for x in self._avail(date)
+                   if x.eol_esm is not None and date <= x.eol_esm]
         return distros

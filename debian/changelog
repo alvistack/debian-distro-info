@@ -1,3 +1,11 @@
+distro-info (0.21ubuntu1) disco; urgency=medium
+
+  * Provide support for the milestone eol-esm and add filters for
+    supported-esm to ubuntu-distro-info along with the python and perl
+    modules. (LP: #1808038)
+
+ -- Brian Murray <brian@ubuntu.com>  Wed, 27 Feb 2019 12:49:49 -0800
+
 distro-info (0.21) unstable; urgency=medium
 
   [ Benjamin Drung ]

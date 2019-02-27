@@ -1,11 +1,12 @@
 Source: distro-info
 Section: devel
 Priority: optional
-Maintainer: Benjamin Drung <bdrung@debian.org>
+Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
+XSBC-Original-Maintainer: Benjamin Drung <bdrung@debian.org>
 Uploaders: Stefano Rivera <stefanor@debian.org>
 Build-Depends: debhelper (>= 11),
                dh-python,
-               distro-info-data (>= 0.7~),
+               distro-info-data (>= 0.39ubuntu1),
                pylint,
                pylint3,
                python-all (>= 2.6.3-3~),
@@ -23,7 +24,7 @@ Vcs-Browser: https://salsa.debian.org/debian/distro-info
 
 Package: distro-info
 Architecture: any
-Depends: distro-info-data (>= 0.7~), ${misc:Depends}, ${shlibs:Depends}
+Depends: distro-info-data (>= 0.39ubuntu1), ${misc:Depends}, ${shlibs:Depends}
 Suggests: shunit2 (>= 2.1.6)
 Breaks: ubuntu-dev-tools (<< 0.133~)
 Replaces: ubuntu-dev-tools (<< 0.127~)
