@@ -40,6 +40,7 @@ static char *milestones[] = {"created"
                             ,"eol"
 #ifdef UBUNTU
                             ,"eol-server"
+                            ,"eol-esm"
 #endif
 };
 
@@ -193,6 +194,17 @@ static inline bool eol(const date_t *date, const distro_t *distro) {
     ;
 }
 
+#ifdef UBUNTU
+static inline bool eol_esm(const date_t *date, const distro_t *distro) {
+    return distro->milestones[MILESTONE_EOL] &&
+           date_ge(date, distro->milestones[MILESTONE_EOL])
+           && (!distro->milestones[MILESTONE_EOL_ESM] ||
+              (distro->milestones[MILESTONE_EOL_ESM] &&
+               date_ge(date, distro->milestones[MILESTONE_EOL_ESM])))
+    ;
+}
+#endif
+
 // Filter callbacks
 
 static bool filter_all(unused(const date_t *date),
@@ -207,6 +219,12 @@ static bool filter_stable(const date_t *date, const distro_t *distro) {
 static bool filter_supported(const date_t *date, const distro_t *distro) {
     return created(date, distro) && !eol(date, distro);
 }
+
+#ifdef UBUNTU
+static bool filter_esm_supported(const date_t *date, const distro_t *distro) {
+    return created(date, distro) && !eol_esm(date, distro);
+}
+#endif
 
 static bool filter_unsupported(const date_t *date, const distro_t *distro) {
     return created(date, distro) && eol(date, distro);
@@ -374,6 +392,7 @@ static void free_data(distro_elem_t *list, char **content) {
         free(list->distro->milestones[MILESTONE_EOL]);
 #ifdef UBUNTU
         free(list->distro->milestones[MILESTONE_EOL_SERVER]);
+        free(list->distro->milestones[MILESTONE_EOL_ESM]);
 #endif
         free(list->distro);
         free(list);
@@ -533,6 +552,9 @@ static void print_help(void) {
 #endif
            "  -s  --stable           latest stable version\n"
            "      --supported        list of all supported stable versions\n"
+#ifdef UBUNTU
+           "      --supported-esm    list of all Ubuntu Advantage supported stable versions\n"
+#endif
 #ifdef DEBIAN
            "  -t  --testing          current testing version\n"
 #endif
@@ -557,6 +579,9 @@ static inline int not_exactly_one(void) {
             "--oldstable, "
 #endif
             "--stable, --supported, "
+#ifdef UBUNTU
+            "--supported-esm, "
+#endif
             "--series, "
 #ifdef DEBIAN
             "--testing, "
@@ -590,28 +615,31 @@ int main(int argc, char *argv[]) {
 #endif
 
     const struct option long_options[] = {
-        {"help",        no_argument,       NULL, 'h' },
-        {"date",        required_argument, NULL, 'D' },
-        {"series",      required_argument, NULL, 'R' },
-        {"all",         no_argument,       NULL, 'a' },
-        {"days",        optional_argument, NULL, 'y' },
-        {"devel",       no_argument,       NULL, 'd' },
-        {"stable",      no_argument,       NULL, 's' },
-        {"supported",   no_argument,       NULL, 'S' },
-        {"unsupported", no_argument,       NULL, 'U' },
-        {"codename",    no_argument,       NULL, 'c' },
-        {"fullname",    no_argument,       NULL, 'f' },
-        {"release",     no_argument,       NULL, 'r' },
+        {"help",          no_argument,       NULL, 'h' },
+        {"date",          required_argument, NULL, 'D' },
+        {"series",        required_argument, NULL, 'R' },
+        {"all",           no_argument,       NULL, 'a' },
+        {"days",          optional_argument, NULL, 'y' },
+        {"devel",         no_argument,       NULL, 'd' },
+        {"stable",        no_argument,       NULL, 's' },
+        {"supported",     no_argument,       NULL, 'S' },
+#ifdef UBUNTU
+        {"supported-esm", no_argument,       NULL, 'e' },
+#endif
+        {"unsupported",   no_argument,       NULL, 'U' },
+        {"codename",      no_argument,       NULL, 'c' },
+        {"fullname",      no_argument,       NULL, 'f' },
+        {"release",       no_argument,       NULL, 'r' },
 #ifdef DEBIAN
-        {"alias",       required_argument, NULL, 'A' },
-        {"oldstable",   no_argument,       NULL, 'o' },
-        {"testing",     no_argument,       NULL, 't' },
+        {"alias",         required_argument, NULL, 'A' },
+        {"oldstable",     no_argument,       NULL, 'o' },
+        {"testing",       no_argument,       NULL, 't' },
 #endif
 #ifdef UBUNTU
-        {"latest",      no_argument,       NULL, 'l' },
-        {"lts",         no_argument,       NULL, 'L' },
+        {"latest",        no_argument,       NULL, 'l' },
+        {"lts",           no_argument,       NULL, 'L' },
 #endif
-        {NULL,          0,                 NULL, '\0' }
+        {NULL,            0,                 NULL, '\0' }
     };
 
 #ifdef UBUNTU
@@ -753,6 +781,15 @@ int main(int argc, char *argv[]) {
                 select_cb = NULL;
                 break;
 
+#ifdef UBUNTU
+            case 'e':
+                // Only long option --supported-esm is used
+                selected_filters++;
+                filter_cb = filter_esm_supported;
+                select_cb = NULL;
+                break;
+
+#endif
 #ifdef DEBIAN
             case 't':
                 selected_filters++;

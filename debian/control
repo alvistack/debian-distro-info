@@ -18,7 +18,7 @@ Vcs-Browser: https://salsa.debian.org/debian/distro-info
 
 Package: distro-info
 Architecture: any
-Depends: distro-info-data (>= 0.7~), ${misc:Depends}, ${shlibs:Depends}
+Depends: distro-info-data (>= 0.39ubuntu1), ${misc:Depends}, ${shlibs:Depends}
 Suggests: shunit2 (>= 2.1.6)
 Breaks: ubuntu-dev-tools (<< 0.133~)
 Replaces: ubuntu-dev-tools (<< 0.127~)

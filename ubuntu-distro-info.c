@@ -16,7 +16,7 @@
 
 #define UBUNTU
 #define CSV_NAME "ubuntu"
-#define CSV_HEADER "version,codename,series,created,release,eol,eol-server"
+#define CSV_HEADER "version,codename,series,created,release,eol,eol-server,eol-esm"
 #define DISTRO_NAME "Ubuntu"
 #define NAME "ubuntu-distro-info"
 

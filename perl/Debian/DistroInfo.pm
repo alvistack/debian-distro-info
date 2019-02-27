@@ -77,7 +77,7 @@ sub convert_date {
             for my $col (@header) {
                 $row{$col} = shift(@raw_row) or undef;
             }
-            for my $col ('created', 'release', 'eol', 'eol-server') {
+            for my $col ('created', 'release', 'eol', 'eol-server', 'eol-esm') {
                 if(defined($row{$col})) {
                     $row{$col} = Debian::DistroInfo::convert_date($row{$col});
                 }
@@ -324,6 +324,18 @@ sub convert_date {
         for my $row ($self->_avail($date)) {
             if ($date <= $row->{'eol'}
                   || (defined($row->{'eol-server'}) && $date <= $row->{'eol-server'})) {
+                push(@distros, $row->{'series'});
+            }
+        }
+        return @distros;
+    }
+
+    sub supported_esm {
+        my ($self, $date) = @_;
+        $date = $self->{'date'} if (!defined($date));
+        my @distros;
+        for my $row ($self->_avail($date)) {
+            if (defined($row->{'eol-esm'}) && $date <= $row->{'eol-esm'}) {
                 push(@distros, $row->{'series'});
             }
         }
