@@ -1,3 +1,9 @@
+distro-info (0.21ubuntu2) disco; urgency=medium
+
+  * Only include LTS releases when filtering by supported-esm.
+
+ -- Brian Murray <brian@ubuntu.com>  Mon, 04 Mar 2019 08:51:32 -0800
+
 distro-info (0.21ubuntu1) disco; urgency=medium
 
   * Provide support for the milestone eol-esm and add filters for
