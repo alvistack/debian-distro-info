@@ -12,6 +12,7 @@ distro-info (0.25) UNRELEASED; urgency=medium
   * Provide support for the milestone eol-esm and add filters for
     supported-esm to ubuntu-distro-info along with the python and perl
     modules. (LP: #1808038)
+  * Only include LTS releases when filtering by supported-esm.
 
  -- Stefano Rivera <stefanor@debian.org>  Wed, 27 Jan 2021 19:46:16 -0700
 

@@ -222,7 +222,8 @@ static bool filter_supported(const date_t *date, const distro_t *distro) {
 
 #ifdef UBUNTU
 static bool filter_esm_supported(const date_t *date, const distro_t *distro) {
-    return created(date, distro) && !eol_esm(date, distro);
+    return created(date, distro) && !eol_esm(date, distro) &&
+           strstr(distro->version, "LTS") != NULL;
 }
 #endif
 
