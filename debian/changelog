@@ -14,6 +14,11 @@ distro-info (0.25) UNRELEASED; urgency=medium
     modules. (LP: #1808038)
   * Only include LTS releases when filtering by supported-esm.
 
+  [ Steve Langasek ]
+  * Override uninteresting flake8 warnings about imports and doc strings.
+  * Don't run tests over the distro_info_test directory, which is pointless
+    and recursive.
+
  -- Stefano Rivera <stefanor@debian.org>  Wed, 27 Jan 2021 19:46:16 -0700
 
 distro-info (0.24) unstable; urgency=medium

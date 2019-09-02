@@ -24,7 +24,7 @@ import unittest
 def get_source_files():
     """Return a list of sources files/directories (to check with flake8/pylint)"""
     scripts = ["debian-distro-info", "ubuntu-distro-info"]
-    modules = ["distro_info_test"]
+    modules = []
     py_files = ["distro_info.py", "setup.py"]
 
     files = []
