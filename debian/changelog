@@ -1,3 +1,12 @@
+distro-info (0.21ubuntu4) eoan; urgency=medium
+
+  * Also adjust build-dependencies for the pylint3/pylint rename.
+  * Override uninteresting flake8 warnings about imports and doc strings.
+  * Don't run tests over the distro_info_test directory, which is pointless
+    and recursive.
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Mon, 02 Sep 2019 09:51:58 -0700
+
 distro-info (0.21ubuntu3) eoan; urgency=medium
 
   * Drop the python2 autopkgtest; there are still python2 reverse-depends
