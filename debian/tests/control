@@ -10,8 +10,3 @@ Test-Command: cp -r python/distro_info_test python/*-distro-info python/setup.py
 Depends: pylint3, python3-all, python3-distro-info, python3-flake8
 Restrictions: allow-stderr
 Features: test-name=python3-unittest
-
-Test-Command: cp -r python/distro_info_test python/*-distro-info python/setup.py "$AUTOPKGTEST_TMP"; for py in $(pyversions -r 2>/dev/null); do cd "$AUTOPKGTEST_TMP"; echo "Testing with $py:"; $py -m unittest discover -v; done
-Depends: pylint, python-all, python-distro-info, python-flake8
-Restrictions: allow-stderr
-Features: test-name=python-unittest

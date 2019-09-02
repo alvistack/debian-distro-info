@@ -1,3 +1,12 @@
+distro-info (0.21ubuntu3) eoan; urgency=medium
+
+  * Drop the python2 autopkgtest; there are still python2 reverse-depends
+    so the python2 package can't go away yet but the test deps should go
+    away not.  Better to drop the python2 tests than to override failing
+    tests.
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Mon, 02 Sep 2019 09:40:34 -0700
+
 distro-info (0.21ubuntu2) disco; urgency=medium
 
   * Only include LTS releases when filtering by supported-esm.
