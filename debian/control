@@ -6,7 +6,7 @@ Uploaders: Stefano Rivera <stefanor@debian.org>
 Build-Depends: debhelper (>= 11),
                dh-python,
                distro-info-data (>= 0.7~),
-               pylint3,
+               pylint (>= 2.2.2-2~) | pylint3,
                python-all (>= 2.6.3-3~),
                python-flake8,
                python-setuptools,
