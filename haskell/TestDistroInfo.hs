@@ -26,6 +26,8 @@ import DistroInfo
 
 date1 :: Day
 date1 = fromGregorian 2011 01 10
+date2 :: Day
+date2 = fromGregorian 2016 02 28
 
 ------------------
 -- Debian tests --
@@ -61,6 +63,12 @@ testDebianSupported d = TestCase (assertEqual "Debian supported" expected result
   where
     expected = ["lenny", "squeeze", "sid", "experimental"]
     result = map debSeries $ debianSupported date1 d
+
+testDebianSupportedLTS :: [DebianEntry] -> Test
+testDebianSupportedLTS d = TestCase (assertEqual "Debian LTS" expected result)
+  where
+    expected = ["squeeze"]
+    result = map debSeries $ debianSupportedLTS date2 d
 
 testDebianTesting :: [DebianEntry] -> Test
 testDebianTesting d = TestCase (assertEqual "Debian testing" expected result)
@@ -126,6 +134,7 @@ tests :: [DebianEntry] -> [UbuntuEntry] -> Test
 tests d u = TestList [
     testDebianAll d,
     testDebianDevel d,
+    testDebianSupportedLTS d,
     testDebianOldstable d,
     testDebianStable d,
     testDebianSupported d,
