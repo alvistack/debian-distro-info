@@ -68,8 +68,9 @@ class DistroRelease(object):
         created=None,
         release=None,
         eol=None,
-        eol_server=None,
         eol_esm=None,
+        eol_lts=None,
+        eol_server=None,
     ):
         # pylint: disable=too-many-arguments
         self.version = version
@@ -78,8 +79,9 @@ class DistroRelease(object):
         self.created = created
         self.release = release
         self.eol = eol
-        self.eol_server = eol_server
+        self.eol_lts = eol_lts
         self.eol_esm = eol_esm
+        self.eol_server = eol_server
 
     def is_supported(self, date):
         """Check whether this release is supported on the given date."""
@@ -113,8 +115,9 @@ class DistroInfo(object):
                 _get_date(row, "created"),
                 _get_date(row, "release"),
                 _get_date(row, "eol"),
-                _get_date(row, "eol-server"),
                 _get_date(row, "eol-esm"),
+                _get_date(row, "eol-lts"),
+                _get_date(row, "eol-server"),
             )
             self._releases.append(release)
         csvfile.close()
@@ -253,6 +256,19 @@ class DebianDistroInfo(DistroInfo):
             date = self._date
         distros = [
             self._format(result, x) for x in self._avail(date) if x.eol is None or date <= x.eol
+        ]
+        return distros
+
+    def lts_supported(self, date=None, result="codename"):
+        """Get list of all LTS supported Debian distributions based on the given
+        date."""
+        if date is None:
+            date = self._date
+        distros = [
+            self._format(result, x)
+            for x in self._avail(date)
+            if (x.eol is not None and date > x.eol)
+            and (x.eol_lts is not None and date <= x.eol_lts)
         ]
         return distros
 

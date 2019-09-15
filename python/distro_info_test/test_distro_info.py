@@ -66,6 +66,11 @@ class DebianDistroInfoTestCase(unittest.TestCase):  # pylint: disable=too-many-p
             self._distro_info.supported(self._date), ["lenny", "squeeze", "sid", "experimental"]
         )
 
+    def test_lts_supported(self):
+        """Test: List all LTS supported Debian distribution."""
+        date = datetime.date(2016, 2, 28)
+        self.assertEqual(self._distro_info.lts_supported(date), ["squeeze"])
+
     def test_testing(self):
         """Test: Get latest testing Debian distribution."""
         self.assertEqual(self._distro_info.testing(self._date), "squeeze")
