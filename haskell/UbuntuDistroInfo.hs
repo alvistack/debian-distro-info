@@ -21,7 +21,6 @@ import System.Console.GetOpt
 import System.Environment
 import System.Exit
 import System.IO
-import System.Locale
 
 import Text.CSV
 
@@ -53,7 +52,7 @@ options :: [OptDescr (Options -> IO Options)]
 options =
   let
     readDate arg opt =
-      return opt { optDate = readTime defaultTimeLocale "%F" arg }
+      return opt { optDate = parseTimeOrError False defaultTimeLocale "%F" arg }
     printHelp _ =
       do
         prg <- getProgName
