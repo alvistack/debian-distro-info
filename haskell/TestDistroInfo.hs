@@ -119,6 +119,12 @@ testUbuntuSupported u = TestCase (assertEqual "Ubuntu supported" expected result
     expected = ["dapper", "hardy", "karmic", "lucid", "maverick", "natty"]
     result = map ubuSeries $ ubuntuSupported date1 u
 
+testUbuntuSupportedESM :: [UbuntuEntry] -> Test
+testUbuntuSupportedESM u = TestCase (assertEqual "Ubuntu ESM" expected result)
+  where
+    expected = ["precise", "trusty", "xenial"]
+    result = map ubuSeries $ ubuntuSupportedESM date2 u
+
 testUbuntuUnsupported :: [UbuntuEntry] -> Test
 testUbuntuUnsupported u = TestCase (assertEqual "Ubuntu unsupported" expected result)
   where
@@ -145,6 +151,7 @@ tests d u = TestList [
     testUbuntuLTS u,
     testUbuntuStable u,
     testUbuntuSupported u,
+    testUbuntuSupportedESM u,
     testUbuntuUnsupported u
   ]
 

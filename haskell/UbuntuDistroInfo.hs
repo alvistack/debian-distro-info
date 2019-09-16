@@ -46,7 +46,8 @@ startOptions = do
 
 onlyOneFilter :: a
 onlyOneFilter = error ("You have to select exactly one of --all, --devel, " ++
-                       "--lts, --stable, --supported, --unsupported.")
+                       "--lts, --stable, --supported, --supported-esm, " ++
+                       "--unsupported.")
 
 options :: [OptDescr (Options -> IO Options)]
 options =
@@ -78,6 +79,8 @@ options =
              "latest stable version"
     , Option "" ["supported"] (NoArg (setFilter ubuntuSupported))
              "list of all supported stable versions"
+    , Option "" ["supported-esm"] (NoArg (setFilter ubuntuSupportedESM))
+             "list of all Ubuntu Advantage supported stable versions"
     , Option "" ["unsupported"] (NoArg (setFilter ubuntuUnsupported))
              "list of all unsupported stable versions"
     , Option "c" ["codename"]

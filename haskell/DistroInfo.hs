@@ -30,6 +30,7 @@ module DistroInfo (DebianEntry, debVersion, debSeries, debFull,
                    ubuntuLTS,
                    ubuntuStable,
                    ubuntuSupported,
+                   ubuntuSupportedESM,
                    ubuntuUnsupported,
                   ) where
 
@@ -59,7 +60,8 @@ data UbuntuEntry = UbuntuEntry { ubuVersion :: String,
                                  ubuCreated :: Day,
                                  ubuRelease :: Day,
                                  ubuEol :: Day,
-                                 ubuEolServer :: Maybe Day
+                                 ubuEolServer :: Maybe Day,
+                                 ubuEolESM :: Maybe Day
                                } deriving(Eq, Show)
 
 -- | Splits a string by a given character (similar to the Python split function)
@@ -106,6 +108,7 @@ ubuntuEntry (heading : content) =
                   (convertDate $ m ! "created") (convertDate $ m ! "release")
                   (convertDate $ m ! "eol")
                   (maybeDate $ Map.lookup "eol-server" m)
+                  (maybeDate $ Map.lookup "eol-esm" m)
 
 -- | Converts a given CSV data into a list of Debian entries
 debianEntry :: CSV -> [DebianEntry]
@@ -235,6 +238,13 @@ ubuntuSupported date = filter isSupported
     isSupported UbuntuEntry { ubuCreated = created, ubuEol = eol,
                               ubuEolServer = eolServer } =
       date >= created && (date <= eol || maybe False (date <=) eolServer)
+
+-- | Get list of all ESM supported distributions based on the given date.
+ubuntuSupportedESM :: Day -> [UbuntuEntry] -> [UbuntuEntry]
+ubuntuSupportedESM date = filter isSupportedESM
+  where
+    isSupportedESM UbuntuEntry { ubuCreated = created, ubuEolESM = eolESM } =
+      date >= created && maybe False (date <=) eolESM
 
 -- | Get list of all unsupported distributions based on the given date.
 ubuntuUnsupported :: Day -> [UbuntuEntry] -> [UbuntuEntry]
