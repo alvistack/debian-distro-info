@@ -69,6 +69,10 @@ experimental"
     success "--date=2011-01-10 --supported" "$result"
 }
 
+testLTS() {
+    success "--date=2016-02-28 --lts" "squeeze"
+}
+
 testUnsupported() {
     local result="buzz
 rex
@@ -160,11 +164,12 @@ Options:
       --date=DATE        date for calculating the version (default: today)
       --series=SERIES    series to calculate the version for
   -y[MILESTONE]          additionally, display days until milestone
-      --days=[MILESTONE] (created, release, eol)
+      --days=[MILESTONE] (created, release, eol, eol-lts)
       --alias=DIST       print the alias (oldstable, stable, testing, unstable)
                          relative to the given distribution codename
   -a  --all              list all known versions
   -d  --devel            latest development version
+  -l  --lts              list of all LTS supported versions
   -o  --oldstable        latest oldstable version
   -s  --stable           latest stable version
       --supported        list of all supported stable versions
@@ -180,7 +185,7 @@ See debian-distro-info(1) for more info.'
 }
 
 testExactlyOne() {
-    local result='debian-distro-info: You have to select exactly one of --alias, --all, --devel, --oldstable, --stable, --supported, --series, --testing, --unsupported.'
+    local result='debian-distro-info: You have to select exactly one of --alias, --all, --devel, --lts, --oldstable, --stable, --supported, --series, --testing, --unsupported.'
     failure "" "$result"
     failure "-ad" "$result"
     failure "--alias foo -a" "$result"
@@ -189,7 +194,7 @@ testExactlyOne() {
 testUnrecognizedOption() {
     failure "--foo" "debian-distro-info: unrecognized option \`--foo'"
     failure "-x" "debian-distro-info: unrecognized option \`-x'"
-    failure "--lts" "debian-distro-info: unrecognized option \`--lts'"
+    failure "--supported-esm" "debian-distro-info: unrecognized option \`--supported-esm'"
 }
 
 testUnrecognizedArguments() {

@@ -34,6 +34,9 @@
 enum MILESTONE {MILESTONE_CREATED
                ,MILESTONE_RELEASE
                ,MILESTONE_EOL
+#ifdef DEBIAN
+               ,MILESTONE_EOL_LTS
+#endif
 #ifdef UBUNTU
                ,MILESTONE_EOL_SERVER
                ,MILESTONE_EOL_ESM
@@ -71,6 +74,9 @@ static inline bool date_ge(const date_t *date1, const date_t *date2);
 static inline bool created(const date_t *date, const distro_t *distro);
 static inline bool released(const date_t *date, const distro_t *distro);
 static inline bool eol(const date_t *date, const distro_t *distro);
+#ifdef DEBIAN
+static inline bool eol_lts(const date_t *date, const distro_t *distro);
+#endif
 #ifdef UBUNTU
 static inline bool eol_esm(const date_t *date, const distro_t *distro);
 #endif

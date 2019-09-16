@@ -38,6 +38,9 @@
 static char *milestones[] = {"created"
                             ,"release"
                             ,"eol"
+#ifdef DEBIAN
+                            ,"eol-lts"
+#endif
 #ifdef UBUNTU
                             ,"eol-server"
                             ,"eol-esm"
@@ -194,6 +197,14 @@ static inline bool eol(const date_t *date, const distro_t *distro) {
     ;
 }
 
+#ifdef DEBIAN
+static inline bool eol_lts(const date_t *date, const distro_t *distro) {
+    return !distro->milestones[MILESTONE_EOL_LTS] ||
+           date_ge(date, distro->milestones[MILESTONE_EOL_LTS])
+    ;
+}
+#endif
+
 #ifdef UBUNTU
 static inline bool eol_esm(const date_t *date, const distro_t *distro) {
     return distro->milestones[MILESTONE_EOL] &&
@@ -219,6 +230,12 @@ static bool filter_stable(const date_t *date, const distro_t *distro) {
 static bool filter_supported(const date_t *date, const distro_t *distro) {
     return created(date, distro) && !eol(date, distro);
 }
+
+#ifdef DEBIAN
+static bool filter_lts_supported(const date_t *date, const distro_t *distro) {
+    return created(date, distro) && eol(date, distro) && !eol_lts(date, distro);
+}
+#endif
 
 #ifdef UBUNTU
 static bool filter_esm_supported(const date_t *date, const distro_t *distro) {
@@ -549,6 +566,7 @@ static void print_help(void) {
            "      --lts              latest long term support (LTS) version\n"
 #endif
 #ifdef DEBIAN
+           "  -l  --lts              list of all LTS supported versions\n"
            "  -o  --oldstable        latest oldstable version\n"
 #endif
            "  -s  --stable           latest stable version\n"
@@ -574,8 +592,9 @@ static inline int not_exactly_one(void) {
 #endif
             "--all, --devel, "
 #ifdef UBUNTU
-            "--latest, --lts, "
+            "--latest, "
 #endif
+            "--lts, "
 #ifdef DEBIAN
             "--oldstable, "
 #endif
@@ -633,6 +652,7 @@ int main(int argc, char *argv[]) {
         {"release",       no_argument,       NULL, 'r' },
 #ifdef DEBIAN
         {"alias",         required_argument, NULL, 'A' },
+        {"lts",           no_argument,       NULL, 'l' },
         {"oldstable",     no_argument,       NULL, 'o' },
         {"testing",       no_argument,       NULL, 't' },
 #endif
@@ -647,7 +667,7 @@ int main(int argc, char *argv[]) {
     const char *short_options = "hadscrfly::";
 #endif
 #ifdef DEBIAN
-    const char *short_options = "hadscrfoty::";
+    const char *short_options = "hadscrfloty::";
 #endif
 
     // Suppress error messages from getopt_long
@@ -757,6 +777,12 @@ int main(int argc, char *argv[]) {
 #endif
 
 #ifdef DEBIAN
+            case 'l':
+                selected_filters++;
+                filter_cb = filter_lts_supported;
+                select_cb = NULL;
+                break;
+
             case 'o':
                 selected_filters++;
                 filter_cb = filter_oldstable;
