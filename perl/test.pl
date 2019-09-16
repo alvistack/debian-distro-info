@@ -16,7 +16,7 @@
 use strict;
 use warnings;
 
-use Test::Simple tests => 33;
+use Test::Simple tests => 34;
 
 use lib '.';
 use Debian::DistroInfo;
@@ -76,6 +76,11 @@ ok(!$deb->valid('foobar'), 'Debian invalid');
 @returned = $deb->supported($date1);
 ok(symmetric_difference(\@expected, \@returned) == 0,
    'Debian supported');
+
+@expected = ('squeeze');
+@returned = $deb->supported_lts($date2);
+ok(symmetric_difference(\@expected, \@returned) == 0,
+   'Debian LTS');
 
 @expected = ('buzz', 'rex', 'bo', 'hamm', 'slink', 'potato', 'woody', 'sarge',
              'etch');
