@@ -160,11 +160,11 @@ main() {
 			-a|--all)
 				[ -z "$callback" ] || { not_exactly_one; return 1; }
 				callback="all";;
-		   	--date=*)
+			--date=*)
 				date=${1#*=};
 				[ -n "$date" ] || { date_requires_arg; return 1; }
 				;;
-		   	--date)
+			--date)
 				date="$2";
 				[ -n "$2" ] || { date_requires_arg; return 1; }
 				shift;;
@@ -181,7 +181,7 @@ main() {
 			-r|--release)  fmt="print_release";;
 			-f|--fullname) fmt="print_fullname";;
 #BEGIN ubuntu#
-		   	--lts)
+			--lts)
 				[ -z "$callback" ] || { not_exactly_one; return 1; }
 				callback="lts";;
 #END ubuntu#
