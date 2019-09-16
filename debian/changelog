@@ -7,6 +7,7 @@ distro-info (0.25) UNRELEASED; urgency=medium
   * Bump standards-Version to 4.5.1, no changes needed.
   * Bump copyright years.
   * Re-black Python.
+  * Add support for Debian LTS (Closes: #782685)
 
   [ Brian Murray ]
   * Provide support for the milestone eol-esm and add filters for
