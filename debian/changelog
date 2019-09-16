@@ -1,4 +1,4 @@
-distro-info (0.25) UNRELEASED; urgency=medium
+distro-info (1.0) UNRELEASED; urgency=medium
 
   [ Debian Janitor ]
   * Mark libdistro-info-perl as Multi-Arch: foreign.
