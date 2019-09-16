@@ -8,6 +8,8 @@ distro-info (0.25) UNRELEASED; urgency=medium
   * Bump copyright years.
   * Re-black Python.
   * Add support for Debian LTS (Closes: #782685)
+  * Depend on distro-info-data (>= 0.46), with extra columns for
+    Debian LTS and Ubuntu ESM.
 
   [ Brian Murray ]
   * Provide support for the milestone eol-esm and add filters for

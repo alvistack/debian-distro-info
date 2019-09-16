@@ -5,7 +5,7 @@ Maintainer: Benjamin Drung <bdrung@debian.org>
 Uploaders: Stefano Rivera <stefanor@debian.org>
 Build-Depends: debhelper-compat (= 13),
                dh-python,
-               distro-info-data (>= 0.7~),
+               distro-info-data (>= 0.46),
                pylint (>= 2.2.2-2~),
                python3-all,
                python3-flake8,
@@ -18,7 +18,7 @@ Vcs-Browser: https://salsa.debian.org/debian/distro-info
 
 Package: distro-info
 Architecture: any
-Depends: distro-info-data (>= 0.39ubuntu1), ${misc:Depends}, ${shlibs:Depends}
+Depends: distro-info-data (>= 0.46), ${misc:Depends}, ${shlibs:Depends}
 Suggests: shunit2 (>= 2.1.6)
 Breaks: ubuntu-dev-tools (<< 0.133~)
 Replaces: ubuntu-dev-tools (<< 0.127~)
@@ -31,7 +31,7 @@ Description: provides information about the distributions' releases
 Package: libdistro-info-perl
 Architecture: all
 Section: perl
-Depends: distro-info-data, ${misc:Depends}, ${perl:Depends}
+Depends: distro-info-data (>= 0.46), ${misc:Depends}, ${perl:Depends}
 Multi-Arch: foreign
 Description: information about distributions' releases (Perl module)
  Information about all releases of Debian and Ubuntu.
@@ -42,7 +42,7 @@ Description: information about distributions' releases (Perl module)
 Package: python3-distro-info
 Architecture: all
 Section: python
-Depends: distro-info-data, ${misc:Depends}, ${python3:Depends}
+Depends: distro-info-data (>= 0.46), ${misc:Depends}, ${python3:Depends}
 Description: information about distributions' releases (Python 3 module)
  Information about all releases of Debian and Ubuntu.
  .
