@@ -17,7 +17,7 @@ set -f
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 DISTRO_INFO_NAME="Debian"
-DISTRO_INFO_ARGS="--all --devel --oldstable --stable --supported
+DISTRO_INFO_ARGS="--all --devel --lts --oldstable --stable --supported
                   --testing --unsupported"
 DISTRO_INFO_DATA="/usr/share/distro-info/debian.csv"
 
@@ -32,6 +32,7 @@ Options:
       --date=DATE    date for calculating the version (default: today)
   -a  --all          list all known versions
   -d  --devel        latest development version
+  -l  --lts          list of all LTS versions
   -o  --oldstable    latest oldstable version
   -s  --stable       latest stable version
       --supported    list of all supported stable versions
@@ -58,6 +59,12 @@ cb_testing() {
 		{ [ -z "$release" -a -n "$version" ] || date_ge "$release" "$CMP_DATE"; } &&
 		store
 	return 1;
+}
+cb_supported() {
+	date_ge "$eol" "$CMP_DATE" && created
+}
+cb_lts() {
+	date_ge "$eollts" "$CMP_DATE" && ! date_ge "$eol" "$CMP_DATE" && created
 }
 
 main "$@"

@@ -25,7 +25,13 @@ store() {
 	s_created=$created;
 	s_release=$release;
 	s_eol=$eol;
+#BEGIN debian#
+	s_eollts=$eollts;
+#END debian#
+#BEGIN ubuntu#
 	s_eols=$eols;
+	s_eolesm=$eolesm;
+#END ubuntu#
 }
 restore() {
 	# restore data previously stored with store
@@ -35,7 +41,13 @@ restore() {
 	created=$s_created;
 	release=$s_release;
 	eol=$s_eol;
+#BEGIN debian#
+	eollts=$s_eollts;
+#END debian#
+#BEGIN ubuntu#
 	eols=$s_eols;
+	eolesm=$s_eolesm;
+#END ubuntu#
 }
 
 created() {
@@ -60,7 +72,13 @@ devel() {
 next_is() {
 	# call a function as if you were calling it for next
 	local version=$n_version codename=$n_codename series=$n_series
-	local created=$n_created release=$n_release eol=$n_eol eols=$n_eols
+	local created=$n_created release=$n_release eol=$n_eol
+#BEGIN debian#
+	local eollts=$n_eollts
+#END debian#
+#BEGIN ubuntu#
+	local eols=$n_eols eolesm=$n_eolesm
+#END ubuntu#
 	"$@"
 }
 
@@ -74,9 +92,6 @@ cb_all() {
 cb_stable() {
 	released && [ -n "$n_version" ] && ! next_is released && store
 	return 1;
-}
-cb_supported() {
-	date_ge "$eols" "$CMP_DATE" && created
 }
 cb_unsupported() {
 	created && ! cb_supported
@@ -97,20 +112,40 @@ filter_data() {
 	local callback="$1" fmt="$2" found=0
 	shift 2;
 	IFS=","
-	local version codename series created release eol eols
-	local n_version n_codename n_series n_created n_release n_eol n_eols
+	local version codename series created release eol
+	local n_version n_codename n_series n_created n_release n_eol
+#BEGIN debian#
+	local eollts n_eollts
+#END debian#
+#BEGIN ubuntu#
+	local eols n_eols eolesm n_eolesm
+#END ubuntu#
 	{
 	read tmpvar # header of file
 	read version codename series created release eol eols
 	[ -n "$eol" ] || eol="9999-99-99"
 	[ -n "$eols" ] || eols=$eol
-	while read n_version n_codename n_series n_created n_release n_eol n_eols; do
+	while read n_version n_codename n_series n_created n_release n_eol \
+#BEGIN debian#
+		n_eollts
+#END debian#
+#BEGIN ubuntu#
+		n_eols n_eolesm
+#END ubuntu#
+	do
 		[ -n "$n_eol" ] || n_eol="9999-99-99"
+#BEGIN ubuntu#
 		[ -n "$n_eols" ] || n_eols=$n_eol
+#END ubuntu#
 		"$callback" && found=$(($found+1)) && "$fmt"
 		version=$n_version; codename=$n_codename; series=$n_series
 		created=$n_created; release=$n_release;   eol=$n_eol;
-		eols=$n_eols
+#BEGIN debian#
+		eollts=$n_eollts
+#END debian#
+#BEGIN ubuntu#
+		eols=$n_eols; eolesm=$n_eolesm;
+#END ubuntu#
 	done
 	} < "$DISTRO_INFO_DATA"
 
@@ -184,8 +219,14 @@ main() {
 			--lts)
 				[ -z "$callback" ] || { not_exactly_one; return 1; }
 				callback="lts";;
+			--supported-esm)
+				[ -z "$callback" ] || { not_exactly_one; return 1; }
+				callback="supported_esm";;
 #END ubuntu#
 #BEGIN debian#
+			--lts)
+				[ -z "$callback" ] || { not_exactly_one; return 1; }
+				callback="lts";;
 			-o|--oldstable|--old)
 				[ -z "$callback" ] || { not_exactly_one; return 1; }
 				callback="oldstable";;
