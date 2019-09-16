@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-# Copyright (C) 2011-2012, Stefano Rivera <stefanor@debian.org>
+# Copyright (C) 2011-2019, Stefano Rivera <stefanor@debian.org>
 #
 # Permission to use, copy, modify, and/or distribute this software for any
 # purpose with or without fee is hereby granted, provided that the above
@@ -16,7 +16,7 @@
 use strict;
 use warnings;
 
-use Test::Simple tests => 32;
+use Test::Simple tests => 33;
 
 use lib '.';
 use Debian::DistroInfo;
@@ -55,35 +55,36 @@ ok(symmetric_difference(\@all, \@returned) == 1,
 
 # Test DistroInfo:
 my @expected = ();
-my $date = Debian::DistroInfo::convert_date('2011-01-10');
+my $date1 = Debian::DistroInfo::convert_date('2011-01-10');
+my $date2 = Debian::DistroInfo::convert_date('2016-02-28');
 
 my $deb = DebianDistroInfo->new();
 @all = ('buzz', 'rex', 'bo', 'hamm', 'slink', 'potato', 'woody', 'sarge',
            'etch', 'lenny', 'squeeze', 'sid', 'experimental');
-@returned = $deb->all($date);
+@returned = $deb->all($date1);
 ok(unique(\@all, \@returned) == 0, 'Debian all');
 
-ok($deb->devel($date) eq 'sid', 'Debian devel');
-ok($deb->old($date) eq 'etch', 'Debian oldstable');
-ok($deb->stable($date) eq 'lenny', 'Debian stable');
-ok($deb->testing($date) eq 'squeeze', 'Debian testing');
+ok($deb->devel($date1) eq 'sid', 'Debian devel');
+ok($deb->old($date1) eq 'etch', 'Debian oldstable');
+ok($deb->stable($date1) eq 'lenny', 'Debian stable');
+ok($deb->testing($date1) eq 'squeeze', 'Debian testing');
 ok($deb->valid('sid'), 'Debian valid');
 ok($deb->valid('stable'), 'Debian valid');
 ok(!$deb->valid('foobar'), 'Debian invalid');
 
 @expected = ('lenny', 'squeeze', 'sid', 'experimental');
-@returned = $deb->supported($date);
+@returned = $deb->supported($date1);
 ok(symmetric_difference(\@expected, \@returned) == 0,
    'Debian supported');
 
 @expected = ('buzz', 'rex', 'bo', 'hamm', 'slink', 'potato', 'woody', 'sarge',
              'etch');
-@returned = $deb->unsupported($date);
+@returned = $deb->unsupported($date1);
 ok(symmetric_difference(\@expected, \@returned) == 0,
    'Debian unsupported');
 
 ok(!defined($deb->codename('foo')), 'Debian codename, invalid');
-ok($deb->codename('testing', $date) eq $deb->testing($date),
+ok($deb->codename('testing', $date1) eq $deb->testing($date1),
    'Debian codename');
 
 ok(!defined($deb->version('foo')), 'Debian version, invalid');
@@ -92,15 +93,15 @@ ok($deb->version('lenny') eq '5.0', 'Debian version');
 my $ubu = UbuntuDistroInfo->new();
 @all = ('warty', 'hoary', 'breezy', 'dapper', 'edgy', 'feisty', 'gutsy',
         'hardy', 'intrepid', 'jaunty', 'karmic', 'lucid', 'maverick', 'natty');
-@returned = $ubu->all($date);
+@returned = $ubu->all($date1);
 ok(unique(\@all, \@returned) == 0, 'Ubuntu all');
 
 ok($ubu->version('Maverick Meerkat') eq '10.10', 'Ubuntu version');
 ok($ubu->version('lucid') eq '10.04 LTS', 'Ubuntu LTS version');
 
-ok($ubu->devel($date) eq 'natty', 'Ubuntu devel');
-ok($ubu->lts($date) eq 'lucid', 'Ubuntu LTS');
-ok($ubu->stable($date) eq 'maverick', 'Ubuntu stable');
+ok($ubu->devel($date1) eq 'natty', 'Ubuntu devel');
+ok($ubu->lts($date1) eq 'lucid', 'Ubuntu LTS');
+ok($ubu->stable($date1) eq 'maverick', 'Ubuntu stable');
 ok($ubu->valid('lucid'), 'Ubuntu valid');
 ok(!$ubu->valid(42), 'Ubuntu invalid');
 ok($ubu->is_lts('lucid'), 'Ubuntu is_lts');
@@ -108,13 +109,18 @@ ok(!$ubu->is_lts(42), 'Ubuntu !is_lts');
 ok(!$ubu->is_lts('warty'), 'Ubuntu !is_lts');
 
 @expected = ('dapper', 'hardy', 'karmic', 'lucid', 'maverick', 'natty');
-@returned = $ubu->supported($date);
+@returned = $ubu->supported($date1);
 ok(symmetric_difference(\@expected, \@returned) == 0,
    'Ubuntu supported');
 
+@expected = ('precise', 'trusty', 'xenial');
+@returned = $ubu->supported_esm($date2);
+ok(symmetric_difference(\@expected, \@returned) == 0,
+   'Ubuntu ESM');
+
 @expected = ('warty', 'hoary', 'breezy', 'edgy', 'feisty', 'gutsy', 'intrepid',
              'jaunty');
-@returned = $ubu->unsupported($date);
+@returned = $ubu->unsupported($date1);
 ok(symmetric_difference(\@expected, \@returned) == 0,
    'Ubuntu unsupported');
 
