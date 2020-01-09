@@ -3,4 +3,4 @@
 export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 
 %:
-	dh $@ --with python2,python3
+	dh $@ --with python3

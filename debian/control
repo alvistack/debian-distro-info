@@ -6,11 +6,7 @@ Uploaders: Stefano Rivera <stefanor@debian.org>
 Build-Depends: debhelper-compat (= 12),
                dh-python,
                distro-info-data (>= 0.7~),
-               pylint (>= 2.2.2-2~) | pylint3,
-               python-all (>= 2.6.3-3~),
-               python-flake8,
-               python-setuptools,
-               python-unittest2,
+               pylint (>= 2.2.2-2~),
                python3-all,
                python3-flake8,
                python3-setuptools,
@@ -41,19 +37,6 @@ Description: information about distributions' releases (Perl module)
  .
  This package contains a Perl module for parsing the data in distro-info-data.
  There is also a command line interface in the distro-info package.
-
-Package: python-distro-info
-Architecture: all
-Section: python
-Depends: distro-info-data, ${misc:Depends}, ${python:Depends}
-Breaks: distro-info (<< 0.3~)
-Replaces: distro-info (<< 0.3~)
-Description: information about distributions' releases (Python module)
- Information about all releases of Debian and Ubuntu.
- .
- This package contains a Python module for parsing the data in
- distro-info-data. There is also a command line interface in the distro-info
- package.
 
 Package: python3-distro-info
 Architecture: all
