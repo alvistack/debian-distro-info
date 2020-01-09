@@ -1,8 +1,8 @@
-distro-info (0.23) UNRELEASED; urgency=medium
+distro-info (0.23) unstable; urgency=medium
 
   * Drop python2 support; Closes: #943052, #936408
 
- -- Sandro Tosi <morph@debian.org>  Wed, 08 Jan 2020 22:45:35 -0500
+ -- Sandro Tosi <morph@debian.org>  Wed, 08 Jan 2020 23:06:26 -0500
 
 distro-info (0.22) unstable; urgency=medium
 
