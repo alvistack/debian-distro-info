@@ -31,9 +31,23 @@ class DebianDistroInfoTestCase(unittest.TestCase):  # pylint: disable=too-many-p
 
     def test_all(self):
         """Test: List all known Debian distributions."""
-        all_distros = set(["buzz", "rex", "bo", "hamm", "slink", "potato",
-                           "woody", "sarge", "etch", "lenny", "squeeze", "sid",
-                           "experimental"])
+        all_distros = set(
+            [
+                "buzz",
+                "rex",
+                "bo",
+                "hamm",
+                "slink",
+                "potato",
+                "woody",
+                "sarge",
+                "etch",
+                "lenny",
+                "squeeze",
+                "sid",
+                "experimental",
+            ]
+        )
         self.assertEqual(all_distros - set(self._distro_info.all), set())
 
     def test_devel(self):
@@ -50,8 +64,9 @@ class DebianDistroInfoTestCase(unittest.TestCase):  # pylint: disable=too-many-p
 
     def test_supported(self):
         """Test: List all supported Debian distribution."""
-        self.assertEqual(self._distro_info.supported(self._date),
-                         ["lenny", "squeeze", "sid", "experimental"])
+        self.assertEqual(
+            self._distro_info.supported(self._date), ["lenny", "squeeze", "sid", "experimental"]
+        )
 
     def test_testing(self):
         """Test: Get latest testing Debian distribution."""
@@ -65,41 +80,38 @@ class DebianDistroInfoTestCase(unittest.TestCase):  # pylint: disable=too-many-p
 
     def test_unsupported(self):
         """Test: List all unsupported Debian distribution."""
-        unsupported = ["buzz", "rex", "bo", "hamm", "slink", "potato", "woody",
-                       "sarge", "etch"]
+        unsupported = ["buzz", "rex", "bo", "hamm", "slink", "potato", "woody", "sarge", "etch"]
         self.assertEqual(self._distro_info.unsupported(self._date), unsupported)
 
     def test_codename(self):
         """Test: Codename decoding"""
-        self.assertIsNone(self._distro_info.codename('foobar'))
-        self.assertEqual(self._distro_info.codename('testing', self._date),
-                         self._distro_info.testing(self._date))
+        self.assertIsNone(self._distro_info.codename("foobar"))
+        self.assertEqual(
+            self._distro_info.codename("testing", self._date),
+            self._distro_info.testing(self._date),
+        )
 
     def test_version(self):
         """Test: Version decoding"""
-        self.assertIsNone(self._distro_info.version('foobar'))
-        self.assertEqual(self._distro_info.version('lenny'), '5.0')
+        self.assertIsNone(self._distro_info.version("foobar"))
+        self.assertEqual(self._distro_info.version("lenny"), "5.0")
 
     def test_codename_result(self):
         """Test: Check result set to codename."""
         self.assertEqual(self._distro_info.old(self._date, "codename"), "etch")
-        self.assertEqual(self._distro_info.devel(self._date, result="codename"),
-                         "sid")
+        self.assertEqual(self._distro_info.devel(self._date, result="codename"), "sid")
 
     def test_fullname(self):
         """Test: Check result set to fullname."""
-        self.assertEqual(self._distro_info.stable(self._date, "fullname"),
-                         'Debian 5.0 "Lenny"')
+        self.assertEqual(self._distro_info.stable(self._date, "fullname"), 'Debian 5.0 "Lenny"')
         result = self._distro_info.testing(self._date, result="fullname")
         self.assertEqual(result, 'Debian 6.0 "Squeeze"')
 
     def test_release(self):
         """Test: Check result set to release."""
         self.assertEqual(self._distro_info.devel(self._date, "release"), "")
-        self.assertEqual(self._distro_info.testing(self._date, "release"),
-                         "6.0")
-        self.assertEqual(self._distro_info.stable(self._date, result="release"),
-                         "5.0")
+        self.assertEqual(self._distro_info.testing(self._date, "release"), "6.0")
+        self.assertEqual(self._distro_info.stable(self._date, result="release"), "5.0")
 
 
 class UbuntuDistroInfoTestCase(unittest.TestCase):  # pylint: disable=too-many-public-methods
@@ -111,9 +123,24 @@ class UbuntuDistroInfoTestCase(unittest.TestCase):  # pylint: disable=too-many-p
 
     def test_all(self):
         """Test: List all known Ubuntu distributions."""
-        all_distros = set(["warty", "hoary", "breezy", "dapper", "edgy",
-                           "feisty", "gutsy", "hardy", "intrepid", "jaunty",
-                           "karmic", "lucid", "maverick", "natty"])
+        all_distros = set(
+            [
+                "warty",
+                "hoary",
+                "breezy",
+                "dapper",
+                "edgy",
+                "feisty",
+                "gutsy",
+                "hardy",
+                "intrepid",
+                "jaunty",
+                "karmic",
+                "lucid",
+                "maverick",
+                "natty",
+            ]
+        )
         self.assertEqual(all_distros - set(self._distro_info.all), set())
 
     def test_devel(self):
@@ -135,16 +162,15 @@ class UbuntuDistroInfoTestCase(unittest.TestCase):  # pylint: disable=too-many-p
 
     def test_unsupported(self):
         """Test: List all unsupported Ubuntu distributions."""
-        unsupported = ["warty", "hoary", "breezy", "edgy", "feisty", "gutsy",
-                       "intrepid", "jaunty"]
+        unsupported = ["warty", "hoary", "breezy", "edgy", "feisty", "gutsy", "intrepid", "jaunty"]
         self.assertEqual(self._distro_info.unsupported(self._date), unsupported)
 
     def test_current_unsupported(self):
         """Test: List all unsupported Ubuntu distributions today."""
-        unsupported = set(["warty", "hoary", "breezy", "edgy", "feisty",
-                           "gutsy", "intrepid", "jaunty"])
-        self.assertEqual(unsupported -
-                         set(self._distro_info.unsupported()), set())
+        unsupported = set(
+            ["warty", "hoary", "breezy", "edgy", "feisty", "gutsy", "intrepid", "jaunty"]
+        )
+        self.assertEqual(unsupported - set(self._distro_info.unsupported()), set())
 
     def test_valid(self):
         """Test: Check for valid Ubuntu distribution."""
@@ -160,24 +186,23 @@ class UbuntuDistroInfoTestCase(unittest.TestCase):  # pylint: disable=too-many-p
     def test_codename(self):
         """Test: Check result set to codename."""
         self.assertEqual(self._distro_info.lts(self._date, "codename"), "lucid")
-        self.assertEqual(self._distro_info.devel(self._date, result="codename"),
-                         "natty")
+        self.assertEqual(self._distro_info.devel(self._date, result="codename"), "natty")
 
     def test_version(self):
         """Test: Check result set to version."""
-        self.assertEqual(self._distro_info.version("lucid"), '10.04 LTS')
-        self.assertEqual(self._distro_info.version("Maverick Meerkat"), '10.10')
+        self.assertEqual(self._distro_info.version("lucid"), "10.04 LTS")
+        self.assertEqual(self._distro_info.version("Maverick Meerkat"), "10.10")
 
     def test_fullname(self):
         """Test: Check result set to fullname."""
-        self.assertEqual(self._distro_info.stable(self._date, "fullname"),
-                         'Ubuntu 10.10 "Maverick Meerkat"')
-        self.assertEqual(self._distro_info.lts(self._date, result="fullname"),
-                         'Ubuntu 10.04 LTS "Lucid Lynx"')
+        self.assertEqual(
+            self._distro_info.stable(self._date, "fullname"), 'Ubuntu 10.10 "Maverick Meerkat"'
+        )
+        self.assertEqual(
+            self._distro_info.lts(self._date, result="fullname"), 'Ubuntu 10.04 LTS "Lucid Lynx"'
+        )
 
     def test_release(self):
         """Test: Check result set to release."""
-        self.assertEqual(self._distro_info.devel(self._date, "release"),
-                         "11.04")
-        self.assertEqual(self._distro_info.lts(self._date, result="release"),
-                         "10.04 LTS")
+        self.assertEqual(self._distro_info.devel(self._date, "release"), "11.04")
+        self.assertEqual(self._distro_info.lts(self._date, result="release"), "10.04 LTS")

@@ -7,11 +7,8 @@ from setuptools import setup
 
 
 PACKAGES = []
-PY_MODULES = ['distro_info']
-SCRIPTS = [
-    'debian-distro-info',
-    'ubuntu-distro-info',
-]
+PY_MODULES = ["distro_info"]
+SCRIPTS = ["debian-distro-info", "ubuntu-distro-info"]
 
 
 def get_debian_version():
@@ -26,9 +23,9 @@ def get_debian_version():
     return version
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     setup(
-        name='distro-info',
+        name="distro-info",
         version=get_debian_version(),
         py_modules=PY_MODULES,
         packages=PACKAGES,

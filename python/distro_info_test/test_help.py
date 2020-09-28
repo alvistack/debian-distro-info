@@ -31,23 +31,29 @@ class HelpTestCase(unittest.TestCase):
     @classmethod
     def populate(cls):
         for script in setup.SCRIPTS:
-            setattr(cls, 'test_' + script, cls.make_help_tester(script))
+            setattr(cls, "test_" + script, cls.make_help_tester(script))
 
     @classmethod
     def make_help_tester(cls, script):
         def tester(self):
-            null = open('/dev/null', 'r')
-            process = subprocess.Popen(['./' + script, '--help'],
-                                       close_fds=True, stdin=null,
-                                       stdout=subprocess.PIPE,
-                                       stderr=subprocess.PIPE)
+            null = open("/dev/null", "r")
+            process = subprocess.Popen(
+                ["./" + script, "--help"],
+                close_fds=True,
+                stdin=null,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+            )
             started = time.time()
             out = []
 
             fds = [process.stdout.fileno(), process.stderr.fileno()]
             for file_descriptor in fds:
-                fcntl.fcntl(file_descriptor, fcntl.F_SETFL,
-                            fcntl.fcntl(file_descriptor, fcntl.F_GETFL) | os.O_NONBLOCK)
+                fcntl.fcntl(
+                    file_descriptor,
+                    fcntl.F_SETFL,
+                    fcntl.fcntl(file_descriptor, fcntl.F_GETFL) | os.O_NONBLOCK,
+                )
 
             while time.time() - started < TIMEOUT:
                 for file_descriptor in select.select(fds, [], fds, TIMEOUT)[0]:
@@ -62,10 +68,13 @@ class HelpTestCase(unittest.TestCase):
                     os.kill(process.pid, signal.SIGKILL)
             null.close()
 
-            self.assertEqual(process.poll(), 0,
-                             "%s failed to return usage within %i seconds.\n"
-                             "Output:\n%s"
-                             % (script, TIMEOUT, ''.encode('ascii').join(out)))
+            self.assertEqual(
+                process.poll(),
+                0,
+                "%s failed to return usage within %i seconds.\n"
+                "Output:\n%s" % (script, TIMEOUT, "".encode("ascii").join(out)),
+            )
             process.stdout.close()
             process.stderr.close()
+
         return tester

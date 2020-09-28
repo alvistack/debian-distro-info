@@ -49,13 +49,14 @@ class DistroDataOutdated(Exception):
 
     def __init__(self):
         super().__init__(
-            "Distribution data outdated. "
-            "Please check for an update for distro-info-data. See "
-            "/usr/share/doc/distro-info-data/README.Debian for details.")
+            "Distribution data outdated. Please check for an update for distro-info-data. "
+            "See /usr/share/doc/distro-info-data/README.Debian for details."
+        )
 
 
 class DistroRelease(object):
     """Represents a distributions release"""
+
     # pylint: disable=too-few-public-methods
 
     def __init__(self, version, codename, series, created=None, release=None, eol=None,
@@ -71,8 +72,11 @@ class DistroRelease(object):
 
     def is_supported(self, date):
         """Check whether this release is supported on the given date."""
-        return date >= self.created and (self.eol is None or date <= self.eol or (
-            self.eol_server is not None and date <= self.eol_server))
+        return date >= self.created and (
+            self.eol is None
+            or date <= self.eol
+            or (self.eol_server is not None and date <= self.eol_server)
+        )
 
 
 def _get_date(row, column):
@@ -91,9 +95,15 @@ class DistroInfo(object):
         csv_reader = csv.DictReader(csvfile)
         self._releases = []
         for row in csv_reader:
-            release = DistroRelease(row['version'], row['codename'], row['series'],
-                                    _get_date(row, 'created'), _get_date(row, 'release'),
-                                    _get_date(row, 'eol'), _get_date(row, 'eol-server'))
+            release = DistroRelease(
+                row["version"],
+                row["codename"],
+                row["series"],
+                _get_date(row, "created"),
+                _get_date(row, "release"),
+                _get_date(row, "eol"),
+                _get_date(row, "eol-server"),
+            )
             self._releases.append(release)
         csvfile.close()
         self._date = datetime.date.today()
@@ -127,8 +137,11 @@ class DistroInfo(object):
         """Get latest development distribution based on the given date."""
         if date is None:
             date = self._date
-        distros = [x for x in self._avail(date) if x.release is None or
-                   (date < x.release and (x.eol is None or date <= x.eol))]
+        distros = [
+            x
+            for x in self._avail(date)
+            if x.release is None or (date < x.release and (x.eol is None or date <= x.eol))
+        ]
         if not distros:
             raise DistroDataOutdated()
         return self._format(result, distros[-1])
@@ -144,15 +157,20 @@ class DistroInfo(object):
         if format_string == "release":
             return release.version
 
-        raise ValueError("Only codename, fullname, object, and release are allowed "
-                         "result values, but not '" + format_string + "'.")
+        raise ValueError(
+            "Only codename, fullname, object, and release are allowed "
+            "result values, but not '" + format_string + "'."
+        )
 
     def stable(self, date=None, result="codename"):
         """Get latest stable distribution based on the given date."""
         if date is None:
             date = self._date
-        distros = [x for x in self._avail(date) if x.release is not None and
-                   date >= x.release and (x.eol is None or date <= x.eol)]
+        distros = [
+            x
+            for x in self._avail(date)
+            if x.release is not None and date >= x.release and (x.eol is None or date <= x.eol)
+        ]
         if not distros:
             raise DistroDataOutdated()
         return self._format(result, distros[-1])
@@ -170,8 +188,7 @@ class DistroInfo(object):
         if date is None:
             date = self._date
         supported = self.supported(date)
-        distros = [self._format(result, x) for x in self._avail(date)
-                   if x.series not in supported]
+        distros = [self._format(result, x) for x in self._avail(date) if x.series not in supported]
         return distros
 
 
@@ -199,8 +216,11 @@ class DebianDistroInfo(DistroInfo):
         """Get latest development distribution based on the given date."""
         if date is None:
             date = self._date
-        distros = [x for x in self._avail(date) if x.release is None or
-                   (date < x.release and (x.eol is None or date <= x.eol))]
+        distros = [
+            x
+            for x in self._avail(date)
+            if x.release is None or (date < x.release and (x.eol is None or date <= x.eol))
+        ]
         if len(distros) < 2:
             raise DistroDataOutdated()
         return self._format(result, distros[-2])
@@ -209,8 +229,7 @@ class DebianDistroInfo(DistroInfo):
         """Get old (stable) Debian distribution based on the given date."""
         if date is None:
             date = self._date
-        distros = [x for x in self._avail(date)
-                   if x.release is not None and date >= x.release]
+        distros = [x for x in self._avail(date) if x.release is not None and date >= x.release]
         if len(distros) < 2:
             raise DistroDataOutdated()
         return self._format(result, distros[-2])
@@ -220,25 +239,33 @@ class DebianDistroInfo(DistroInfo):
            date."""
         if date is None:
             date = self._date
-        distros = [self._format(result, x) for x in self._avail(date)
-                   if x.eol is None or date <= x.eol]
+        distros = [
+            self._format(result, x) for x in self._avail(date) if x.eol is None or date <= x.eol
+        ]
         return distros
 
     def testing(self, date=None, result="codename"):
         """Get latest testing Debian distribution based on the given date."""
         if date is None:
             date = self._date
-        distros = [x for x in self._avail(date) if (x.release is None and x.version) or
-                   (x.release is not None and date < x.release and
-                    (x.eol is None or date <= x.eol))]
+        distros = [
+            x
+            for x in self._avail(date)
+            if (x.release is None and x.version)
+            or (x.release is not None and date < x.release and (x.eol is None or date <= x.eol))
+        ]
         if not distros:
             raise DistroDataOutdated()
         return self._format(result, distros[-1])
 
     def valid(self, codename):
         """Check if the given codename is known."""
-        return (DistroInfo.valid(self, codename) or
-                codename in ["unstable", "testing", "stable", "oldstable"])
+        return DistroInfo.valid(self, codename) or codename in [
+            "unstable",
+            "testing",
+            "stable",
+            "oldstable",
+        ]
 
 
 class UbuntuDistroInfo(DistroInfo):
@@ -252,8 +279,9 @@ class UbuntuDistroInfo(DistroInfo):
            given date."""
         if date is None:
             date = self._date
-        distros = [x for x in self._releases if x.version.find("LTS") >= 0 and
-                   x.release <= date <= x.eol]
+        distros = [
+            x for x in self._releases if x.version.find("LTS") >= 0 and x.release <= date <= x.eol
+        ]
         if not distros:
             raise DistroDataOutdated()
         return self._format(result, distros[-1])
@@ -270,7 +298,9 @@ class UbuntuDistroInfo(DistroInfo):
            date."""
         if date is None:
             date = self._date
-        distros = [self._format(result, x) for x in self._avail(date)
-                   if date <= x.eol or
-                   (x.eol_server is not None and date <= x.eol_server)]
+        distros = [
+            self._format(result, x)
+            for x in self._avail(date)
+            if date <= x.eol or (x.eol_server is not None and date <= x.eol_server)
+        ]
         return distros
