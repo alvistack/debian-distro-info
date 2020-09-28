@@ -31,23 +31,21 @@ class DebianDistroInfoTestCase(unittest.TestCase):  # pylint: disable=too-many-p
 
     def test_all(self):
         """Test: List all known Debian distributions."""
-        all_distros = set(
-            [
-                "buzz",
-                "rex",
-                "bo",
-                "hamm",
-                "slink",
-                "potato",
-                "woody",
-                "sarge",
-                "etch",
-                "lenny",
-                "squeeze",
-                "sid",
-                "experimental",
-            ]
-        )
+        all_distros = {
+            "buzz",
+            "rex",
+            "bo",
+            "hamm",
+            "slink",
+            "potato",
+            "woody",
+            "sarge",
+            "etch",
+            "lenny",
+            "squeeze",
+            "sid",
+            "experimental",
+        }
         self.assertEqual(all_distros - set(self._distro_info.all), set())
 
     def test_devel(self):
@@ -123,24 +121,22 @@ class UbuntuDistroInfoTestCase(unittest.TestCase):  # pylint: disable=too-many-p
 
     def test_all(self):
         """Test: List all known Ubuntu distributions."""
-        all_distros = set(
-            [
-                "warty",
-                "hoary",
-                "breezy",
-                "dapper",
-                "edgy",
-                "feisty",
-                "gutsy",
-                "hardy",
-                "intrepid",
-                "jaunty",
-                "karmic",
-                "lucid",
-                "maverick",
-                "natty",
-            ]
-        )
+        all_distros = {
+            "warty",
+            "hoary",
+            "breezy",
+            "dapper",
+            "edgy",
+            "feisty",
+            "gutsy",
+            "hardy",
+            "intrepid",
+            "jaunty",
+            "karmic",
+            "lucid",
+            "maverick",
+            "natty",
+        }
         self.assertEqual(all_distros - set(self._distro_info.all), set())
 
     def test_devel(self):
@@ -167,9 +163,7 @@ class UbuntuDistroInfoTestCase(unittest.TestCase):  # pylint: disable=too-many-p
 
     def test_current_unsupported(self):
         """Test: List all unsupported Ubuntu distributions today."""
-        unsupported = set(
-            ["warty", "hoary", "breezy", "edgy", "feisty", "gutsy", "intrepid", "jaunty"]
-        )
+        unsupported = {"warty", "hoary", "breezy", "edgy", "feisty", "gutsy", "intrepid", "jaunty"}
         self.assertEqual(unsupported - set(self._distro_info.unsupported()), set())
 
     def test_valid(self):
