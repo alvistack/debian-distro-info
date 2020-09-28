@@ -48,7 +48,7 @@ class DistroDataOutdated(Exception):
     """Distribution data outdated."""
 
     def __init__(self):
-        super(DistroDataOutdated, self).__init__(
+        super().__init__(
             "Distribution data outdated. "
             "Please check for an update for distro-info-data. See "
             "/usr/share/doc/distro-info-data/README.Debian for details.")
@@ -179,7 +179,7 @@ class DebianDistroInfo(DistroInfo):
     """provides information about Debian's distributions"""
 
     def __init__(self):
-        super(DebianDistroInfo, self).__init__("Debian")
+        super().__init__("Debian")
 
     def codename(self, release, date=None, default=None):
         """Map 'unstable', 'testing', etc. to their codenames."""
@@ -245,7 +245,7 @@ class UbuntuDistroInfo(DistroInfo):
     """provides information about Ubuntu's distributions"""
 
     def __init__(self):
-        super(UbuntuDistroInfo, self).__init__("Ubuntu")
+        super().__init__("Ubuntu")
 
     def lts(self, date=None, result="codename"):
         """Get latest long term support (LTS) Ubuntu distribution based on the
