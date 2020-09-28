@@ -1,3 +1,13 @@
+distro-info (0.24) unstable; urgency=medium
+
+  * Fix issues found by pylint 2.6.0 (Closes: #971094)
+  * Blacken Python code
+  * python: Define sets directly
+  * Bump Standards-Version to 4.5.0
+  * Switch to debhelper 13
+
+ -- Benjamin Drung <bdrung@debian.org>  Mon, 28 Sep 2020 19:36:32 +0200
+
 distro-info (0.23) unstable; urgency=medium
 
   * Drop python2 support; Closes: #943052, #936408
