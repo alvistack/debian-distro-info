@@ -408,6 +408,9 @@ static void free_data(distro_elem_t *list, char **content) {
         free(list->distro->milestones[MILESTONE_CREATED]);
         free(list->distro->milestones[MILESTONE_RELEASE]);
         free(list->distro->milestones[MILESTONE_EOL]);
+#ifdef DEBIAN
+        free(list->distro->milestones[MILESTONE_EOL_LTS]);
+#endif
 #ifdef UBUNTU
         free(list->distro->milestones[MILESTONE_EOL_SERVER]);
         free(list->distro->milestones[MILESTONE_EOL_ESM]);
