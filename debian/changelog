@@ -12,6 +12,7 @@ distro-info (1.0) UNRELEASED; urgency=medium
     Debian LTS and Ubuntu ESM.
   * Ignore W503 warnings from flake8, they are PEP-8 incompatible.
   * Handle currently unknown columns in CSV data.
+  * Drop old Breaks+Replaces on ubuntu-dev-tools, no longer needed.
 
   [ Brian Murray ]
   * Provide support for the milestone eol-esm and add filters for
