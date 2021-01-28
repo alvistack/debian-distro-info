@@ -434,9 +434,9 @@ static distro_elem_t *read_data(const char *filename, char **content) {
     data = *content = read_full_file(filename);
     line = strsep(&data, "\n");
     lineno = 1;
-    if(unlikely(strcmp(CSV_HEADER, line) != 0)) {
-        fprintf(stderr, NAME ": Header `%s' in file `%s' does not match "
-                "exactly `" CSV_HEADER "'.\n", line, filename);
+    if(unlikely(strncmp(CSV_HEADER, line, strlen(CSV_HEADER)) != 0)) {
+        fprintf(stderr, NAME ": Header `%s' in file `%s' does not start with "
+                "`" CSV_HEADER "'.\n", line, filename);
         failures++;
     }
 
