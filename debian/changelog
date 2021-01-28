@@ -3,6 +3,9 @@ distro-info (0.25) UNRELEASED; urgency=medium
   [ Debian Janitor ]
   * Mark libdistro-info-perl as Multi-Arch: foreign.
 
+  [ Stefano Rivera ]
+  * Bump standards-Version to 4.5.1, no changes needed.
+
  -- Stefano Rivera <stefanor@debian.org>  Wed, 27 Jan 2021 19:46:16 -0700
 
 distro-info (0.24) unstable; urgency=medium
