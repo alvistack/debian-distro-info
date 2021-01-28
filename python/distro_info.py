@@ -59,8 +59,9 @@ class DistroRelease(object):
 
     # pylint: disable=too-few-public-methods
 
-    def __init__(self, version, codename, series, created=None, release=None, eol=None,
-                 eol_server=None):
+    def __init__(
+        self, version, codename, series, created=None, release=None, eol=None, eol_server=None
+    ):
         # pylint: disable=too-many-arguments
         self.version = version
         self.codename = codename
@@ -236,7 +237,7 @@ class DebianDistroInfo(DistroInfo):
 
     def supported(self, date=None, result="codename"):
         """Get list of all supported Debian distributions based on the given
-           date."""
+        date."""
         if date is None:
             date = self._date
         distros = [
@@ -276,7 +277,7 @@ class UbuntuDistroInfo(DistroInfo):
 
     def lts(self, date=None, result="codename"):
         """Get latest long term support (LTS) Ubuntu distribution based on the
-           given date."""
+        given date."""
         if date is None:
             date = self._date
         distros = [
@@ -295,7 +296,7 @@ class UbuntuDistroInfo(DistroInfo):
 
     def supported(self, date=None, result="codename"):
         """Get list of all supported Ubuntu distributions based on the given
-           date."""
+        date."""
         if date is None:
             date = self._date
         distros = [
