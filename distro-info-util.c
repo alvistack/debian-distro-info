@@ -40,6 +40,7 @@ static char *milestones[] = {"created"
                             ,"eol"
 #ifdef DEBIAN
                             ,"eol-lts"
+                            ,"eol-elts"
 #endif
 #ifdef UBUNTU
                             ,"eol-server"
@@ -203,6 +204,12 @@ static inline bool eol_lts(const date_t *date, const distro_t *distro) {
            date_ge(date, distro->milestones[MILESTONE_EOL_LTS])
     ;
 }
+
+static inline bool eol_elts(const date_t *date, const distro_t *distro) {
+    return !distro->milestones[MILESTONE_EOL_ELTS] ||
+           date_ge(date, distro->milestones[MILESTONE_EOL_ELTS])
+    ;
+}
 #endif
 
 #ifdef UBUNTU
@@ -234,6 +241,10 @@ static bool filter_supported(const date_t *date, const distro_t *distro) {
 #ifdef DEBIAN
 static bool filter_lts_supported(const date_t *date, const distro_t *distro) {
     return created(date, distro) && eol(date, distro) && !eol_lts(date, distro);
+}
+
+static bool filter_elts_supported(const date_t *date, const distro_t *distro) {
+    return created(date, distro) && eol_lts(date, distro) && !eol_elts(date, distro);
 }
 #endif
 
@@ -410,6 +421,7 @@ static void free_data(distro_elem_t *list, char **content) {
         free(list->distro->milestones[MILESTONE_EOL]);
 #ifdef DEBIAN
         free(list->distro->milestones[MILESTONE_EOL_LTS]);
+        free(list->distro->milestones[MILESTONE_EOL_ELTS]);
 #endif
 #ifdef UBUNTU
         free(list->distro->milestones[MILESTONE_EOL_SERVER]);
@@ -578,6 +590,7 @@ static void print_help(void) {
            "      --supported        list of all supported stable versions\n"
 #ifdef DEBIAN
            "  -l  --lts              list of all LTS supported versions\n"
+           "  -e  --elts             list of all Extended LTS supported versions\n"
 #endif
 #ifdef UBUNTU
            "      --supported-esm    list of all Ubuntu Advantage supported stable versions\n"
@@ -596,6 +609,9 @@ static inline int not_exactly_one(void) {
             "--alias, "
 #endif
             "--all, --devel, "
+#ifdef DEBIAN
+            "--elts, "
+#endif
 #ifdef UBUNTU
             "--latest, "
 #endif
@@ -657,6 +673,7 @@ int main(int argc, char *argv[]) {
         {"release",       no_argument,       NULL, 'r' },
 #ifdef DEBIAN
         {"alias",         required_argument, NULL, 'A' },
+        {"elts",          no_argument,       NULL, 'e' },
         {"lts",           no_argument,       NULL, 'l' },
         {"oldstable",     no_argument,       NULL, 'o' },
         {"testing",       no_argument,       NULL, 't' },
@@ -672,7 +689,7 @@ int main(int argc, char *argv[]) {
     const char *short_options = "hadscrfly::";
 #endif
 #ifdef DEBIAN
-    const char *short_options = "hadscrfloty::";
+    const char *short_options = "hadescrfloty::";
 #endif
 
     // Suppress error messages from getopt_long
@@ -782,6 +799,12 @@ int main(int argc, char *argv[]) {
 #endif
 
 #ifdef DEBIAN
+            case 'e':
+                selected_filters++;
+                filter_cb = filter_elts_supported;
+                select_cb = NULL;
+                break;
+
             case 'l':
                 selected_filters++;
                 filter_cb = filter_lts_supported;

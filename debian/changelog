@@ -14,6 +14,7 @@ distro-info (1.0) UNRELEASED; urgency=medium
   * Handle currently unknown columns in CSV data.
   * Drop old Breaks+Replaces on ubuntu-dev-tools, no longer needed.
   * Reorganise help into a slightly more logical order.
+  * Add support for Debian ELTS.
 
   [ Brian Murray ]
   * Provide support for the milestone eol-esm and add filters for

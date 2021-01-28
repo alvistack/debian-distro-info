@@ -73,6 +73,10 @@ testLTS() {
     success "--date=2016-02-28 --lts" "squeeze"
 }
 
+testELTS() {
+    success "--date=2018-09-01 --elts" "wheezy"
+}
+
 testUnsupported() {
     local result="buzz
 rex
@@ -164,7 +168,7 @@ Options:
       --date=DATE        date for calculating the version (default: today)
       --series=SERIES    series to calculate the version for
   -y[MILESTONE]          additionally, display days until milestone
-      --days=[MILESTONE] (created, release, eol, eol-lts)
+      --days=[MILESTONE] (created, release, eol, eol-lts, eol-elts)
       --alias=DIST       print the alias (oldstable, stable, testing, unstable)
                          relative to the given distribution codename
   -a  --all              list all known versions
@@ -174,6 +178,7 @@ Options:
   -o  --oldstable        latest oldstable version
       --supported        list of all supported stable versions
   -l  --lts              list of all LTS supported versions
+  -e  --elts             list of all Extended LTS supported versions
       --unsupported      list of all unsupported stable versions
   -c  --codename         print the codename (default)
   -f  --fullname         print the full name
@@ -185,7 +190,7 @@ See debian-distro-info(1) for more info.'
 }
 
 testExactlyOne() {
-    local result='debian-distro-info: You have to select exactly one of --alias, --all, --devel, --lts, --oldstable, --stable, --supported, --series, --testing, --unsupported.'
+    local result='debian-distro-info: You have to select exactly one of --alias, --all, --devel, --elts, --lts, --oldstable, --stable, --supported, --series, --testing, --unsupported.'
     failure "" "$result"
     failure "-ad" "$result"
     failure "--alias foo -a" "$result"
@@ -350,6 +355,11 @@ testDays() {
     success "--testing --date=$date --days=eol-lts -c" "wheezy 1854"
     success "--testing --date=$date --days=eol-lts -f" "Debian 7 \"Wheezy\" 1854"
     success "--testing --date=$date --days=eol-lts -r" "7 1854"
+
+    success "--testing --date=$date --days=eol-elts" "2615"
+    success "--testing --date=$date --days=eol-elts -c" "wheezy 2615"
+    success "--testing --date=$date --days=eol-elts -f" "Debian 7 \"Wheezy\" 2615"
+    success "--testing --date=$date --days=eol-elts -r" "7 2615"
 }
 
 . shunit2

@@ -16,7 +16,7 @@
 
 #define DEBIAN
 #define CSV_NAME "debian"
-#define CSV_HEADER "version,codename,series,created,release,eol,eol-lts"
+#define CSV_HEADER "version,codename,series,created,release,eol,eol-lts,eol-elts"
 #define DISTRO_NAME "Debian"
 #define NAME "debian-distro-info"
 
