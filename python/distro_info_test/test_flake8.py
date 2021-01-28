@@ -36,7 +36,7 @@ class Flake8TestCase(unittest.TestCase):
             "-m",
             "flake8",
             "--ignore",
-            "H301,H403,H405,W504",
+            "H301,H403,H405,W504,W503",
             "--max-line-length=99",
         ] + get_source_files()
         if unittest_verbosity() >= 2:

@@ -10,6 +10,7 @@ distro-info (1.0) UNRELEASED; urgency=medium
   * Add support for Debian LTS (Closes: #782685)
   * Depend on distro-info-data (>= 0.46), with extra columns for
     Debian LTS and Ubuntu ESM.
+  * Ignore W503 warnings from flake8, they are PEP-8 incompatible.
 
   [ Brian Murray ]
   * Provide support for the milestone eol-esm and add filters for
