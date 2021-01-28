@@ -1,3 +1,9 @@
+distro-info (0.21+deb10u1) buster; urgency=medium
+
+  * Handle currently unknown columns in CSV data.
+
+ -- Stefano Rivera <stefanor@debian.org>  Wed, 27 Jan 2021 19:46:16 -0700
+
 distro-info (0.21) unstable; urgency=medium
 
   [ Benjamin Drung ]
