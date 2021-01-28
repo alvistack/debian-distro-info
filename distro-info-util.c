@@ -565,20 +565,22 @@ static void print_help(void) {
 #endif
            "  -a  --all              list all known versions\n"
            "  -d  --devel            latest development version\n"
+#ifdef DEBIAN
+           "  -t  --testing          current testing version\n"
+#endif
+           "  -s  --stable           latest stable version\n"
 #ifdef UBUNTU
            "      --lts              latest long term support (LTS) version\n"
 #endif
 #ifdef DEBIAN
-           "  -l  --lts              list of all LTS supported versions\n"
            "  -o  --oldstable        latest oldstable version\n"
 #endif
-           "  -s  --stable           latest stable version\n"
            "      --supported        list of all supported stable versions\n"
+#ifdef DEBIAN
+           "  -l  --lts              list of all LTS supported versions\n"
+#endif
 #ifdef UBUNTU
            "      --supported-esm    list of all Ubuntu Advantage supported stable versions\n"
-#endif
-#ifdef DEBIAN
-           "  -t  --testing          current testing version\n"
 #endif
            "      --unsupported      list of all unsupported stable versions\n"
            "  -c  --codename         print the codename (default)\n"

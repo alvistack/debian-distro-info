@@ -169,11 +169,11 @@ Options:
                          relative to the given distribution codename
   -a  --all              list all known versions
   -d  --devel            latest development version
-  -l  --lts              list of all LTS supported versions
-  -o  --oldstable        latest oldstable version
-  -s  --stable           latest stable version
-      --supported        list of all supported stable versions
   -t  --testing          current testing version
+  -s  --stable           latest stable version
+  -o  --oldstable        latest oldstable version
+      --supported        list of all supported stable versions
+  -l  --lts              list of all LTS supported versions
       --unsupported      list of all unsupported stable versions
   -c  --codename         print the codename (default)
   -f  --fullname         print the full name
