@@ -320,6 +320,36 @@ testDays() {
     success "--testing --date=$date --days=eol -c" "etch 1045"
     success "--testing --date=$date --days=eol -f" "Debian 4.0 \"Etch\" 1045"
     success "--testing --date=$date --days=eol -r" "4.0 1045"
+
+    # day before wheezy was released
+    date=2013-05-03
+
+    success "--testing --date=$date" "wheezy"
+
+    success "--testing --date=$date --days=created" "-817"
+    success "--testing --date=$date --days=created -c" "wheezy -817"
+    success "--testing --date=$date --days=created -f" "Debian 7 \"Wheezy\" -817"
+    success "--testing --date=$date --days=created -r" "7 -817"
+
+    success "--testing --date=$date --days" "1"
+    success "--testing --date=$date --days -c" "wheezy 1"
+    success "--testing --date=$date --days -f" "Debian 7 \"Wheezy\" 1"
+    success "--testing --date=$date --days -r" "7 1"
+
+    success "--testing --date=$date --days=release" "1"
+    success "--testing --date=$date --days=release -c" "wheezy 1"
+    success "--testing --date=$date --days=release -f" "Debian 7 \"Wheezy\" 1"
+    success "--testing --date=$date --days=release -r" "7 1"
+
+    success "--testing --date=$date --days=eol" "1089"
+    success "--testing --date=$date --days=eol -c" "wheezy 1089"
+    success "--testing --date=$date --days=eol -f" "Debian 7 \"Wheezy\" 1089"
+    success "--testing --date=$date --days=eol -r" "7 1089"
+
+    success "--testing --date=$date --days=eol-lts" "1854"
+    success "--testing --date=$date --days=eol-lts -c" "wheezy 1854"
+    success "--testing --date=$date --days=eol-lts -f" "Debian 7 \"Wheezy\" 1854"
+    success "--testing --date=$date --days=eol-lts -r" "7 1854"
 }
 
 . shunit2
