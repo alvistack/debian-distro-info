@@ -4,7 +4,7 @@ Upstream-Contact: Benjamin Drung <bdrung@debian.org>
 
 Files: *
 Copyright: 2009-2018, Benjamin Drung <bdrung@debian.org>
-           2010-2011, Stefano Rivera <stefanor@debian.org>
+           2010-2021, Stefano Rivera <stefanor@debian.org>
 License: ISC
 
 Files: shell/*-distro-info.in shell/distro-info-util.sh
