@@ -27,6 +27,7 @@ store() {
 	s_eol=$eol;
 #BEGIN debian#
 	s_eollts=$eollts;
+	s_eolelts=$eolelts;
 #END debian#
 #BEGIN ubuntu#
 	s_eols=$eols;
@@ -43,6 +44,7 @@ restore() {
 	eol=$s_eol;
 #BEGIN debian#
 	eollts=$s_eollts;
+	eolelts=$s_eolelts;
 #END debian#
 #BEGIN ubuntu#
 	eols=$s_eols;
@@ -74,7 +76,7 @@ next_is() {
 	local version=$n_version codename=$n_codename series=$n_series
 	local created=$n_created release=$n_release eol=$n_eol
 #BEGIN debian#
-	local eollts=$n_eollts
+	local eollts=$n_eollts eolelts=$in_eolelts
 #END debian#
 #BEGIN ubuntu#
 	local eols=$n_eols eolesm=$n_eolesm
@@ -115,7 +117,7 @@ filter_data() {
 	local version codename series created release eol
 	local n_version n_codename n_series n_created n_release n_eol
 #BEGIN debian#
-	local eollts n_eollts
+	local eollts n_eollts eolelts n_eolelts
 #END debian#
 #BEGIN ubuntu#
 	local eols n_eols eolesm n_eolesm
@@ -127,7 +129,7 @@ filter_data() {
 	[ -n "$eols" ] || eols=$eol
 	while read n_version n_codename n_series n_created n_release n_eol \
 #BEGIN debian#
-		n_eollts
+		n_eollts n_eolelts
 #END debian#
 #BEGIN ubuntu#
 		n_eols n_eolesm
@@ -141,7 +143,7 @@ filter_data() {
 		version=$n_version; codename=$n_codename; series=$n_series
 		created=$n_created; release=$n_release;   eol=$n_eol;
 #BEGIN debian#
-		eollts=$n_eollts
+		eollts=$n_eollts; eolelts=$n_eolelts;
 #END debian#
 #BEGIN ubuntu#
 		eols=$n_eols; eolesm=$n_eolesm;
@@ -224,6 +226,9 @@ main() {
 				callback="supported_esm";;
 #END ubuntu#
 #BEGIN debian#
+			--elts)
+				[ -z "$callback" ] || { not_exactly_one; return 1; }
+				callback="elts";;
 			--lts)
 				[ -z "$callback" ] || { not_exactly_one; return 1; }
 				callback="lts";;
