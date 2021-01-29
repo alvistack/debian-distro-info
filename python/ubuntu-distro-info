@@ -38,10 +38,10 @@ def parse_args():
                         help="list all known versions")
     parser.add_argument("-d", "--devel", dest="devel", action="store_true",
                         help="latest development version")
-    parser.add_argument("--lts", dest="lts", action="store_true",
-                        help="latest long term support (LTS) version")
     parser.add_argument("-s", "--stable", dest="stable", action="store_true",
                         help="latest stable version")
+    parser.add_argument("--lts", dest="lts", action="store_true",
+                        help="latest long term support (LTS) version")
     parser.add_argument("--supported", dest="supported", action="store_true",
                         help="list of all supported stable versions")
     parser.add_argument("--unsupported", dest="unsupported", action="store_true",
