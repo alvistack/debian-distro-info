@@ -6,7 +6,7 @@ build: debian-distro-info ubuntu-distro-info
 %-distro-info: %-distro-info.in distro-info-util.sh
 	sed -e '/^\. .*distro-info-util.sh\"$$/r distro-info-util.sh' $< | \
 		sed -e '/^##/d;/^\. .*distro-info-util.sh\"$$/d' | \
-		python -c 'import re,sys;print re.sub("(?<=\n)#BEGIN \w*#\n(.|\n)*?\n#END \w*#\n", "", re.sub("(?<=\n)#(BEGIN|END) $*#\n", "", sys.stdin.read())),' > $@
+		python3 -c 'import re,sys;print(re.sub("(?<=\n)#BEGIN \w*#\n(.|\n)*?\n#END \w*#\n", "", re.sub("(?<=\n)#(BEGIN|END) $*#\n", "", sys.stdin.read())), end="")' > $@
 	chmod +x $@
 
 install: debian-distro-info ubuntu-distro-info
