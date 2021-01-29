@@ -21,6 +21,7 @@ module DistroInfo (DebianEntry, debVersion, debSeries, debFull,
                    debianStable,
                    debianSupported,
                    debianSupportedLTS,
+                   debianSupportedELTS,
                    debianTesting,
                    debianUnsupported,
                    UbuntuEntry, ubuVersion, ubuSeries, ubuFull,
@@ -49,7 +50,8 @@ data DebianEntry = DebianEntry { debVersion :: String,
                                  debCreated :: Day,
                                  debRelease :: Maybe Day,
                                  debEol :: Maybe Day,
-                                 debEolLTS :: Maybe Day
+                                 debEolLTS :: Maybe Day,
+                                 debEolELTS :: Maybe Day
                                } deriving(Eq, Show)
 
 -- | Represents one Ubuntu release data set
@@ -123,6 +125,7 @@ debianEntry (heading : content) =
                   (maybeDate $ Map.lookup "release" m)
                   (maybeDate $ Map.lookup "eol" m)
                   (maybeDate $ Map.lookup "eol-lts" m)
+                  (maybeDate $ Map.lookup "eol-elts" m)
 
 -------------------
 -- Debian Filter --
@@ -174,6 +177,14 @@ debianSupportedLTS date = filter isSupportedLTS
     isSupportedLTS DebianEntry { debCreated = created, debEol = eol,
                                  debEolLTS = eol_lts } =
       date >= created && maybe False (date >) eol && maybe False (date <=) eol_lts
+
+-- | Get list of all ELTS supported distributions based on the given date.
+debianSupportedELTS :: Day -> [DebianEntry] -> [DebianEntry]
+debianSupportedELTS date = filter isSupportedELTS
+  where
+    isSupportedELTS DebianEntry { debCreated = created, debEolLTS = eol_lts,
+                                  debEolELTS = eol_elts } =
+      date >= created && maybe False (date >) eol_lts && maybe False (date <=) eol_elts
 
 -- | Get latest testing Debian distribution based on the given date.
 debianTesting :: Day -> [DebianEntry] -> [DebianEntry]

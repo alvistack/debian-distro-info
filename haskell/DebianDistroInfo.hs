@@ -46,8 +46,8 @@ startOptions = do
 
 onlyOneFilter :: a
 onlyOneFilter = error ("You have to select exactly one of --all, " ++
-                       "--devel, --lts, --oldstable, --stable, --supported, " ++
-                       "--testing, --unsupported.")
+                       "--devel, --elts, --lts, --oldstable, --stable, " ++
+                       "--supported, --testing, --unsupported.")
 
 options :: [OptDescr (Options -> IO Options)]
 options =
@@ -80,6 +80,8 @@ options =
              "list all known versions"
     , Option "d" ["devel"] (NoArg (setFilter debianDevel))
              "latest development version"
+    , Option "e" ["elts"] (NoArg (setFilter debianSupportedELTS))
+             "list of all Extended LTS supported versions"
     , Option "l" ["lts"] (NoArg (setFilter debianSupportedLTS))
              "list of all LTS supported versions"
     , Option "o" ["oldstable"] (NoArg (setFilter debianOldstable))

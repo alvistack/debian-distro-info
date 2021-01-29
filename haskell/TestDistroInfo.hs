@@ -28,6 +28,8 @@ date1 :: Day
 date1 = fromGregorian 2011 01 10
 date2 :: Day
 date2 = fromGregorian 2016 02 28
+date3 :: Day
+date3 = fromGregorian 2020 06 29
 
 ------------------
 -- Debian tests --
@@ -69,6 +71,12 @@ testDebianSupportedLTS d = TestCase (assertEqual "Debian LTS" expected result)
   where
     expected = ["squeeze"]
     result = map debSeries $ debianSupportedLTS date2 d
+
+testDebianSupportedELTS :: [DebianEntry] -> Test
+testDebianSupportedELTS d = TestCase (assertEqual "Debian ELTS" expected result)
+  where
+    expected = ["wheezy"]
+    result = map debSeries $ debianSupportedELTS date3 d
 
 testDebianTesting :: [DebianEntry] -> Test
 testDebianTesting d = TestCase (assertEqual "Debian testing" expected result)
@@ -141,6 +149,7 @@ tests d u = TestList [
     testDebianAll d,
     testDebianDevel d,
     testDebianSupportedLTS d,
+    testDebianSupportedELTS d,
     testDebianOldstable d,
     testDebianStable d,
     testDebianSupported d,
