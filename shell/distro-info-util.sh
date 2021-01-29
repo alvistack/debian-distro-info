@@ -226,10 +226,10 @@ main() {
 				callback="supported_esm";;
 #END ubuntu#
 #BEGIN debian#
-			--elts)
+			-e|--elts)
 				[ -z "$callback" ] || { not_exactly_one; return 1; }
 				callback="elts";;
-			--lts)
+			-l|--lts)
 				[ -z "$callback" ] || { not_exactly_one; return 1; }
 				callback="lts";;
 			-o|--oldstable|--old)
