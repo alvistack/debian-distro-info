@@ -16,7 +16,7 @@
 use strict;
 use warnings;
 
-use Test::Simple tests => 34;
+use Test::Simple tests => 35;
 
 use lib '.';
 use Debian::DistroInfo;
@@ -57,6 +57,7 @@ ok(symmetric_difference(\@all, \@returned) == 1,
 my @expected = ();
 my $date1 = Debian::DistroInfo::convert_date('2011-01-10');
 my $date2 = Debian::DistroInfo::convert_date('2016-02-28');
+my $date3 = Debian::DistroInfo::convert_date('2020-06-29');
 
 my $deb = DebianDistroInfo->new();
 @all = ('buzz', 'rex', 'bo', 'hamm', 'slink', 'potato', 'woody', 'sarge',
@@ -81,6 +82,11 @@ ok(symmetric_difference(\@expected, \@returned) == 0,
 @returned = $deb->supported_lts($date2);
 ok(symmetric_difference(\@expected, \@returned) == 0,
    'Debian LTS');
+
+@expected = ('wheezy');
+@returned = $deb->supported_elts($date3);
+ok(symmetric_difference(\@expected, \@returned) == 0,
+   'Debian ELTS');
 
 @expected = ('buzz', 'rex', 'bo', 'hamm', 'slink', 'potato', 'woody', 'sarge',
              'etch');
