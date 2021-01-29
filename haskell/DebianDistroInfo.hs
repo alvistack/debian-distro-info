@@ -80,18 +80,18 @@ options =
              "list all known versions"
     , Option "d" ["devel"] (NoArg (setFilter debianDevel))
              "latest development version"
-    , Option "e" ["elts"] (NoArg (setFilter debianSupportedELTS))
-             "list of all Extended LTS supported versions"
-    , Option "l" ["lts"] (NoArg (setFilter debianSupportedLTS))
-             "list of all LTS supported versions"
-    , Option "o" ["oldstable"] (NoArg (setFilter debianOldstable))
-             "latest oldstable version"
-    , Option "s" ["stable"] (NoArg (setFilter debianStable))
-             "latest stable version"
-    , Option "" ["supported"] (NoArg (setFilter debianSupported))
-             "list of all supported stable versions"
     , Option "t" ["testing"] (NoArg (setFilter debianTesting))
              "current testing version"
+    , Option "s" ["stable"] (NoArg (setFilter debianStable))
+             "latest stable version"
+    , Option "o" ["oldstable"] (NoArg (setFilter debianOldstable))
+             "latest oldstable version"
+    , Option "" ["supported"] (NoArg (setFilter debianSupported))
+             "list of all supported stable versions"
+    , Option "l" ["lts"] (NoArg (setFilter debianSupportedLTS))
+             "list of all LTS supported versions"
+    , Option "e" ["elts"] (NoArg (setFilter debianSupportedELTS))
+             "list of all Extended LTS supported versions"
     , Option "" ["unsupported"] (NoArg (setFilter debianUnsupported))
              "list of all unsupported stable versions"
     , Option "c" ["codename"]

@@ -73,10 +73,10 @@ options =
              "list all known versions"
     , Option "d" ["devel"] (NoArg (setFilter ubuntuDevel))
              "latest development version"
-    , Option "" ["lts"] (NoArg (setFilter ubuntuLTS))
-             "latest long term support (LTS) version"
     , Option "s" ["stable"] (NoArg (setFilter ubuntuStable))
              "latest stable version"
+    , Option "" ["lts"] (NoArg (setFilter ubuntuLTS))
+             "latest long term support (LTS) version"
     , Option "" ["supported"] (NoArg (setFilter ubuntuSupported))
              "list of all supported stable versions"
     , Option "" ["supported-esm"] (NoArg (setFilter ubuntuSupportedESM))
