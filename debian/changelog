@@ -1,4 +1,4 @@
-distro-info (1.0) UNRELEASED; urgency=medium
+distro-info (1.0) unstable; urgency=medium
 
   [ Debian Janitor ]
   * Mark libdistro-info-perl as Multi-Arch: foreign.
@@ -28,7 +28,7 @@ distro-info (1.0) UNRELEASED; urgency=medium
   * Don't run tests over the distro_info_test directory, which is pointless
     and recursive.
 
- -- Stefano Rivera <stefanor@debian.org>  Wed, 27 Jan 2021 19:46:16 -0700
+ -- Stefano Rivera <stefanor@debian.org>  Fri, 29 Jan 2021 13:35:30 -0700
 
 distro-info (0.24) unstable; urgency=medium
 
