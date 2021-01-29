@@ -70,6 +70,7 @@ class DistroRelease(object):
         eol=None,
         eol_esm=None,
         eol_lts=None,
+        eol_elts=None,
         eol_server=None,
     ):
         # pylint: disable=too-many-arguments
@@ -80,6 +81,7 @@ class DistroRelease(object):
         self.release = release
         self.eol = eol
         self.eol_lts = eol_lts
+        self.eol_elts = eol_elts
         self.eol_esm = eol_esm
         self.eol_server = eol_server
 
@@ -117,6 +119,7 @@ class DistroInfo(object):
                 _get_date(row, "eol"),
                 _get_date(row, "eol-esm"),
                 _get_date(row, "eol-lts"),
+                _get_date(row, "eol-elts"),
                 _get_date(row, "eol-server"),
             )
             self._releases.append(release)
@@ -269,6 +272,19 @@ class DebianDistroInfo(DistroInfo):
             for x in self._avail(date)
             if (x.eol is not None and date > x.eol)
             and (x.eol_lts is not None and date <= x.eol_lts)
+        ]
+        return distros
+
+    def elts_supported(self, date=None, result="codename"):
+        """Get list of all Extended LTS supported Debian distributions based on
+        the given date."""
+        if date is None:
+            date = self._date
+        distros = [
+            self._format(result, x)
+            for x in self._avail(date)
+            if (x.eol_lts is not None and date > x.eol_lts)
+            and (x.eol_elts is not None and date <= x.eol_elts)
         ]
         return distros
 
