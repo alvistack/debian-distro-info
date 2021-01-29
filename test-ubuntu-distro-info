@@ -117,9 +117,9 @@ testFullname() {
     success "--date=2011-01-10 --fullname --lts --days=eol" \
         'Ubuntu 10.04 LTS "Lucid Lynx" 850'
     success "--date=2011-01-10 --fullname --lts -yeol-server" \
-        'Ubuntu 10.04 LTS "Lucid Lynx" 1570'
+        'Ubuntu 10.04 LTS "Lucid Lynx" 1571'
     success "--date=2011-01-10 --fullname --lts --days=eol-server" \
-        'Ubuntu 10.04 LTS "Lucid Lynx" 1570'
+        'Ubuntu 10.04 LTS "Lucid Lynx" 1571'
 }
 
 testRelease() {
@@ -141,9 +141,9 @@ testRelease() {
     success "--date=2011-01-10 --lts --release -yeol" \
         "10.04 LTS 850"
     success "--date=2011-01-10 --lts --release --days=eol-server" \
-        "10.04 LTS 1570"
+        "10.04 LTS 1571"
     success "--date=2011-01-10 --lts --release -yeol-server" \
-        "10.04 LTS 1570"
+        "10.04 LTS 1571"
 
     success "--date=2011-01-10 -r --stable" "10.10"
 }
@@ -272,10 +272,10 @@ testDays() {
     success "--date=$date --lts --days=eol -f" "Ubuntu 10.04 LTS \"Lucid Lynx\" 1105"
     success "--date=$date --lts --days=eol -r" "10.04 LTS 1105"
 
-    success "--date=$date --lts --days=eol-server" "1825"
-    success "--date=$date --lts --days=eol-server -c" "lucid 1825"
-    success "--date=$date --lts --days=eol-server -f" "Ubuntu 10.04 LTS \"Lucid Lynx\" 1825"
-    success "--date=$date --lts --days=eol-server -r" "10.04 LTS 1825"
+    success "--date=$date --lts --days=eol-server" "1826"
+    success "--date=$date --lts --days=eol-server -c" "lucid 1826"
+    success "--date=$date --lts --days=eol-server -f" "Ubuntu 10.04 LTS \"Lucid Lynx\" 1826"
+    success "--date=$date --lts --days=eol-server -r" "10.04 LTS 1826"
 
     # date precise released
     date=2012-04-26
@@ -297,15 +297,15 @@ testDays() {
     success "--date=$date --lts --days -f" "Ubuntu 12.04 LTS \"Precise Pangolin\" 0"
     success "--date=$date --lts --days -r" "12.04 LTS 0"
 
-    success "--date=$date --lts --days=eol" "1826"
-    success "--date=$date --lts --days=eol -c" "precise 1826"
-    success "--date=$date --lts --days=eol -f" "Ubuntu 12.04 LTS \"Precise Pangolin\" 1826"
-    success "--date=$date --lts --days=eol -r" "12.04 LTS 1826"
+    success "--date=$date --lts --days=eol" "1828"
+    success "--date=$date --lts --days=eol -c" "precise 1828"
+    success "--date=$date --lts --days=eol -f" "Ubuntu 12.04 LTS \"Precise Pangolin\" 1828"
+    success "--date=$date --lts --days=eol -r" "12.04 LTS 1828"
 
-    success "--date=$date --lts --days=eol-server" "1826"
-    success "--date=$date --lts --days=eol-server -c" "precise 1826"
-    success "--date=$date --lts --days=eol-server -f" "Ubuntu 12.04 LTS \"Precise Pangolin\" 1826"
-    success "--date=$date --lts --days=eol-server -r" "12.04 LTS 1826"
+    success "--date=$date --lts --days=eol-server" "1828"
+    success "--date=$date --lts --days=eol-server -c" "precise 1828"
+    success "--date=$date --lts --days=eol-server -f" "Ubuntu 12.04 LTS \"Precise Pangolin\" 1828"
+    success "--date=$date --lts --days=eol-server -r" "12.04 LTS 1828"
 
     # day before raring was released
     date=2013-04-24

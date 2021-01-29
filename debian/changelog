@@ -15,6 +15,7 @@ distro-info (1.0) UNRELEASED; urgency=medium
   * Drop old Breaks+Replaces on ubuntu-dev-tools, no longer needed.
   * Reorganise help into a slightly more logical order.
   * Add support for Debian ELTS.
+  * Update tests to match old date adjustments in distro-info-data 0.46.
 
   [ Brian Murray ]
   * Provide support for the milestone eol-esm and add filters for
