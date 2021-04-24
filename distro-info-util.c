@@ -587,7 +587,7 @@ static void print_help(void) {
 #ifdef DEBIAN
            "  -o  --oldstable        latest oldstable version\n"
 #endif
-           "      --supported        list of all supported stable versions\n"
+           "      --supported        list of all supported versions (including development)\n"
 #ifdef DEBIAN
            "  -l  --lts              list of all LTS supported versions\n"
            "  -e  --elts             list of all Extended LTS supported versions\n"

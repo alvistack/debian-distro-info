@@ -78,7 +78,7 @@ options =
     , Option "" ["lts"] (NoArg (setFilter ubuntuLTS))
              "latest long term support (LTS) version"
     , Option "" ["supported"] (NoArg (setFilter ubuntuSupported))
-             "list of all supported stable versions"
+             "list of all supported versions (including development)"
     , Option "" ["supported-esm"] (NoArg (setFilter ubuntuSupportedESM))
              "list of all Ubuntu Advantage supported stable versions"
     , Option "" ["unsupported"] (NoArg (setFilter ubuntuUnsupported))

@@ -44,8 +44,9 @@ def parse_args():
                         help="latest stable version")
     parser.add_argument("-o", "--old", dest="old", action="store_true",
                         help="latest old (stable) version")
-    parser.add_argument("--supported", dest="supported", action="store_true",
-                        help="list of all supported stable versions")
+    parser.add_argument(
+        "--supported", dest="supported", action="store_true",
+        help="list of all supported versions (including development)")
     parser.add_argument("-l", "--lts", dest="lts", action="store_true",
                         help="list of all LTS supported stable versions")
     parser.add_argument("-e", "--elts", dest="elts", action="store_true",

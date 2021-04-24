@@ -87,7 +87,7 @@ options =
     , Option "o" ["oldstable"] (NoArg (setFilter debianOldstable))
              "latest oldstable version"
     , Option "" ["supported"] (NoArg (setFilter debianSupported))
-             "list of all supported stable versions"
+             "list of all supported versions (including development)"
     , Option "l" ["lts"] (NoArg (setFilter debianSupportedLTS))
              "list of all LTS supported versions"
     , Option "e" ["elts"] (NoArg (setFilter debianSupportedELTS))

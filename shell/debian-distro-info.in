@@ -35,7 +35,7 @@ Options:
   -t  --testing      current testing version
   -s  --stable       latest stable version
   -o  --oldstable    latest oldstable version
-      --supported    list of all supported stable versions
+      --supported    list of all supported versions (including development)
   -l  --lts          list of all LTS versions
   -e  --elts         list of all Extended LTS versions
       --unsupported  list of all unsupported stable versions
