@@ -1,7 +1,7 @@
 distro-info (1.1) UNRELEASED; urgency=medium
 
   * Man pages and help: Clarify that --supported includes development releases
-    (LP: #1727751)
+    (Closes: #902167, LP: #1727751)
 
  -- Stefano Rivera <stefanor@debian.org>  Sat, 24 Apr 2021 15:00:56 -0400
 
