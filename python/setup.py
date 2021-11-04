@@ -31,7 +31,7 @@ if __name__ == "__main__":
         py_modules=PY_MODULES,
         packages=PACKAGES,
         test_suite="distro_info_test",
-        url='https://salsa.debian.org/debian/distro-info',
-        author='Benjamin Drung',
-        author_email='bdrung@debian.org',
+        url="https://salsa.debian.org/debian/distro-info",
+        author="Benjamin Drung",
+        author_email="bdrung@debian.org",
     )

@@ -5,6 +5,7 @@ distro-info (1.1) UNRELEASED; urgency=medium
   * Update Python module to satisfy pylint 2.11 (Closes: #998598)
   * Python: Drop object inheritance in classes, we no longer need to support
     2.7.
+  * Re-black python.
 
  -- Stefano Rivera <stefanor@debian.org>  Sat, 24 Apr 2021 15:00:56 -0400
 
