@@ -54,7 +54,7 @@ class DistroDataOutdated(Exception):
         )
 
 
-class DistroRelease(object):
+class DistroRelease:
     """Represents a distributions release"""
 
     # pylint: disable=too-few-public-methods
@@ -98,7 +98,7 @@ def _get_date(row, column):
     return convert_date(row[column]) if column in row else None
 
 
-class DistroInfo(object):
+class DistroInfo:
     """Base class for distribution information.
     Use DebianDistroInfo or UbuntuDistroInfo instead of using this directly.
     """
