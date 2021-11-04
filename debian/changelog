@@ -2,6 +2,7 @@ distro-info (1.1) UNRELEASED; urgency=medium
 
   * Man pages and help: Clarify that --supported includes development releases
     (Closes: #902167, LP: #1727751)
+  * Update Python module to satisfy pylint 2.11 (Closes: #998598)
 
  -- Stefano Rivera <stefanor@debian.org>  Sat, 24 Apr 2021 15:00:56 -0400
 

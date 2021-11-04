@@ -106,24 +106,23 @@ class DistroInfo(object):
     def __init__(self, distro):
         self._distro = distro
         filename = os.path.join(_get_data_dir(), distro.lower() + ".csv")
-        csvfile = open(filename)
-        csv_reader = csv.DictReader(csvfile)
-        self._releases = []
-        for row in csv_reader:
-            release = DistroRelease(
-                row["version"],
-                row["codename"],
-                row["series"],
-                _get_date(row, "created"),
-                _get_date(row, "release"),
-                _get_date(row, "eol"),
-                _get_date(row, "eol-esm"),
-                _get_date(row, "eol-lts"),
-                _get_date(row, "eol-elts"),
-                _get_date(row, "eol-server"),
-            )
-            self._releases.append(release)
-        csvfile.close()
+        with open(filename, encoding="utf-8") as csvfile:
+            csv_reader = csv.DictReader(csvfile)
+            self._releases = []
+            for row in csv_reader:
+                release = DistroRelease(
+                    row["version"],
+                    row["codename"],
+                    row["series"],
+                    _get_date(row, "created"),
+                    _get_date(row, "release"),
+                    _get_date(row, "eol"),
+                    _get_date(row, "eol-esm"),
+                    _get_date(row, "eol-lts"),
+                    _get_date(row, "eol-elts"),
+                    _get_date(row, "eol-server"),
+                )
+                self._releases.append(release)
         self._date = datetime.date.today()
 
     @property

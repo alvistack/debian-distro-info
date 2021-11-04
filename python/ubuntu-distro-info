@@ -28,8 +28,8 @@ from distro_info import convert_date, UbuntuDistroInfo
 
 def parse_args():
     script_name = os.path.basename(sys.argv[0])
-    usage = "%s [options]" % (script_name)
-    epilog = "See %s(1) for more info." % (script_name)
+    usage = f"{script_name} [options]"
+    epilog = f"See {script_name}(1) for more info."
     parser = argparse.ArgumentParser(usage=usage, epilog=epilog)
 
     parser.add_argument("--date", dest="date", default=None,

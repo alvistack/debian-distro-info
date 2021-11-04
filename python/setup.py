@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
-import os
 import re
+from pathlib import Path
 
 from setuptools import setup
 
@@ -14,9 +14,10 @@ SCRIPTS = ["debian-distro-info", "ubuntu-distro-info"]
 def get_debian_version():
     """look what Debian version we have"""
     version = None
-    changelog = "../debian/changelog"
-    if os.path.exists(changelog):
-        head = open(changelog, "rb").readline().decode("utf-8")
+    changelog = Path("../debian/changelog")
+    if changelog.exists():
+        with changelog.open("r", encoding="utf-8") as changelog_f:
+            head = changelog_f.readline()
         match = re.compile(r".*\((.*)\).*").match(head)
         if match:
             version = match.group(1)
