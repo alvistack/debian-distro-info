@@ -1,4 +1,4 @@
-distro-info (1.1) UNRELEASED; urgency=medium
+distro-info (1.1) unstable; urgency=medium
 
   * Man pages and help: Clarify that --supported includes development releases
     (Closes: #902167, LP: #1727751)
@@ -8,7 +8,7 @@ distro-info (1.1) UNRELEASED; urgency=medium
   * Re-black python.
   * Bump Standards-Version to 4.6.0, no changes needed.
 
- -- Stefano Rivera <stefanor@debian.org>  Sat, 24 Apr 2021 15:00:56 -0400
+ -- Stefano Rivera <stefanor@debian.org>  Thu, 04 Nov 2021 14:27:37 -0700
 
 distro-info (1.0) unstable; urgency=medium
 
