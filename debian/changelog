@@ -1,3 +1,11 @@
+distro-info (1.2) UNRELEASED; urgency=medium
+
+  * Remove constraints unnecessary since buster:
+    + Build-Depends: Drop versioned constraint on shunit2.
+    + distro-info: Drop versioned constraint on shunit2 in Suggests.
+
+ -- Debian Janitor <janitor@jelmer.uk>  Thu, 03 Feb 2022 10:09:20 -0000
+
 distro-info (1.1) unstable; urgency=medium
 
   * Man pages and help: Clarify that --supported includes development releases
