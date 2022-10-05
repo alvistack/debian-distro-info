@@ -1,4 +1,4 @@
-# Copyright (C) 2017, Benjamin Drung <benjamin.drung@profitbricks.com>
+# Copyright (C) 2017-2021, Benjamin Drung <benjamin.drung@ionos.com>
 #
 # Permission to use, copy, modify, and/or distribute this software for any
 # purpose with or without fee is hereby granted, provided that the above
@@ -12,17 +12,15 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-"""Test suite for distro-info"""
+"""Helper functions for testing."""
 
 import inspect
 import os
-import site
-import sys
 import unittest
 
 
 def get_source_files():
-    """Return a list of sources files/directories (to check with flake8/pylint)"""
+    """Return a list of sources files/directories (to check with flake8/pylint)."""
     scripts = ["debian-distro-info", "ubuntu-distro-info"]
     modules = []
     py_files = ["distro_info.py", "setup.py"]
@@ -31,19 +29,13 @@ def get_source_files():
     for code_file in scripts + modules + py_files:
         is_script = code_file in scripts
         if not os.path.exists(code_file):  # pragma: no cover
-            # The alternative path in the OLDPWD environment is needed for Debian's pybuild
-            # Use installed files as fallback
-            for alternative_path in [os.environ.get("OLDPWD", "")] + site.getsitepackages():
-                alternative = os.path.join(alternative_path, code_file)
-                if os.path.exists(alternative):
-                    code_file = alternative
-                    break
+            # The alternative path is needed for Debian's pybuild
+            alternative = os.path.join(os.environ.get("OLDPWD", ""), code_file)
+            code_file = alternative if os.path.exists(alternative) else code_file
         if is_script:
             with open(code_file, "rb") as script_file:
                 shebang = script_file.readline().decode("utf-8")
-            if (sys.version_info[0] == 3 and "python3" in shebang) or (
-                "python" in shebang and "python3" not in shebang
-            ):
+            if "python" in shebang:
                 files.append(code_file)
         else:
             files.append(code_file)
@@ -51,8 +43,10 @@ def get_source_files():
 
 
 def unittest_verbosity():
-    """Return the verbosity setting of the currently running unittest
-    program, or None if none is running.
+    """
+    Return the verbosity setting of the currently running unittest.
+
+    If no test is running, return 0.
     """
     frame = inspect.currentframe()
     while frame:
@@ -60,4 +54,4 @@ def unittest_verbosity():
         if isinstance(self, unittest.TestProgram):
             return self.verbosity
         frame = frame.f_back
-    return None  # pragma: no cover
+    return 0  # pragma: no cover

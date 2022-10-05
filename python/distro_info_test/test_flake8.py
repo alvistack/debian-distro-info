@@ -12,7 +12,7 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-"""test_flake8.py - Run flake8 check"""
+"""Run flake8 check."""
 
 import subprocess
 import sys
@@ -30,36 +30,27 @@ class Flake8TestCase(unittest.TestCase):
     """
 
     def test_flake8(self):
-        """Test: Run flake8 on Python source code"""
-        cmd = [
-            sys.executable,
-            "-m",
-            "flake8",
-            "--ignore",
-            "H301,H403,H405,W504,W503",
-            "--max-line-length=99",
-        ] + get_source_files()
+        """Test: Run flake8 on Python source code."""
+        cmd = [sys.executable, "-m", "flake8", "--max-line-length=99"] + get_source_files()
         if unittest_verbosity() >= 2:
-            sys.stderr.write("Running following command:\n{}\n".format(" ".join(cmd)))
-        process = subprocess.Popen(
+            sys.stderr.write(f"Running following command:\n{' '.join(cmd)}\n")
+        with subprocess.Popen(
             cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, close_fds=True
-        )
+        ) as process:
+            out, err = process.communicate()
 
-        out, err = process.communicate()
         if process.returncode != 0:  # pragma: no cover
             msgs = []
             if err:
                 msgs.append(
-                    "flake8 exited with code {} and has unexpected output on stderr:\n{}".format(
-                        process.returncode, err.decode().rstrip()
-                    )
+                    f"flake8 exited with code {process.returncode} "
+                    f"and has unexpected output on stderr:\n{err.decode().rstrip()}"
                 )
             if out:
-                msgs.append("flake8 found issues:\n{}".format(out.decode().rstrip()))
+                msgs.append(f"flake8 found issues:\n{out.decode().rstrip()}")
             if not msgs:
                 msgs.append(
-                    "flake8 exited with code {} and has no output on stdout or stderr.".format(
-                        process.returncode
-                    )
+                    f"flake8 exited with code {process.returncode} "
+                    "and has no output on stdout or stderr."
                 )
             self.fail("\n".join(msgs))
