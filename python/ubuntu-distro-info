@@ -23,7 +23,7 @@ import argparse
 import os
 import sys
 
-from distro_info import convert_date, UbuntuDistroInfo
+from distro_info import UbuntuDistroInfo, convert_date
 
 
 def parse_args():

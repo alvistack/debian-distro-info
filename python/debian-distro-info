@@ -23,7 +23,7 @@ import argparse
 import os
 import sys
 
-from distro_info import convert_date, DebianDistroInfo
+from distro_info import DebianDistroInfo, convert_date
 
 
 def parse_args():
