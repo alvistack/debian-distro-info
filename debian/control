@@ -3,7 +3,8 @@ Section: devel
 Priority: optional
 Maintainer: Benjamin Drung <bdrung@debian.org>
 Uploaders: Stefano Rivera <stefanor@debian.org>
-Build-Depends: debhelper-compat (= 13),
+Build-Depends: black,
+               debhelper-compat (= 13),
                dh-python,
                distro-info-data (>= 0.46),
                pylint (>= 2.2.2-2~),

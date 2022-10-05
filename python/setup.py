@@ -5,7 +5,6 @@ from pathlib import Path
 
 from setuptools import setup
 
-
 PACKAGES = []
 PY_MODULES = ["distro_info"]
 SCRIPTS = ["debian-distro-info", "ubuntu-distro-info"]

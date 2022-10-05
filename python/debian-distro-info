@@ -32,43 +32,75 @@ def parse_args():
     epilog = f"See {script_name}(1) for more info."
     parser = argparse.ArgumentParser(usage=usage, epilog=epilog)
 
-    parser.add_argument("--date", dest="date", default=None,
-                        help="date for calculating the version (default: today).")
-    parser.add_argument("-a", "--all", dest="all", action="store_true",
-                        help="list all known versions")
-    parser.add_argument("-d", "--devel", dest="devel", action="store_true",
-                        help="latest development version")
-    parser.add_argument("-t", "--testing", dest="testing", action="store_true",
-                        help="current testing version")
-    parser.add_argument("-s", "--stable", dest="stable", action="store_true",
-                        help="latest stable version")
-    parser.add_argument("-o", "--old", dest="old", action="store_true",
-                        help="latest old (stable) version")
     parser.add_argument(
-        "--supported", dest="supported", action="store_true",
-        help="list of all supported versions (including development)")
-    parser.add_argument("-l", "--lts", dest="lts", action="store_true",
-                        help="list of all LTS supported stable versions")
-    parser.add_argument("-e", "--elts", dest="elts", action="store_true",
-                        help="list of all ELTS supported stable versions")
-    parser.add_argument("--unsupported", dest="unsupported",
-                        help="list of all unsupported stable versions")
+        "--date",
+        dest="date",
+        default=None,
+        help="date for calculating the version (default: today).",
+    )
+    parser.add_argument(
+        "-a", "--all", dest="all", action="store_true", help="list all known versions"
+    )
+    parser.add_argument(
+        "-d", "--devel", dest="devel", action="store_true", help="latest development version"
+    )
+    parser.add_argument(
+        "-t", "--testing", dest="testing", action="store_true", help="current testing version"
+    )
+    parser.add_argument(
+        "-s", "--stable", dest="stable", action="store_true", help="latest stable version"
+    )
+    parser.add_argument(
+        "-o", "--old", dest="old", action="store_true", help="latest old (stable) version"
+    )
+    parser.add_argument(
+        "--supported",
+        dest="supported",
+        action="store_true",
+        help="list of all supported versions (including development)",
+    )
+    parser.add_argument(
+        "-l",
+        "--lts",
+        dest="lts",
+        action="store_true",
+        help="list of all LTS supported stable versions",
+    )
+    parser.add_argument(
+        "-e",
+        "--elts",
+        dest="elts",
+        action="store_true",
+        help="list of all ELTS supported stable versions",
+    )
+    parser.add_argument(
+        "--unsupported", dest="unsupported", help="list of all unsupported stable versions"
+    )
 
     args = parser.parse_args()
 
-    versions = [args.all, args.devel, args.lts, args.elts, args.old,
-                args.stable, args.supported, args.testing, args.unsupported]
+    versions = [
+        args.all,
+        args.devel,
+        args.lts,
+        args.elts,
+        args.old,
+        args.stable,
+        args.supported,
+        args.testing,
+        args.unsupported,
+    ]
     if len([x for x in versions if x]) != 1:
-        parser.error("You have to select exactly one of --all, --devel, "
-                     "--elts, --lts, --old, --stable, --supported, --testing, "
-                     "--unsupported.")
+        parser.error(
+            "You have to select exactly one of --all, --devel, --elts, --lts,"
+            " --old, --stable, --supported, --testing, --unsupported."
+        )
 
     if args.date is not None:
         try:
             args.date = convert_date(args.date)
         except ValueError:
-            parser.error("Option --date needs to be a date in ISO 8601 "
-                         "format.")
+            parser.error("Option --date needs to be a date in ISO 8601 format.")
     return args
 
 
