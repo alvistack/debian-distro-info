@@ -1,4 +1,4 @@
-distro-info (1.2) UNRELEASED; urgency=medium
+distro-info (1.2) unstable; urgency=medium
 
   [ Debian Janitor ]
   * Remove constraints unnecessary since buster:
@@ -17,7 +17,7 @@ distro-info (1.2) UNRELEASED; urgency=medium
   * python: Cover distro_info_test by linters as well
   * python: Use PEP440 compliant version in setup.py (LP: #1991606)
 
- -- Debian Janitor <janitor@jelmer.uk>  Thu, 03 Feb 2022 10:09:20 -0000
+ -- Stefano Rivera <stefanor@debian.org>  Sat, 15 Oct 2022 19:03:06 +0200
 
 distro-info (1.1) unstable; urgency=medium
 
