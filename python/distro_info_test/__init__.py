@@ -32,6 +32,12 @@ def get_source_files():
             # The alternative path is needed for Debian's pybuild
             alternative = os.path.join(os.environ.get("OLDPWD", ""), code_file)
             code_file = alternative if os.path.exists(alternative) else code_file
+        if (
+            not os.path.exists(code_file)
+            and code_file.endswith(".py")
+            and "AUTOPKGTEST_TMP" in os.environ
+        ):
+            code_file = "/usr/lib/python3/dist-packages/" + code_file
         if is_script:
             with open(code_file, "rb") as script_file:
                 shebang = script_file.readline().decode("utf-8")
