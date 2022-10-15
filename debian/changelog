@@ -8,6 +8,7 @@ distro-info (1.2) UNRELEASED; urgency=medium
   [ Stefano Rivera ]
   * Update pylint config to fix FTBFS with pylint 2.15.
   * Support the nocheck build profile.
+  * Bump Standards-Version to 4.6.1, no changes needed.
 
   [ Benjamin Drung ]
   * python: Update test cases
