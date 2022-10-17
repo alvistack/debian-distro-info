@@ -27,7 +27,7 @@ def get_debian_version():
 if __name__ == "__main__":
     setup(
         name="distro-info",
-        version=get_debian_version(),
+        version='1.1',
         py_modules=PY_MODULES,
         packages=PACKAGES,
         test_suite="distro_info_test",
