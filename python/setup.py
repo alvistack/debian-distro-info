@@ -36,7 +36,7 @@ def make_pep440_compliant(version: str) -> str:
 if __name__ == "__main__":
     setup(
         name="distro-info",
-        version=make_pep440_compliant(get_debian_version()),
+        version='1.4',
         py_modules=PY_MODULES,
         packages=PACKAGES,
         test_suite="distro_info_test",
