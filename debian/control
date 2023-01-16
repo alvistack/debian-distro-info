@@ -5,7 +5,7 @@ Maintainer: Benjamin Drung <bdrung@debian.org>
 Uploaders: Stefano Rivera <stefanor@debian.org>
 Build-Depends: black <!nocheck>,
                debhelper-compat (= 13),
-               dh-python,
+               dh-sequence-python3,
                distro-info-data (>= 0.46) <!nocheck>,
                isort <!nocheck>,
                pylint (>= 2.2.2-2~) <!nocheck>,
