@@ -192,7 +192,7 @@ class DistroInfo:
             raise DistroDataOutdated()
         return self._format(result, distros[-1])
 
-    def supported(self, date=None, result=None):
+    def supported(self, date=None, result="codename"):
         """Get list of all supported distributions based on the given date."""
         raise NotImplementedError()
 
