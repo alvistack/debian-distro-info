@@ -13,7 +13,7 @@ Build-Depends: black <!nocheck>,
                python3-flake8 <!nocheck>,
                python3-setuptools,
                shunit2 <!nocheck>
-Standards-Version: 4.6.1
+Standards-Version: 4.6.2
 Rules-Requires-Root: no
 Vcs-Git: https://salsa.debian.org/debian/distro-info.git
 Vcs-Browser: https://salsa.debian.org/debian/distro-info
