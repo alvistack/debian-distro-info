@@ -20,9 +20,9 @@ import select
 import signal
 import subprocess
 import time
+import unittest
 
 import setup
-from distro_info_test import unittest
 
 TIMEOUT = 5
 
