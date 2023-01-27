@@ -319,7 +319,9 @@ class UbuntuDistroInfo(DistroInfo):
         if date is None:
             date = self._date
         distros = [
-            x for x in self._releases if x.version.find("LTS") >= 0 and x.release <= date <= x.eol
+            x
+            for x in self._releases
+            if x.version.find("LTS") >= 0 and x.release and x.eol and x.release <= date <= x.eol
         ]
         if not distros:
             raise DistroDataOutdated()
@@ -340,7 +342,7 @@ class UbuntuDistroInfo(DistroInfo):
         distros = [
             self._format(result, x)
             for x in self._avail(date)
-            if date <= x.eol or (x.eol_server is not None and date <= x.eol_server)
+            if (x.eol and date <= x.eol) or (x.eol_server is not None and date <= x.eol_server)
         ]
         return distros
 
