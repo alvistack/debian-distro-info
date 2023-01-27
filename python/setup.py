@@ -25,7 +25,11 @@ def get_debian_version():
 
 def make_pep440_compliant(version: str) -> str:
     """Convert the version into a PEP440 compliant version."""
-    return re.sub("([a-zA-Z])", r"+\1", version, count=1)
+    pep440_version = re.sub("([a-zA-Z])", r"+\1", version, count=1)
+    assert re.match(
+        r"^[0-9][0-9.]*((a|b|rc|.post|.dev)[0-9]+)*(\+[a-zA-Z0-9.]+)?$", pep440_version
+    ), f"'{pep440_version}' not PEP440 compliant"
+    return pep440_version
 
 
 if __name__ == "__main__":
