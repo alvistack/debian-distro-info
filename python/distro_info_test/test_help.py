@@ -20,6 +20,7 @@ import select
 import signal
 import subprocess
 import time
+import typing
 import unittest
 
 import setup
@@ -29,13 +30,13 @@ TIMEOUT = 5
 
 class HelpTestCase(unittest.TestCase):
     @classmethod
-    def populate(cls):
+    def populate(cls) -> None:
         for script in setup.SCRIPTS:
             setattr(cls, "test_" + script, cls.make_help_tester(script))
 
     @classmethod
-    def make_help_tester(cls, script):
-        def tester(self):
+    def make_help_tester(cls, script: str) -> typing.Callable[[typing.Any], None]:
+        def tester(self: typing.Any) -> None:
             with subprocess.Popen(
                 ["./" + script, "--help"],
                 close_fds=True,
@@ -46,6 +47,8 @@ class HelpTestCase(unittest.TestCase):
                 started = time.time()
                 out = []
 
+                assert process.stdout
+                assert process.stderr
                 fds = [process.stdout.fileno(), process.stderr.fileno()]
                 for file_descriptor in fds:
                     fcntl.fcntl(

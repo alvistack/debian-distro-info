@@ -5,7 +5,7 @@ import re
 
 from setuptools import setup
 
-PACKAGES = []
+PACKAGES: list[str] = []
 PY_MODULES = ["distro_info"]
 SCRIPTS = ["debian-distro-info", "ubuntu-distro-info"]
 

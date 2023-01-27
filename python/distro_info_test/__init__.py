@@ -19,7 +19,7 @@ import os
 import unittest
 
 
-def get_source_files():
+def get_source_files() -> list[str]:
     """Return a list of sources files/directories (to check with flake8/pylint)."""
     scripts = ["debian-distro-info", "ubuntu-distro-info"]
     modules = ["distro_info_test"]
@@ -48,7 +48,7 @@ def get_source_files():
     return files
 
 
-def unittest_verbosity():
+def unittest_verbosity() -> int:
     """
     Return the verbosity setting of the currently running unittest.
 
