@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
+import pathlib
 import re
-from pathlib import Path
 
 from setuptools import setup
 
@@ -10,17 +10,15 @@ PY_MODULES = ["distro_info"]
 SCRIPTS = ["debian-distro-info", "ubuntu-distro-info"]
 
 
-def get_debian_version():
+def get_debian_version() -> str:
     """look what Debian version we have"""
-    version = None
-    changelog = Path("../debian/changelog")
-    if changelog.exists():
-        with changelog.open("r", encoding="utf-8") as changelog_f:
-            head = changelog_f.readline()
-        match = re.compile(r".*\((.*)\).*").match(head)
-        if match:
-            version = match.group(1)
-    return version
+    changelog = pathlib.Path(__file__).parent.parent / "debian" / "changelog"
+    with changelog.open("r", encoding="utf-8") as changelog_f:
+        head = changelog_f.readline()
+    match = re.compile(r".*\((.*)\).*").match(head)
+    if not match:
+        raise ValueError(f"Failed to extract Debian version from '{head}'.")
+    return match.group(1)
 
 
 def make_pep440_compliant(version: str) -> str:
