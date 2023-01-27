@@ -23,15 +23,15 @@ def get_debian_version():
     return version
 
 
-def get_pep440_version():
-    """Return the a PEP440 compliant version."""
-    return re.sub("([a-zA-Z])", r"+\1", get_debian_version(), count=1)
+def make_pep440_compliant(version: str) -> str:
+    """Convert the version into a PEP440 compliant version."""
+    return re.sub("([a-zA-Z])", r"+\1", version, count=1)
 
 
 if __name__ == "__main__":
     setup(
         name="distro-info",
-        version=get_pep440_version(),
+        version=make_pep440_compliant(get_debian_version()),
         py_modules=PY_MODULES,
         packages=PACKAGES,
         test_suite="distro_info_test",

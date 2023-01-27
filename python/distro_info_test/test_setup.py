@@ -17,22 +17,16 @@
 import unittest
 import unittest.mock
 
-from setup import get_pep440_version
+from setup import make_pep440_compliant
 
 
 class SetupTestCase(unittest.TestCase):
     """Test functions in setup.py."""
 
-    @unittest.mock.patch("setup.get_debian_version")
-    def test_get_pep440_version_unchanged(self, debian_version_mock):
-        """Test get_pep440_version() for version '1.2'."""
-        debian_version_mock.return_value = "1.2"
-        self.assertEqual(get_pep440_version(), "1.2")
-        debian_version_mock.assert_called_once_with()
+    def test_make_pep440_compliant_unchanged(self) -> None:
+        """Test make_pep440_compliant() with already correct version."""
+        self.assertEqual(make_pep440_compliant("1.2"), "1.2")
 
-    @unittest.mock.patch("setup.get_debian_version")
-    def test_get_pep440_version_ubuntu(self, debian_version_mock):
-        """Test get_pep440_version() for version '1.1ubuntu1'."""
-        debian_version_mock.return_value = "1.1ubuntu1"
-        self.assertEqual(get_pep440_version(), "1.1+ubuntu1")
-        debian_version_mock.assert_called_once_with()
+    def test_make_pep440_compliant_ubuntu(self) -> None:
+        """Test make_pep440_compliant() with Ubuntu version."""
+        self.assertEqual(make_pep440_compliant("1.1ubuntu1"), "1.1+ubuntu1")
