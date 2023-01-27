@@ -70,7 +70,7 @@ class HelpTestCase(unittest.TestCase):
                     process.poll(),
                     0,
                     f"{script} failed to return usage within {TIMEOUT} seconds.\n"
-                    f"Output:\n{b''.join(out)}",
+                    f"Output:\n{b''.join(out).decode()}",
                 )
 
         return tester
