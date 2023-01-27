@@ -218,16 +218,14 @@ class DebianDistroInfo(DistroInfo):
     def codename(self, release, date=None, default=None):
         """Map 'unstable', 'testing', etc. to their codenames."""
         if release == "unstable":
-            codename = self.devel(date)
-        elif release == "testing":
-            codename = self.testing(date)
-        elif release == "stable":
-            codename = self.stable(date)
-        elif release == "oldstable":
-            codename = self.old(date)
-        else:
-            codename = default
-        return codename
+            return self.devel(date)
+        if release == "testing":
+            return self.testing(date)
+        if release == "stable":
+            return self.stable(date)
+        if release == "oldstable":
+            return self.old(date)
+        return default
 
     def devel(self, date=None, result="codename"):
         """Get latest development distribution based on the given date."""
