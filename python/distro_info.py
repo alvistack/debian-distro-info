@@ -17,26 +17,21 @@
 import csv
 import datetime
 import os
+import typing
 
 
-def convert_date(string):
+def convert_date(string: str) -> datetime.date:
     """Convert a date string in ISO 8601 into a datetime object."""
-    if not string:
-        date = None
-    else:
-        parts = [int(x) for x in string.split("-")]
-        if len(parts) == 3:
-            (year, month, day) = parts
-            date = datetime.date(year, month, day)
-        elif len(parts) == 2:
-            (year, month) = parts
-            if month == 12:
-                date = datetime.date(year, month, 31)
-            else:
-                date = datetime.date(year, month + 1, 1) - datetime.timedelta(1)
-        else:
-            raise ValueError("Date not in ISO 8601 format.")
-    return date
+    parts = [int(x) for x in string.split("-")]
+    if len(parts) == 3:
+        (year, month, day) = parts
+        return datetime.date(year, month, day)
+    if len(parts) == 2:
+        (year, month) = parts
+        if month == 12:
+            return datetime.date(year, month, 31)
+        return datetime.date(year, month + 1, 1) - datetime.timedelta(1)
+    raise ValueError("Date not in ISO 8601 format.")
 
 
 def _get_data_dir():
@@ -65,7 +60,7 @@ class DistroRelease:
         version,
         codename,
         series,
-        created=None,
+        created,
         release=None,
         eol=None,
         eol_esm=None,
@@ -94,8 +89,11 @@ class DistroRelease:
         )
 
 
-def _get_date(row, column):
-    return convert_date(row[column]) if column in row else None
+def _get_date(row: dict[str, str], column: str) -> typing.Optional[datetime.date]:
+    date_string = row.get(column)
+    if not date_string:
+        return None
+    return convert_date(date_string)
 
 
 class DistroInfo:
@@ -114,7 +112,7 @@ class DistroInfo:
                     row["version"],
                     row["codename"],
                     row["series"],
-                    _get_date(row, "created"),
+                    convert_date(row["created"]),
                     _get_date(row, "release"),
                     _get_date(row, "eol"),
                     _get_date(row, "eol-esm"),
