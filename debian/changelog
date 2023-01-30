@@ -1,3 +1,16 @@
+distro-info (1.4) unstable; urgency=medium
+
+  * python:
+    - Assert that Python version is PEP440 compliant
+    - Handle more Debian versions correctly in make_pep440_compliant
+    - Use result="codename" as default everywhere
+    - Require 'created' field to be set because it is needed by is_supported()
+    - Check dates to be set before comparing them
+    - Add type annotations and check them with mypy
+  * Bump Standards-Version to 4.6.2
+
+ -- Benjamin Drung <bdrung@debian.org>  Mon, 30 Jan 2023 12:08:37 +0100
+
 distro-info (1.3) unstable; urgency=medium
 
   * Team upload.
