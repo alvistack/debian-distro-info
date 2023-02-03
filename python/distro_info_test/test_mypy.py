@@ -14,6 +14,7 @@
 
 """Run mypy to check static typing of the Python code."""
 
+import shutil
 import subprocess
 import sys
 import unittest
@@ -28,6 +29,7 @@ class MypyTestCase(unittest.TestCase):
     the get_source_files() function.
     """
 
+    @unittest.skipIf(not shutil.which("mypy"), "mypy not found")
     def test_mypy(self) -> None:
         """Test: Run mypy on Python source code."""
         # The *-distro-info binaries do not have type hints.
