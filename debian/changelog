@@ -1,3 +1,9 @@
+distro-info (1.5) unstable; urgency=medium
+
+  * Skip mypy on i386 (not available on Ubuntu)
+
+ -- Benjamin Drung <bdrung@debian.org>  Fri, 03 Feb 2023 10:41:15 +0100
+
 distro-info (1.4) unstable; urgency=medium
 
   * python:
