@@ -169,6 +169,23 @@ static date_t *read_date(const char *s, int *failures, const char *filename,
     return date;
 }
 
+// Return current date.
+// The result needs to be freed after its use.
+static date_t *get_current_date() {
+    date_t *date;
+    struct tm *now;
+    time_t time_now;
+
+    time_now = time(NULL);
+    now = gmtime(&time_now);
+
+    date = malloc(sizeof(date_t));
+    date->year = 1900 + now->tm_year;
+    date->month = 1 + now->tm_mon;
+    date->day = now->tm_mday;
+    return date;
+}
+
 static inline bool date_ge(const date_t *date1, const date_t *date2) {
     return date1->year > date2->year ||
            (date1->year == date2->year && date1->month > date2->month) ||
@@ -924,12 +941,7 @@ int main(int argc, char *argv[]) {
     }
 
     if(unlikely(date == NULL)) {
-        time_t time_now = time(NULL);
-        struct tm *now = gmtime(&time_now);
-        date = malloc(sizeof(date_t));
-        date->year = 1900 + now->tm_year;
-        date->month = 1 + now->tm_mon;
-        date->day = now->tm_mday;
+        date = get_current_date();
     }
 
     distro_list = read_data(DATA_DIR "/" CSV_NAME ".csv", &content);
