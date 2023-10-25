@@ -5,7 +5,7 @@ import re
 
 from setuptools import setup
 
-PACKAGES: list[str] = []
+PACKAGES = ["distro_info"]
 PY_MODULES = ["distro_info"]
 SCRIPTS = ["debian-distro-info", "ubuntu-distro-info"]
 
@@ -43,4 +43,5 @@ if __name__ == "__main__":
         url="https://salsa.debian.org/debian/distro-info",
         author="Benjamin Drung",
         author_email="bdrung@debian.org",
+        package_data={"distro_info": ["py.typed"]},
     )
