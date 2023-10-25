@@ -1,3 +1,10 @@
+distro-info (1.6) unstable; urgency=medium
+
+  * python: mark distro_info with py.typed marker (Closes: #1053936)
+  * Let distro-info programs respect SOURCE_DATE_EPOCH (Closes: #1034422)
+
+ -- Benjamin Drung <bdrung@debian.org>  Thu, 26 Oct 2023 00:16:50 +0200
+
 distro-info (1.5) unstable; urgency=medium
 
   * Skip mypy on i386 (not available on Ubuntu)
