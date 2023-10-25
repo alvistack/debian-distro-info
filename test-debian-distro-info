@@ -250,6 +250,11 @@ testUnknownSeries() {
     failure "--series foobar" "debian-distro-info: unknown distribution series \`foobar'"
 }
 
+testSourceDateEpoch() {
+    SOURCE_DATE_EPOCH=1675417275 success "--stable" "bullseye"
+    SOURCE_DATE_EPOCH=badcoffee hasWarning "--stable" "debian-distro-info: Environment variable SOURCE_DATE_EPOCH='badcoffee' not a valid epoch. Ignoring."
+}
+
 testDays() {
     # day after lenny released
     date=2009-02-15

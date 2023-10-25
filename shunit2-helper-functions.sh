@@ -26,6 +26,14 @@ runCommand() {
     assertEquals "return value of ${COMMAND} $param\n" $exp_retval $retval
 }
 
+hasWarning() {
+    local param="$1"
+    local exp_stderr="$2"
+    local stderrF="${SHUNIT_TMPDIR}/stderr"
+    eval "${COMMAND} $param" > /dev/null 2> ${stderrF}
+    assertEquals "error output of ${COMMAND} $param\n" "$exp_stderr" "$(cat ${stderrF})"
+}
+
 success() {
     runCommand "$1" "$2" "" 0
 }

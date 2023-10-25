@@ -246,6 +246,11 @@ testUnknownSeries() {
     failure "--series foobar" "ubuntu-distro-info: unknown distribution series \`foobar'"
 }
 
+testSourceDateEpoch() {
+    SOURCE_DATE_EPOCH=1664860020 success "--stable" "jammy"
+    SOURCE_DATE_EPOCH=chocolate hasWarning "--stable" "ubuntu-distro-info: Environment variable SOURCE_DATE_EPOCH='chocolate' not a valid epoch. Ignoring."
+}
+
 testDays() {
     # day after lucid released
     date=2010-04-30
