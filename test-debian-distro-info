@@ -351,10 +351,10 @@ testDays() {
     success "--testing --date=$date --days=release -f" "Debian 7 \"Wheezy\" 1"
     success "--testing --date=$date --days=release -r" "7 1"
 
-    success "--testing --date=$date --days=eol" "1089"
-    success "--testing --date=$date --days=eol -c" "wheezy 1089"
-    success "--testing --date=$date --days=eol -f" "Debian 7 \"Wheezy\" 1089"
-    success "--testing --date=$date --days=eol -r" "7 1089"
+    success "--testing --date=$date --days=eol" "1088"
+    success "--testing --date=$date --days=eol -c" "wheezy 1088"
+    success "--testing --date=$date --days=eol -f" "Debian 7 \"Wheezy\" 1088"
+    success "--testing --date=$date --days=eol -r" "7 1088"
 
     success "--testing --date=$date --days=eol-lts" "1854"
     success "--testing --date=$date --days=eol-lts -c" "wheezy 1854"

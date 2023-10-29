@@ -1,3 +1,10 @@
+distro-info (1.7) UNRELEASED; urgency=medium
+
+  * Update tests for distro-info-data 0.59, which adjusted Debian 7's EoL
+    (Closes: #1054946)
+
+ -- Stefano Rivera <stefanor@debian.org>  Sun, 29 Oct 2023 10:33:15 +0200
+
 distro-info (1.6) unstable; urgency=medium
 
   * python: mark distro_info with py.typed marker (Closes: #1053936)
