@@ -6,7 +6,7 @@ Uploaders: Stefano Rivera <stefanor@debian.org>
 Build-Depends: black <!nocheck>,
                debhelper-compat (= 13),
                dh-sequence-python3,
-               distro-info-data (>= 0.46) <!nocheck>,
+               distro-info-data (>= 0.58+deb12u1~) <!nocheck>,
                isort <!nocheck>,
                mypy [!i386] <!nocheck>,
                pylint (>= 2.2.2-2~) <!nocheck>,

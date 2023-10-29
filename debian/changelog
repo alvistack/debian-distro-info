@@ -1,3 +1,10 @@
+distro-info (1.5+deb12u1) bookworm; urgency=medium
+
+  * Update tests for distro-info-data 0.58+deb12u1, which adjusted Debian 7's
+    EoL (Closes: #1054946)
+
+ -- Stefano Rivera <stefanor@debian.org>  Sun, 29 Oct 2023 10:33:15 +0200
+
 distro-info (1.5) unstable; urgency=medium
 
   * Skip mypy on i386 (not available on Ubuntu)
