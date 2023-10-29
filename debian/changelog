@@ -1,8 +1,9 @@
 distro-info (0.14+deb9u1) stretch; urgency=medium
 
   * Handle currently unknown columns in CSV data.
+  * Make the Python module version PEP440 compliant.
 
- -- Stefano Rivera <stefanor@debian.org>  Wed, 27 Jan 2021 19:46:16 -0700
+ -- Stefano Rivera <stefanor@debian.org>  Sun, 29 Oct 2023 14:48:16 +0200
 
 distro-info (0.14) unstable; urgency=medium
 
