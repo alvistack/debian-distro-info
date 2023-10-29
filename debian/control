@@ -5,7 +5,7 @@ Maintainer: Benjamin Drung <bdrung@debian.org>
 Uploaders: Stefano Rivera <stefanor@debian.org>
 Build-Depends: debhelper (>= 11),
                dh-python,
-               distro-info-data (>= 0.7~),
+               distro-info-data (>= 0.41+deb10u8~),
                pylint,
                pylint3,
                python-all (>= 2.6.3-3~),
