@@ -1,3 +1,11 @@
+distro-info (1.0+deb11u1) bullseye; urgency=medium
+
+  * python:
+    - Assert that Python version is PEP440 compliant
+    - Handle more Debian versions correctly in make_pep440_compliant
+
+ -- Stefano Rivera <stefanor@debian.org>  Sun, 29 Oct 2023 14:48:16 +0200
+
 distro-info (1.0) unstable; urgency=medium
 
   [ Debian Janitor ]
