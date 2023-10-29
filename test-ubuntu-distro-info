@@ -301,10 +301,10 @@ testDays() {
     success "--date=$date --lts --days=eol -f" "Ubuntu 12.04 LTS \"Precise Pangolin\" 1828"
     success "--date=$date --lts --days=eol -r" "12.04 LTS 1828"
 
-    success "--date=$date --lts --days=eol-server" "(unknown)"
-    success "--date=$date --lts --days=eol-server -c" "precise (unknown)"
-    success "--date=$date --lts --days=eol-server -f" "Ubuntu 12.04 LTS \"Precise Pangolin\" (unknown)"
-    success "--date=$date --lts --days=eol-server -r" "12.04 LTS (unknown)"
+    success "--date=$date --devel --days=eol-server" "(unknown)"
+    success "--date=$date --devel --days=eol-server -c" "quantal (unknown)"
+    success "--date=$date --devel --days=eol-server -f" "Ubuntu 12.10 \"Quantal Quetzal\" (unknown)"
+    success "--date=$date --devel --days=eol-server -r" "12.10 (unknown)"
 
     # day before raring was released
     date=2013-04-24
