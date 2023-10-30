@@ -1,13 +1,15 @@
 distro-info (0.14+deb8u1) jessie; urgency=medium
 
-  * Handle currently unknown columns in CSV data.
-  * Make the Python module version PEP440 compliant.
-  * Update tests for distro-info-data 41+deb10u8, which adjusted Ubuntu 10.04
-    and 12.04's EoL
-  * Change test unknown eol-server dates to use Ubuntu 12.10, which won't get
-    ESM data in the future, if we include extra distro-info-data columns.
+  * Non-security ELTS update, enabling distro-info-data updates:
+    - Handle currently unknown columns in CSV data.
+    - Make the Python module version PEP440 compliant.
+    - Update tests for distro-info-data 41+deb10u8, which adjusted Ubuntu
+      10.04 and 12.04's EoL
+    - Change test unknown eol-server dates to use Ubuntu 12.10, which won't
+      get ESM data in the future, if we include extra distro-info-data
+      columns.
 
- -- Stefano Rivera <stefanor@debian.org>  Sun, 29 Oct 2023 14:48:16 +0200
+ -- Stefano Rivera <stefanor@debian.org>  Mon, 30 Oct 2023 12:54:36 +0200
 
 distro-info (0.14) unstable; urgency=medium
 
