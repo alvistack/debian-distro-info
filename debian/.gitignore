@@ -1,0 +1,8 @@
+*.substvars
+*debhelper*
+.debhelper
+distro-info
+files
+libdistro-info-perl
+python3-distro-info
+tmp
