@@ -31,7 +31,7 @@ def get_pep440_version():
 if __name__ == "__main__":
     setup(
         name="distro-info",
-        version=get_pep440_version(),
+        version='1.3',
         py_modules=PY_MODULES,
         packages=PACKAGES,
         test_suite="distro_info_test",

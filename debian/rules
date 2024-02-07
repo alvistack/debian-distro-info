@@ -1,6 +1,30 @@
 #!/usr/bin/make -f
 
-export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+SHELL := /bin/bash
+
+VENDOR ?= $(shell dpkg-vendor --query Vendor | tr '[:upper:]' '[:lower:]')
+
+override_dh_auto_build:
+	make debian-distro-info
+	make ubuntu-distro-info
+	dh_auto_build --buildsystem=pybuild -- --dir=python
+
+override_dh_auto_install:
+	install -Dpm755 -d debian/tmp/usr/bin
+	install -Dpm755 -d debian/tmp/usr/share/man/man1
+	install -Dpm755 -d debian/tmp/usr/share/perl5/Debian
+	install -Dpm755 -t debian/tmp/usr/bin debian-distro-info
+	install -Dpm755 -t debian/tmp/usr/bin ubuntu-distro-info
+	ln -fs $(shell dpkg-vendor --query Vendor | tr '[:upper:]' '[:lower:]')-distro-info debian/tmp/usr/bin/distro-info
+	install -Dpm644 -t debian/tmp/usr/share/man/man1 doc/*.1
+	install -Dpm644 -t debian/tmp/usr/share/perl5/Debian perl/Debian/*.pm
+	dh_auto_install --buildsystem=pybuild --destdir=debian/tmp -- --dir=python
+	find debian/tmp/usr/lib/python*/*-packages -type f -name '*.pyc' -exec rm -rf {} \;
+	fdupes -qnrps debian/tmp/usr/lib/python*/*-packages
+
+override_dh_auto_test:
+
+override_dh_auto_clean:
 
 %:
-	dh $@
+	dh $@ --with python3
