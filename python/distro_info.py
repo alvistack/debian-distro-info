@@ -89,6 +89,11 @@ class DistroRelease:
         )
 
 
+_ObjectResult = typing.Literal["object"]
+_NonObjectResult = typing.Literal["codename", "fullname", "release"]
+_AnyResult = typing.Union[_ObjectResult, _NonObjectResult]
+
+
 def _get_date(row: dict[str, str], column: str) -> typing.Optional[datetime.date]:
     date_string = row.get(column)
     if not date_string:
@@ -128,9 +133,17 @@ class DistroInfo:
         """List codenames of all known distributions."""
         return [x.series for x in self._releases]
 
-    def get_all(self, result: str = "codename") -> list[typing.Union[DistroRelease, str]]:
+    @typing.overload
+    def get_all(self, result: _ObjectResult) -> list[DistroRelease]: ...
+
+    @typing.overload
+    def get_all(self, result: _NonObjectResult = "codename") -> list[str]: ...
+
+    def get_all(
+        self, result: _AnyResult = "codename"
+    ) -> typing.Union[list[DistroRelease], list[str]]:
         """List all known distributions."""
-        return [self._format(result, x) for x in self._releases]
+        return self._format_list(result, self._releases)
 
     def _avail(self, date: datetime.date) -> list[DistroRelease]:
         """Return all distributions that were available on the given date."""
@@ -153,8 +166,18 @@ class DistroInfo:
                 return release.version
         return default
 
+    @typing.overload
     def devel(
-        self, date: typing.Optional[datetime.date] = None, result: str = "codename"
+        self, date: typing.Optional[datetime.date] = None, *, result: _ObjectResult
+    ) -> DistroRelease: ...
+
+    @typing.overload
+    def devel(
+        self, date: typing.Optional[datetime.date] = None, result: _NonObjectResult = "codename"
+    ) -> str: ...
+
+    def devel(
+        self, date: typing.Optional[datetime.date] = None, result: _AnyResult = "codename"
     ) -> typing.Union[DistroRelease, str]:
         """Get latest development distribution based on the given date."""
         if date is None:
@@ -168,8 +191,14 @@ class DistroInfo:
             raise DistroDataOutdated()
         return self._format(result, distros[-1])
 
+    @typing.overload
+    def _format(self, format_string: _ObjectResult, release: DistroRelease) -> DistroRelease: ...
+
+    @typing.overload
+    def _format(self, format_string: _NonObjectResult, release: DistroRelease) -> str: ...
+
     def _format(
-        self, format_string: str, release: DistroRelease
+        self, format_string: _AnyResult, release: DistroRelease
     ) -> typing.Union[DistroRelease, str]:
         """Format a given distribution entry."""
         if format_string == "object":
@@ -186,8 +215,39 @@ class DistroInfo:
             "result values, but not '" + format_string + "'."
         )
 
+    @typing.overload
+    def _format_list(
+        self, format_string: _ObjectResult, releases: typing.Sequence[DistroRelease]
+    ) -> list[DistroRelease]: ...
+
+    @typing.overload
+    def _format_list(
+        self, format_string: _NonObjectResult, releases: typing.Sequence[DistroRelease]
+    ) -> list[str]: ...
+
+    def _format_list(
+        self, format_string: _AnyResult, releases: typing.Sequence[DistroRelease]
+    ) -> typing.Union[list[DistroRelease], list[str]]:
+        """Format a sequence of distribution entries."""
+        distros: typing.Sequence[typing.Union[DistroRelease, str]] = [
+            self._format(format_string, x) for x in releases
+        ]
+        if format_string == "object":
+            return typing.cast(list[DistroRelease], distros)
+        return typing.cast(list[str], distros)
+
+    @typing.overload
     def stable(
-        self, date: typing.Optional[datetime.date] = None, result: str = "codename"
+        self, date: typing.Optional[datetime.date] = None, *, result: _ObjectResult
+    ) -> DistroRelease: ...
+
+    @typing.overload
+    def stable(
+        self, date: typing.Optional[datetime.date] = None, result: _NonObjectResult = "codename"
+    ) -> str: ...
+
+    def stable(
+        self, date: typing.Optional[datetime.date] = None, result: _AnyResult = "codename"
     ) -> typing.Union[DistroRelease, str]:
         """Get latest stable distribution based on the given date."""
         if date is None:
@@ -201,9 +261,19 @@ class DistroInfo:
             raise DistroDataOutdated()
         return self._format(result, distros[-1])
 
+    @typing.overload
     def supported(
-        self, date: typing.Optional[datetime.date] = None, result: str = "codename"
-    ) -> list[typing.Union[DistroRelease, str]]:
+        self, date: typing.Optional[datetime.date] = None, *, result: _ObjectResult
+    ) -> list[DistroRelease]: ...
+
+    @typing.overload
+    def supported(
+        self, date: typing.Optional[datetime.date] = None, result: _NonObjectResult = "codename"
+    ) -> list[str]: ...
+
+    def supported(
+        self, date: typing.Optional[datetime.date] = None, result: _AnyResult = "codename"
+    ) -> typing.Union[list[DistroRelease], list[str]]:
         """Get list of all supported distributions based on the given date."""
         raise NotImplementedError()
 
@@ -211,15 +281,26 @@ class DistroInfo:
         """Check if the given codename is known."""
         return codename in self.all
 
+    @typing.overload
     def unsupported(
-        self, date: typing.Optional[datetime.date] = None, result: str = "codename"
-    ) -> list[typing.Union[DistroRelease, str]]:
+        self, date: typing.Optional[datetime.date] = None, *, result: _ObjectResult
+    ) -> list[DistroRelease]: ...
+
+    @typing.overload
+    def unsupported(
+        self, date: typing.Optional[datetime.date] = None, result: _NonObjectResult = "codename"
+    ) -> list[str]: ...
+
+    def unsupported(
+        self, date: typing.Optional[datetime.date] = None, result: _AnyResult = "codename"
+    ) -> typing.Union[list[DistroRelease], list[str]]:
         """Get list of all unsupported distributions based on the given date."""
         if date is None:
             date = self._date
         supported = self.supported(date)
-        distros = [self._format(result, x) for x in self._avail(date) if x.series not in supported]
-        return distros
+        return self._format_list(
+            result, [x for x in self._avail(date) if x.series not in supported]
+        )
 
 
 class DebianDistroInfo(DistroInfo):
@@ -245,8 +326,22 @@ class DebianDistroInfo(DistroInfo):
             return self.old(date)
         return default
 
+    @typing.overload
     def devel(
-        self, date: typing.Optional[datetime.date] = None, result: str = "codename"
+        self, date: typing.Optional[datetime.date] = None, *, result: _ObjectResult
+    ) -> DistroRelease: ...
+
+    @typing.overload
+    # https://github.com/pylint-dev/pylint/issues/5264
+    # pylint: disable-next=arguments-differ
+    def devel(
+        self, date: typing.Optional[datetime.date] = None, result: _NonObjectResult = "codename"
+    ) -> str: ...
+
+    # https://github.com/pylint-dev/pylint/issues/5264
+    # pylint: disable-next=arguments-differ
+    def devel(
+        self, date: typing.Optional[datetime.date] = None, result: _AnyResult = "codename"
     ) -> typing.Union[DistroRelease, str]:
         """Get latest development distribution based on the given date."""
         if date is None:
@@ -260,8 +355,18 @@ class DebianDistroInfo(DistroInfo):
             raise DistroDataOutdated()
         return self._format(result, distros[-2])
 
+    @typing.overload
     def old(
-        self, date: typing.Optional[datetime.date] = None, result: str = "codename"
+        self, date: typing.Optional[datetime.date] = None, *, result: _ObjectResult
+    ) -> DistroRelease: ...
+
+    @typing.overload
+    def old(
+        self, date: typing.Optional[datetime.date] = None, result: _NonObjectResult = "codename"
+    ) -> str: ...
+
+    def old(
+        self, date: typing.Optional[datetime.date] = None, result: _AnyResult = "codename"
     ) -> typing.Union[DistroRelease, str]:
         """Get old (stable) Debian distribution based on the given date."""
         if date is None:
@@ -271,50 +376,92 @@ class DebianDistroInfo(DistroInfo):
             raise DistroDataOutdated()
         return self._format(result, distros[-2])
 
+    @typing.overload
     def supported(
-        self, date: typing.Optional[datetime.date] = None, result: str = "codename"
-    ) -> list[typing.Union[DistroRelease, str]]:
+        self, date: typing.Optional[datetime.date] = None, *, result: _ObjectResult
+    ) -> list[DistroRelease]: ...
+
+    @typing.overload
+    # https://github.com/pylint-dev/pylint/issues/5264
+    # pylint: disable-next=arguments-differ
+    def supported(
+        self, date: typing.Optional[datetime.date] = None, result: _NonObjectResult = "codename"
+    ) -> list[str]: ...
+
+    # https://github.com/pylint-dev/pylint/issues/5264
+    # pylint: disable-next=arguments-differ
+    def supported(
+        self, date: typing.Optional[datetime.date] = None, result: _AnyResult = "codename"
+    ) -> typing.Union[list[DistroRelease], list[str]]:
         """Get list of all supported Debian distributions based on the given
         date."""
         if date is None:
             date = self._date
-        distros = [
-            self._format(result, x) for x in self._avail(date) if x.eol is None or date <= x.eol
-        ]
-        return distros
+        distros = [x for x in self._avail(date) if x.eol is None or date <= x.eol]
+        return self._format_list(result, distros)
+
+    @typing.overload
+    def lts_supported(
+        self, date: typing.Optional[datetime.date] = None, *, result: _ObjectResult
+    ) -> list[DistroRelease]: ...
+
+    @typing.overload
+    def lts_supported(
+        self, date: typing.Optional[datetime.date] = None, result: _NonObjectResult = "codename"
+    ) -> list[str]: ...
 
     def lts_supported(
-        self, date: typing.Optional[datetime.date] = None, result: str = "codename"
-    ) -> list[typing.Union[DistroRelease, str]]:
+        self, date: typing.Optional[datetime.date] = None, result: _AnyResult = "codename"
+    ) -> typing.Union[list[DistroRelease], list[str]]:
         """Get list of all LTS supported Debian distributions based on the given
         date."""
         if date is None:
             date = self._date
         distros = [
-            self._format(result, x)
+            x
             for x in self._avail(date)
             if (x.eol is not None and date > x.eol)
             and (x.eol_lts is not None and date <= x.eol_lts)
         ]
-        return distros
+        return self._format_list(result, distros)
+
+    @typing.overload
+    def elts_supported(
+        self, date: typing.Optional[datetime.date] = None, *, result: _ObjectResult
+    ) -> list[DistroRelease]: ...
+
+    @typing.overload
+    def elts_supported(
+        self, date: typing.Optional[datetime.date] = None, result: _NonObjectResult = "codename"
+    ) -> list[str]: ...
 
     def elts_supported(
-        self, date: typing.Optional[datetime.date] = None, result: str = "codename"
-    ) -> list[typing.Union[DistroRelease, str]]:
+        self, date: typing.Optional[datetime.date] = None, result: _AnyResult = "codename"
+    ) -> typing.Union[list[DistroRelease], list[str]]:
         """Get list of all Extended LTS supported Debian distributions based on
         the given date."""
         if date is None:
             date = self._date
         distros = [
-            self._format(result, x)
+            x
             for x in self._avail(date)
             if (x.eol_lts is not None and date > x.eol_lts)
             and (x.eol_elts is not None and date <= x.eol_elts)
         ]
-        return distros
+        return self._format_list(result, distros)
+
+    @typing.overload
+    def testing(
+        self, date: typing.Optional[datetime.date] = None, *, result: _ObjectResult
+    ) -> DistroRelease: ...
+
+    @typing.overload
+    def testing(
+        self, date: typing.Optional[datetime.date] = None, result: _NonObjectResult = "codename"
+    ) -> str: ...
 
     def testing(
-        self, date: typing.Optional[datetime.date] = None, result: str = "codename"
+        self, date: typing.Optional[datetime.date] = None, result: _AnyResult = "codename"
     ) -> typing.Union[DistroRelease, str]:
         """Get latest testing Debian distribution based on the given date."""
         if date is None:
@@ -345,8 +492,18 @@ class UbuntuDistroInfo(DistroInfo):
     def __init__(self) -> None:
         super().__init__("Ubuntu")
 
+    @typing.overload
     def lts(
-        self, date: typing.Optional[datetime.date] = None, result: str = "codename"
+        self, date: typing.Optional[datetime.date] = None, *, result: _ObjectResult
+    ) -> DistroRelease: ...
+
+    @typing.overload
+    def lts(
+        self, date: typing.Optional[datetime.date] = None, result: _NonObjectResult = "codename"
+    ) -> str: ...
+
+    def lts(
+        self, date: typing.Optional[datetime.date] = None, result: _AnyResult = "codename"
     ) -> typing.Union[DistroRelease, str]:
         """Get latest long term support (LTS) Ubuntu distribution based on the
         given date."""
@@ -368,30 +525,50 @@ class UbuntuDistroInfo(DistroInfo):
             return False
         return "LTS" in distros[0].version
 
+    @typing.overload
     def supported(
-        self, date: typing.Optional[datetime.date] = None, result: str = "codename"
-    ) -> list[typing.Union[DistroRelease, str]]:
+        self, date: typing.Optional[datetime.date] = None, *, result: _ObjectResult
+    ) -> list[DistroRelease]: ...
+
+    @typing.overload
+    # https://github.com/pylint-dev/pylint/issues/5264
+    # pylint: disable-next=arguments-differ
+    def supported(
+        self, date: typing.Optional[datetime.date] = None, result: _NonObjectResult = "codename"
+    ) -> list[str]: ...
+
+    # https://github.com/pylint-dev/pylint/issues/5264
+    # pylint: disable-next=arguments-differ
+    def supported(
+        self, date: typing.Optional[datetime.date] = None, result: _AnyResult = "codename"
+    ) -> typing.Union[list[DistroRelease], list[str]]:
         """Get list of all supported Ubuntu distributions based on the given
         date."""
         if date is None:
             date = self._date
         distros = [
-            self._format(result, x)
+            x
             for x in self._avail(date)
             if (x.eol and date <= x.eol) or (x.eol_server is not None and date <= x.eol_server)
         ]
-        return distros
+        return self._format_list(result, distros)
+
+    @typing.overload
+    def supported_esm(
+        self, date: typing.Optional[datetime.date] = None, *, result: _ObjectResult
+    ) -> list[DistroRelease]: ...
+
+    @typing.overload
+    def supported_esm(
+        self, date: typing.Optional[datetime.date] = None, result: _NonObjectResult = "codename"
+    ) -> list[str]: ...
 
     def supported_esm(
-        self, date: typing.Optional[datetime.date] = None, result: str = "codename"
-    ) -> list[typing.Union[DistroRelease, str]]:
+        self, date: typing.Optional[datetime.date] = None, result: _AnyResult = "codename"
+    ) -> typing.Union[list[DistroRelease], list[str]]:
         """Get list of all ESM supported Ubuntu distributions based on the
         given date."""
         if date is None:
             date = self._date
-        distros = [
-            self._format(result, x)
-            for x in self._avail(date)
-            if x.eol_esm is not None and date <= x.eol_esm
-        ]
-        return distros
+        distros = [x for x in self._avail(date) if x.eol_esm is not None and date <= x.eol_esm]
+        return self._format_list(result, distros)
