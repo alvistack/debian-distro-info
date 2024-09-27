@@ -1,8 +1,15 @@
-distro-info (1.8) UNRELEASED; urgency=medium
+distro-info (1.8) unstable; urgency=medium
 
+  [ Stefano Rivera ]
   * Python: Stop using setup.py test. (Closes: #1080213)
 
- -- Stefano Rivera <stefanor@debian.org>  Sun, 01 Sep 2024 15:41:54 +0200
+  [ Colin Watson ]
+  * python: Tighten types of various DistroInfo methods
+
+  [ Benjamin Drung ]
+  * Bump Standards-Version 4.7.0
+
+ -- Benjamin Drung <bdrung@debian.org>  Fri, 27 Sep 2024 13:27:18 +0200
 
 distro-info (1.7) unstable; urgency=medium
 
