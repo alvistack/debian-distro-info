@@ -1,3 +1,9 @@
+distro-info (1.9) unstable; urgency=medium
+
+  * Run black and isort only in GitLab CI
+
+ -- Benjamin Drung <bdrung@debian.org>  Mon, 30 Sep 2024 23:00:33 +0200
+
 distro-info (1.8) unstable; urgency=medium
 
   [ Stefano Rivera ]
