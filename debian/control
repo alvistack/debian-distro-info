@@ -3,11 +3,9 @@ Section: devel
 Priority: optional
 Maintainer: Benjamin Drung <bdrung@debian.org>
 Uploaders: Stefano Rivera <stefanor@debian.org>
-Build-Depends: black <!nocheck>,
-               debhelper-compat (= 13),
+Build-Depends: debhelper-compat (= 13),
                dh-sequence-python3,
                distro-info-data (>= 0.59~) <!nocheck>,
-               isort <!nocheck>,
                mypy [!i386] <!nocheck>,
                pylint (>= 2.2.2-2~) <!nocheck>,
                python3-all,

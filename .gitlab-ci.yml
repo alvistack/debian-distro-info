@@ -5,3 +5,19 @@ include:
 variables:
   # Crossbuilding fails to install python3.12-minimal:arm64 (2024-09-30)
   SALSA_CI_DISABLE_CROSSBUILD_ARM64: 1
+
+black:
+  needs: []
+  image: debian:unstable
+  script:
+    - apt-get update && apt-get upgrade -y
+    - apt-get install --no-install-recommends -y black
+    - black --check --diff -l 99 . python/*-distro-info
+
+isort:
+  needs: []
+  image: debian:unstable
+  script:
+    - apt-get update && apt-get upgrade -y
+    - apt-get install --no-install-recommends -y isort
+    - isort --check-only --diff -l 99 .
