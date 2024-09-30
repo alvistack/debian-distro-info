@@ -2,7 +2,7 @@
 *.swp
 *.o
 *.pyc
-debian-distro-info
-ubuntu-distro-info
+/debian-distro-info
+/ubuntu-distro-info
 __pycache__/
 /python/distro_info.egg-info/
