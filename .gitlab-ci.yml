@@ -1,3 +1,7 @@
 ---
 include:
   - https://salsa.debian.org/salsa-ci-team/pipeline/raw/master/recipes/debian.yml
+
+variables:
+  # Crossbuilding fails to install python3.12-minimal:arm64 (2024-09-30)
+  SALSA_CI_DISABLE_CROSSBUILD_ARM64: 1
