@@ -49,12 +49,11 @@ class DistroDataOutdated(Exception):
         )
 
 
+# pylint: disable-next=too-few-public-methods,too-many-instance-attributes
 class DistroRelease:
     """Represents a distributions release"""
 
-    # pylint: disable=too-few-public-methods
-    # pylint: disable=too-many-instance-attributes
-
+    # pylint: disable-next=too-many-arguments
     def __init__(
         self,
         version: str,
@@ -68,7 +67,6 @@ class DistroRelease:
         eol_elts: typing.Optional[datetime.date] = None,
         eol_server: typing.Optional[datetime.date] = None,
     ) -> None:
-        # pylint: disable=too-many-arguments
         self.version = version
         self.codename = codename
         self.series = series
