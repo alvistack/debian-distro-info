@@ -53,7 +53,7 @@ class DistroDataOutdated(Exception):
 class DistroRelease:
     """Represents a distributions release"""
 
-    # pylint: disable-next=too-many-arguments
+    # pylint: disable-next=too-many-arguments,too-many-positional-arguments
     def __init__(
         self,
         version: str,
