@@ -1,3 +1,9 @@
+distro-info (1.10) unstable; urgency=medium
+
+  * python: Disable pylint's too-many-positional-arguments (Closes: #1084247)
+
+ -- Benjamin Drung <bdrung@debian.org>  Mon, 07 Oct 2024 12:13:16 +0200
+
 distro-info (1.9) unstable; urgency=medium
 
   * Run black and isort only in GitLab CI
