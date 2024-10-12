@@ -1,8 +1,8 @@
-distro-info (1.11) UNRELEASED; urgency=medium
+distro-info (1.11) unstable; urgency=medium
 
   * Bump pylint minimum version. (Closes: #1084247)
 
- -- Stefano Rivera <stefanor@debian.org>  Sat, 12 Oct 2024 10:06:16 -0700
+ -- Stefano Rivera <stefanor@debian.org>  Sat, 12 Oct 2024 10:12:40 -0700
 
 distro-info (1.10) unstable; urgency=medium
 
