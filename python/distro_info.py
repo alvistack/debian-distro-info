@@ -124,7 +124,11 @@ class DistroInfo:
                     _get_date(row, "eol-server"),
                 )
                 self._releases.append(release)
-        self._date = datetime.date.today()
+        source_date_epoch = os.environ.get("SOURCE_DATE_EPOCH")
+        if source_date_epoch is not None:
+            self._date = datetime.date.fromtimestamp(int(source_date_epoch))
+        else:
+            self._date = datetime.date.today()
 
     @property
     def all(self) -> list[str]:

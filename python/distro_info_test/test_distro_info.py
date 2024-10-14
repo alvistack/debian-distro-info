@@ -18,6 +18,7 @@
 
 import datetime
 import unittest
+from unittest.mock import patch
 
 from distro_info import DebianDistroInfo, UbuntuDistroInfo
 
@@ -90,6 +91,14 @@ class DebianDistroInfoTestCase(unittest.TestCase):  # pylint: disable=too-many-p
         """Test: List all unsupported Debian distribution."""
         unsupported = ["buzz", "rex", "bo", "hamm", "slink", "potato", "woody", "sarge", "etch"]
         self.assertEqual(self._distro_info.unsupported(self._date), unsupported)
+
+    @patch.dict("os.environ", {"SOURCE_DATE_EPOCH": "1500000000"})
+    def test_date_filtering(self) -> None:
+        """Test: filter supported Debian releases based on build date"""
+        supported = ["jessie", "stretch", "buster", "sid", "experimental"]
+
+        distro_info = DebianDistroInfo()
+        self.assertEqual(distro_info.supported(), supported)
 
     def test_codename(self) -> None:
         """Test: Codename decoding"""
@@ -170,6 +179,14 @@ class UbuntuDistroInfoTestCase(unittest.TestCase):  # pylint: disable=too-many-p
         """Test: List all unsupported Ubuntu distributions."""
         unsupported = ["warty", "hoary", "breezy", "edgy", "feisty", "gutsy", "intrepid", "jaunty"]
         self.assertEqual(self._distro_info.unsupported(self._date), unsupported)
+
+    @patch.dict("os.environ", {"SOURCE_DATE_EPOCH": "1500000000"})
+    def test_date_filtering(self) -> None:
+        """Test: filter supported Ubuntu releases based on build date"""
+        supported = ["trusty", "xenial", "yakkety", "zesty", "artful"]
+
+        distro_info = UbuntuDistroInfo()
+        self.assertEqual(distro_info.supported(), supported)
 
     def test_current_unsupported(self) -> None:
         """Test: List all unsupported Ubuntu distributions today."""
