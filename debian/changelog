@@ -1,3 +1,10 @@
+distro-info (1.12) unstable; urgency=medium
+
+  [ James Addison ]
+  * python: add release filtering by SOURCE_DATE_EPOCH (Closes: #1085112)
+
+ -- Benjamin Drung <bdrung@debian.org>  Wed, 16 Oct 2024 14:13:02 +0200
+
 distro-info (1.11) unstable; urgency=medium
 
   * Bump pylint minimum version. (Closes: #1084247)
