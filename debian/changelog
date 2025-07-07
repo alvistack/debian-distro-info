@@ -1,3 +1,13 @@
+distro-info (1.14) unstable; urgency=medium
+
+  [ Helmut Grohne ]
+  * Fix FTCBFS: Annotate python3-all dependency with :native. (Closes: #1108108)
+
+  [ Benjamin Drung ]
+  * Bump Standards-Version to 4.7.2
+
+ -- Benjamin Drung <bdrung@debian.org>  Mon, 07 Jul 2025 21:35:57 +0200
+
 distro-info (1.13) unstable; urgency=medium
 
   [ Michael R. Crusoe ]
