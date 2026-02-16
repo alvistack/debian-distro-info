@@ -19,10 +19,10 @@ COMMAND="${COMMAND:-${0%/*}/debian-distro-info}"
 . "${0%/*}/shunit2-helper-functions.sh"
 
 testAlias() {
-    success "--alias sid" "unstable"
+    SOURCE_DATE_EPOCH=1771279784 success "--alias sid" "unstable"
     success "--date 2010-10-20 --alias squeeze" "testing"
     success "--date 2011-11-20 --alias squeeze" "stable"
-    success "--alias whatever" "whatever"
+    success "--date 2026-02-16 --alias whatever" "whatever"
 }
 
 testAll() {
