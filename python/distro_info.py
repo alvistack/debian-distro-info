@@ -24,10 +24,10 @@ def convert_date(string: str) -> datetime.date:
     """Convert a date string in ISO 8601 into a datetime object."""
     parts = [int(x) for x in string.split("-")]
     if len(parts) == 3:
-        (year, month, day) = parts
+        year, month, day = parts
         return datetime.date(year, month, day)
     if len(parts) == 2:
-        (year, month) = parts
+        year, month = parts
         if month == 12:
             return datetime.date(year, month, 31)
         return datetime.date(year, month + 1, 1) - datetime.timedelta(1)
