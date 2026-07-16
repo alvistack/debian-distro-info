@@ -4,7 +4,7 @@ Maintainer: Benjamin Drung <bdrung@debian.org>
 Uploaders: Stefano Rivera <stefanor@debian.org>
 Build-Depends: debhelper-compat (= 13),
                dh-sequence-python3,
-               distro-info-data (>= 0.59~) <!nocheck>,
+               distro-info-data (>= 0.64~) <!nocheck>,
                mypy [!i386] <!nocheck>,
                pylint (>= 3.3.0) <!nocheck>,
                python3-all:native,

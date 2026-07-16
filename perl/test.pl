@@ -15,8 +15,9 @@
 
 use strict;
 use warnings;
+use List::Util qw(all);
 
-use Test::Simple tests => 35;
+use Test::Simple tests => 41;
 
 use lib '.';
 use Debian::DistroInfo;
@@ -38,6 +39,13 @@ sub symmetric_difference {
     return unique($a, $b) + unique($b, $a);
 }
 
+# Check if list a is a subset of list b.
+sub is_subset {
+   my ($a, $b) = @_;
+   my %lookup = map { $_ => 1 } @$b;
+   return all { exists $lookup{$_} } @$a;
+}
+
 my @all = ();
 my @returned = ();
 
@@ -52,6 +60,8 @@ ok(unique(\@all, \@returned) == 1, 'unique: 1 Unique Item');
 ok(unique(\@returned, \@all) == 0, 'unique: 1 Unique Item in the haystack');
 ok(symmetric_difference(\@all, \@returned) == 1,
    'symmetric_difference: 1 Unique Item');
+ok(is_subset(\@returned, \@all), "is_subset: subset given");
+ok(!is_subset(\@all, \@returned), "is_subset: superset given");
 
 # Test DistroInfo:
 my @expected = ();
@@ -134,5 +144,16 @@ ok(symmetric_difference(\@expected, \@returned) == 0,
 @returned = $ubu->unsupported($date1);
 ok(symmetric_difference(\@expected, \@returned) == 0,
    'Ubuntu unsupported');
+
+# Test get_all_series:
+@expected = ('buzz', 'rex', 'bo', 'trixie', 'forky', 'duke', 'sid');
+@returned = Debian::DistroInfo::get_all_series('debian');
+ok(is_subset(\@expected, \@returned), 'get_all_series: debian');
+ok(scalar(@returned) >= 22, 'get_all_series: debian has at leat 22 series');
+
+@expected = ('warty', 'hoary', 'breezy', 'trusty', 'noble', 'questing');
+@returned = Debian::DistroInfo::get_all_series('ubuntu');
+ok(is_subset(\@expected, \@returned), 'get_all_series: ubuntu');
+ok(scalar(@returned) >= 43, 'get_all_series: ubuntu has at leat 43 series');
 
 # vi: set et sta sw=4 ts=4:

@@ -18,13 +18,32 @@ package Debian::DistroInfo;
 
 Debian::DistroInfo - provides information about Ubuntu's and Debian's distributions
 
+=head2 get_all_series
+
+    my @series = get_all_series($distro);
+
+Parses the distro-info data file associated with the given distribution (e.g., 'debian'
+or 'ubuntu') and extracts all values under the 'series' column.
+
+=over 4
+
+=item * B<Input:> C<$distro> (String) - The name of the distribution.
+
+=item * B<Returns:> An array (list) of series/codename strings.
+
+=item * B<Exceptions:>
+Dies if the CSV file cannot be opened, or if the CSV file lacks a 'series' column header.
+
+=back
+
 =cut
 
 use strict;
 use warnings;
+use List::Util qw(first);
 
 use Exporter qw(import);
-our @EXPORT_OK = qw(convert_date);
+our @EXPORT_OK = qw(convert_date get_all_series);
 
 our $VERSION = '1.16';
 
@@ -55,6 +74,33 @@ sub convert_date {
     return $date;
 }
 
+sub get_all_series {
+    my ($distro) = @_;
+    my @series;
+
+    my $csv_file = _get_csv_file($distro);
+    open(my $fh, '<', $csv_file)
+        or die "Unable to open ${distro}'s data file.";
+
+    my $line = <$fh>;
+    chomp($line);
+    my @header = split(/,/, $line);
+    my $series_index = first { $header[$_] eq 'series' } 0 .. $#header;
+    if (!defined $series_index) {
+        die "Column 'series' not found in '${csv_file}'.\n";
+    }
+
+    while (my $row = <$fh>) {
+        chomp($row);
+        my @columns = split (/,/, $row);
+        if (exists $columns[$series_index]) {
+            push @series, $columns[$series_index];
+        }
+    }
+    close($fh);
+
+    return @series;
+}
 
 {
     package DistroInfo;
