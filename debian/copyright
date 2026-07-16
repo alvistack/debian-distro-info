@@ -3,7 +3,7 @@ Upstream-Name: distro-info
 Upstream-Contact: Benjamin Drung <bdrung@debian.org>
 
 Files: *
-Copyright: 2009-2018, Benjamin Drung <bdrung@debian.org>
+Copyright: 2009-2026, Benjamin Drung <bdrung@debian.org>
            2010-2025, Stefano Rivera <stefanor@debian.org>
 License: ISC
 
