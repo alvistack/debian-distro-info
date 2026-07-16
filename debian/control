@@ -2,7 +2,7 @@ Source: distro-info
 Section: devel
 Maintainer: Benjamin Drung <bdrung@debian.org>
 Uploaders: Stefano Rivera <stefanor@debian.org>
-Build-Depends: debhelper-compat (= 13),
+Build-Depends: debhelper-compat (= 14),
                dh-sequence-python3,
                distro-info-data (>= 0.64~) <!nocheck>,
                mypy [!i386] <!nocheck>,
@@ -19,7 +19,7 @@ Vcs-Browser: https://salsa.debian.org/debian/distro-info
 
 Package: distro-info
 Architecture: any
-Depends: distro-info-data (>= 0.59~), ${misc:Depends}, ${shlibs:Depends}
+Depends: distro-info-data (>= 0.59~)
 Suggests: shunit2
 Description: provides information about the distributions' releases
  Information about all releases of Debian and Ubuntu. The distro-info script
@@ -30,7 +30,7 @@ Description: provides information about the distributions' releases
 Package: libdistro-info-perl
 Architecture: all
 Section: perl
-Depends: distro-info-data (>= 0.59~), ${misc:Depends}, ${perl:Depends}
+Depends: distro-info-data (>= 0.59~)
 Multi-Arch: foreign
 Description: information about distributions' releases (Perl module)
  Information about all releases of Debian and Ubuntu.
@@ -41,7 +41,7 @@ Description: information about distributions' releases (Perl module)
 Package: python3-distro-info
 Architecture: all
 Section: python
-Depends: distro-info-data (>= 0.46), ${misc:Depends}, ${python3:Depends}
+Depends: distro-info-data (>= 0.46)
 Description: information about distributions' releases (Python 3 module)
  Information about all releases of Debian and Ubuntu.
  .
