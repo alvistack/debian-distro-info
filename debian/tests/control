@@ -6,6 +6,10 @@ Test-Command: COMMAND=/usr/bin/ubuntu-distro-info ./test-ubuntu-distro-info
 Depends: distro-info, shunit2 (>= 2.1.6)
 Features: test-name=test-ubuntu-distro-info
 
+Test-Command: cp perl/test.pl "$AUTOPKGTEST_TMP" && cd "$AUTOPKGTEST_TMP" && ./test.pl
+Depends: distro-info-data (>= 0.64~), libdistro-info-perl
+Features: test-name=test-libdistro-info-perl
+
 Test-Command: cp -r python/distro_info_test python/*-distro-info python/setup.py "$AUTOPKGTEST_TMP"; for py in $(py3versions -r 2>/dev/null); do cd "$AUTOPKGTEST_TMP"; echo "Testing with $py:"; $py -m unittest discover -v; done
 Depends: mypy [!i386],
          pylint (>= 3.3.0),
