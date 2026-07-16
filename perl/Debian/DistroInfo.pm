@@ -26,7 +26,7 @@ use warnings;
 use Exporter qw(import);
 our @EXPORT_OK = qw(convert_date);
 
-our $VERSION = '0.2.2';
+our $VERSION = '1.16';
 
 my $outdated_error = "Distribution data outdated. "
     . "Please check for an update for distro-info-data. "
