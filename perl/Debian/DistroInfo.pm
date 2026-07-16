@@ -32,6 +32,15 @@ my $outdated_error = "Distribution data outdated. "
     . "Please check for an update for distro-info-data. "
     . "See /usr/share/doc/distro-info-data/README.Debian for details.";
 
+sub _get_data_dir {
+    return '/usr/share/distro-info';
+}
+
+sub _get_csv_file {
+    my ($distro) = @_;
+    return _get_data_dir . "/$distro.csv";
+}
+
 sub convert_date {
     my ($date) = @_;
     my @parts = split(/-/, $date);
@@ -52,10 +61,6 @@ sub convert_date {
 
     use Time::Piece;
 
-    sub _get_data_dir {
-        return '/usr/share/distro-info';
-    }
-
     sub new {
         my ($class, $distro) = @_;
         my @rows;
@@ -63,7 +68,7 @@ sub convert_date {
                     'rows' => \@rows,
                     'date' => Time::Piece->new(),
                    };
-        open(my $fh, '<', $class->_get_data_dir . "/$distro.csv")
+        open(my $fh, '<', Debian::DistroInfo::_get_csv_file($distro))
           or die "Unable to open ${distro}'s data file.";
 
         my $line = <$fh>;
