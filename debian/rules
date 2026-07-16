@@ -4,3 +4,12 @@ export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 
 %:
 	dh $@
+
+execute_after_dh_auto_clean:
+	dh_auto_clean --buildsystem=pybuild --sourcedir=python
+
+execute_after_dh_auto_build:
+	dh_auto_build --buildsystem=pybuild --sourcedir=python
+
+execute_after_dh_auto_install:
+	dh_auto_install --buildsystem=pybuild --sourcedir=python
