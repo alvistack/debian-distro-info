@@ -1,3 +1,16 @@
+distro-info (1.16) unstable; urgency=medium
+
+  * Format Python code with black 26.3
+  * Perl library:
+    - fix exporting convert_date
+    - add get_all_series() function (Closes: #1141228, LP: #1012459)
+  * Add autopkgtest for testing libdistro-info-perl
+  * Bump Standards-Version to 4.7.4
+  * Use pybuild-plugin-pyproject to build the Python module
+  * Switch to debhelper 14
+
+ -- Benjamin Drung <bdrung@debian.org>  Fri, 17 Jul 2026 00:35:41 +0200
+
 distro-info (1.15) unstable; urgency=medium
 
   * test: Fix testAlias when SOURCE_DATE_EPOCH is set to 2030 (Closes: #1127115)
