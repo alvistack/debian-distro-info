@@ -23,7 +23,7 @@ Debian::DistroInfo - provides information about Ubuntu's and Debian's distributi
 use strict;
 use warnings;
 
-use Exporter;
+use Exporter qw(import);
 our @EXPORT_OK = qw(convert_date);
 
 our $VERSION = '0.2.2';
