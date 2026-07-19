@@ -1,3 +1,9 @@
+distro-info (1.17) unstable; urgency=medium
+
+  * test: replace experimental by rc-buggy for distro-info-data 0.73
+
+ -- Benjamin Drung <bdrung@debian.org>  Sun, 19 Jul 2026 16:17:03 +0200
+
 distro-info (1.16) unstable; urgency=medium
 
   * Format Python code with black 26.3
