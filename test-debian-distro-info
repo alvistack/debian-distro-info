@@ -38,7 +38,7 @@ etch
 lenny
 squeeze
 sid
-experimental"
+rc-buggy"
     local pattern=$(echo $result | sed "s/ /\\\\|/g")
     success "--date 2007-07-07 --all | grep -w \"$pattern\"" "$result"
     success "-a | grep -w \"$pattern\"" "$result"
@@ -65,7 +65,7 @@ testSupported() {
     local result="lenny
 squeeze
 sid
-experimental"
+rc-buggy"
     success "--date=2011-01-10 --supported" "$result"
 }
 

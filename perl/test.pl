@@ -72,7 +72,7 @@ my $date3 = Debian::DistroInfo::convert_date('2020-06-29');
 
 my $deb = DebianDistroInfo->new();
 @all = ('buzz', 'rex', 'bo', 'hamm', 'slink', 'potato', 'woody', 'sarge',
-           'etch', 'lenny', 'squeeze', 'sid', 'experimental');
+           'etch', 'lenny', 'squeeze', 'sid', 'rc-buggy');
 @returned = $deb->all($date1);
 ok(unique(\@all, \@returned) == 0, 'Debian all');
 
@@ -84,7 +84,7 @@ ok($deb->valid('sid'), 'Debian valid');
 ok($deb->valid('stable'), 'Debian valid');
 ok(!$deb->valid('foobar'), 'Debian invalid');
 
-@expected = ('lenny', 'squeeze', 'sid', 'experimental');
+@expected = ('lenny', 'squeeze', 'sid', 'rc-buggy');
 @returned = $deb->supported($date1);
 ok(symmetric_difference(\@expected, \@returned) == 0,
    'Debian supported');

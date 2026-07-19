@@ -45,7 +45,7 @@ class DebianDistroInfoTestCase(unittest.TestCase):  # pylint: disable=too-many-p
             "lenny",
             "squeeze",
             "sid",
-            "experimental",
+            "rc-buggy",
         }
         self.assertEqual(all_distros - set(self._distro_info.all), set())
 
@@ -64,7 +64,7 @@ class DebianDistroInfoTestCase(unittest.TestCase):  # pylint: disable=too-many-p
     def test_supported(self) -> None:
         """Test: List all supported Debian distribution."""
         self.assertEqual(
-            self._distro_info.supported(self._date), ["lenny", "squeeze", "sid", "experimental"]
+            self._distro_info.supported(self._date), ["lenny", "squeeze", "sid", "rc-buggy"]
         )
 
     def test_lts_supported(self) -> None:
@@ -95,7 +95,7 @@ class DebianDistroInfoTestCase(unittest.TestCase):  # pylint: disable=too-many-p
     @patch.dict("os.environ", {"SOURCE_DATE_EPOCH": "1500000000"})
     def test_date_filtering(self) -> None:
         """Test: filter supported Debian releases based on build date"""
-        supported = ["jessie", "stretch", "buster", "sid", "experimental"]
+        supported = ["jessie", "stretch", "buster", "sid", "rc-buggy"]
 
         distro_info = DebianDistroInfo()
         self.assertEqual(distro_info.supported(), supported)
