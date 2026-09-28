@@ -67,6 +67,15 @@ natty"
     success "--date=2011-01-10 --supported" "$result"
 }
 
+testSupportedESM() {
+    local result="xenial
+bionic
+focal
+jammy
+noble"
+    success "--date=2025-04-01 --supported-esm" "$result"
+}
+
 testSupportedLegacy() {
     local result="trusty
 xenial

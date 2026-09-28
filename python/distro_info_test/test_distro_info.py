@@ -175,6 +175,13 @@ class UbuntuDistroInfoTestCase(unittest.TestCase):  # pylint: disable=too-many-p
         supported = ["dapper", "hardy", "karmic", "lucid", "maverick", "natty"]
         self.assertEqual(self._distro_info.supported(self._date), supported)
 
+    def test_supported_esm(self) -> None:
+        """Test: List all supported ESM Ubuntu distribution."""
+        supported_esm = ["trusty", "xenial", "bionic", "focal", "jammy"]
+        self.assertEqual(
+            self._distro_info.supported_esm(datetime.date(2022, 12, 22)), supported_esm
+        )
+
     def test_supported_legacy(self) -> None:
         """Test: List all supported legacy Ubuntu distribution."""
         supported_legacy = ["trusty", "xenial", "bionic", "focal", "jammy", "noble"]
