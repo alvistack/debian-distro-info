@@ -1,3 +1,13 @@
+distro-info (1.18) unstable; urgency=medium
+
+  * Support Ubuntu Pro with Legacy add-on (LP: #2131678):
+    - ubuntu-distro-info: add --supported-legacy
+    - python: add UbuntuDistroInfo.supported_legacy
+    - perl: add UbuntuDistroInfo.supported_legacy
+  * Add test cases for ubuntu-distro-info --supported-esm
+
+ -- Benjamin Drung <bdrung@debian.org>  Mon, 28 Sep 2026 16:01:16 +0200
+
 distro-info (1.17) unstable; urgency=medium
 
   * test: replace experimental by rc-buggy for distro-info-data 0.73
