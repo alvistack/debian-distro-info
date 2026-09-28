@@ -46,6 +46,7 @@ static char *milestones[] = {"created"
 #ifdef UBUNTU
                             ,"eol-server"
                             ,"eol-esm"
+                            ,"eol-legacy"
 #endif
 };
 
@@ -284,6 +285,11 @@ static bool filter_elts_supported(const date_t *date, const distro_t *distro) {
 static bool filter_esm_supported(const date_t *date, const distro_t *distro) {
     return created(date, distro) && !eol_esm(date, distro) &&
            strstr(distro->version, "LTS") != NULL;
+}
+
+static bool filter_legacy_supported(const date_t *date, const distro_t *distro) {
+    return created(date, distro) && distro->milestones[MILESTONE_EOL_LEGACY]
+           && !date_ge(date, distro->milestones[MILESTONE_EOL_LEGACY]);
 }
 #endif
 
@@ -626,6 +632,8 @@ static void print_help(void) {
 #endif
 #ifdef UBUNTU
            "      --supported-esm    list of all Ubuntu Advantage supported stable versions\n"
+           "      --supported-legacy list of all stable versions supported by Ubuntu Pro\n"
+           "                         with Legacy add-on\n"
 #endif
            "      --unsupported      list of all unsupported stable versions\n"
            "  -c  --codename         print the codename (default)\n"
@@ -697,7 +705,8 @@ int main(int argc, char *argv[]) {
         {"stable",        no_argument,       NULL, 's' },
         {"supported",     no_argument,       NULL, 'S' },
 #ifdef UBUNTU
-        {"supported-esm", no_argument,       NULL, 'e' },
+        {"supported-esm",    no_argument,    NULL, 'e' },
+        {"supported-legacy", no_argument,    NULL, 'x' },
 #endif
         {"unsupported",   no_argument,       NULL, 'U' },
         {"codename",      no_argument,       NULL, 'c' },
@@ -876,6 +885,12 @@ int main(int argc, char *argv[]) {
                 select_cb = NULL;
                 break;
 
+            case 'x':
+                // Only long option --supported-legacy is used
+                selected_filters++;
+                filter_cb = filter_legacy_supported;
+                select_cb = NULL;
+                break;
 #endif
 #ifdef DEBIAN
             case 't':

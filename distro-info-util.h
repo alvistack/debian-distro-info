@@ -41,6 +41,7 @@ enum MILESTONE {MILESTONE_CREATED
 #ifdef UBUNTU
                ,MILESTONE_EOL_SERVER
                ,MILESTONE_EOL_ESM
+               ,MILESTONE_EOL_LEGACY
 #endif
                ,MILESTONE_COUNT
 };
