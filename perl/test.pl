@@ -18,7 +18,7 @@ use strict;
 use warnings;
 use List::Util qw(all);
 
-use Test::Simple tests => 41;
+use Test::Simple tests => 42;
 
 use lib '.';
 use Debian::DistroInfo;
@@ -139,6 +139,11 @@ ok(symmetric_difference(\@expected, \@returned) == 0,
 @returned = $ubu->supported_esm($date2);
 ok(symmetric_difference(\@expected, \@returned) == 0,
    'Ubuntu ESM');
+
+@expected = ('trusty', 'xenial', 'bionic', 'focal', 'jammy', 'noble');
+@returned = $ubu->supported_legacy(Debian::DistroInfo::convert_date('2025-09-04'));
+ok(symmetric_difference(\@expected, \@returned) == 0,
+   'Ubuntu Legacy');
 
 @expected = ('warty', 'hoary', 'breezy', 'edgy', 'feisty', 'gutsy', 'intrepid',
              'jaunty');

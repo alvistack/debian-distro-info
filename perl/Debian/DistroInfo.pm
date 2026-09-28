@@ -130,7 +130,7 @@ sub get_all_series {
                 $row{$col} = shift(@raw_row) or undef;
             }
             for my $col ('created', 'release', 'eol', 'eol-esm', 'eol-lts',
-                         'eol-elts', 'eol-server') {
+                         'eol-elts', 'eol-server', 'eol-legacy') {
                 if(defined($row{$col})) {
                     $row{$col} = Debian::DistroInfo::convert_date($row{$col});
                 }
@@ -415,6 +415,18 @@ sub get_all_series {
         my @distros;
         for my $row ($self->_avail($date)) {
             if (defined($row->{'eol-esm'}) && $date <= $row->{'eol-esm'}) {
+                push(@distros, $row->{'series'});
+            }
+        }
+        return @distros;
+    }
+
+    sub supported_legacy {
+        my ($self, $date) = @_;
+        $date = $self->{'date'} if (!defined($date));
+        my @distros;
+        for my $row ($self->_avail($date)) {
+            if (defined($row->{'eol-legacy'}) && $date <= $row->{'eol-legacy'}) {
                 push(@distros, $row->{'series'});
             }
         }

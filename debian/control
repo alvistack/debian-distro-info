@@ -30,7 +30,7 @@ Description: provides information about the distributions' releases
 Package: libdistro-info-perl
 Architecture: all
 Section: perl
-Depends: distro-info-data (>= 0.59~)
+Depends: distro-info-data (>= 0.65~)
 Multi-Arch: foreign
 Description: information about distributions' releases (Perl module)
  Information about all releases of Debian and Ubuntu.
