@@ -175,6 +175,13 @@ class UbuntuDistroInfoTestCase(unittest.TestCase):  # pylint: disable=too-many-p
         supported = ["dapper", "hardy", "karmic", "lucid", "maverick", "natty"]
         self.assertEqual(self._distro_info.supported(self._date), supported)
 
+    def test_supported_legacy(self) -> None:
+        """Test: List all supported legacy Ubuntu distribution."""
+        supported_legacy = ["trusty", "xenial", "bionic", "focal", "jammy", "noble"]
+        self.assertEqual(
+            self._distro_info.supported_legacy(datetime.date(2025, 9, 4)), supported_legacy
+        )
+
     def test_unsupported(self) -> None:
         """Test: List all unsupported Ubuntu distributions."""
         unsupported = ["warty", "hoary", "breezy", "edgy", "feisty", "gutsy", "intrepid", "jaunty"]

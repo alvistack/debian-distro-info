@@ -66,6 +66,7 @@ class DistroRelease:
         eol_lts: typing.Optional[datetime.date] = None,
         eol_elts: typing.Optional[datetime.date] = None,
         eol_server: typing.Optional[datetime.date] = None,
+        eol_legacy: typing.Optional[datetime.date] = None,
     ) -> None:
         self.version = version
         self.codename = codename
@@ -77,6 +78,7 @@ class DistroRelease:
         self.eol_elts = eol_elts
         self.eol_esm = eol_esm
         self.eol_server = eol_server
+        self.eol_legacy = eol_legacy
 
     def is_supported(self, date: datetime.date) -> bool:
         """Check whether this release is supported on the given date."""
@@ -122,6 +124,7 @@ class DistroInfo:
                     _get_date(row, "eol-lts"),
                     _get_date(row, "eol-elts"),
                     _get_date(row, "eol-server"),
+                    _get_date(row, "eol-legacy"),
                 )
                 self._releases.append(release)
         source_date_epoch = os.environ.get("SOURCE_DATE_EPOCH")
@@ -573,4 +576,16 @@ class UbuntuDistroInfo(DistroInfo):
         if date is None:
             date = self._date
         distros = [x for x in self._avail(date) if x.eol_esm is not None and date <= x.eol_esm]
+        return self._format_list(result, distros)
+
+    def supported_legacy(
+        self, date: typing.Optional[datetime.date] = None, result: _AnyResult = "codename"
+    ) -> typing.Union[list[DistroRelease], list[str]]:
+        """Get list of all Ubuntu distributions supported by Ubuntu Pro
+        with Legacy add-on based on the given date."""
+        if date is None:
+            date = self._date
+        distros = [
+            x for x in self._avail(date) if x.eol_legacy is not None and date <= x.eol_legacy
+        ]
         return self._format_list(result, distros)
