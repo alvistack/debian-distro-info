@@ -38,7 +38,7 @@ test-python:
 	$(foreach python,$(shell py3versions -r),cd python && $(python) -m unittest discover$(\n))
 
 clean:
-	rm -rf debian-distro-info ubuntu-distro-info python/build python/*.egg-info python/.pylint.d
+	rm -rf debian-distro-info ubuntu-distro-info python/build python/*.egg-info python/.pylint.d python/.mypy_cache
 	find python -name '*.pyc' -delete
 
 .PHONY: build clean install test test-commandline test-perl test-python
