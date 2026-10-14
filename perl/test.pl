@@ -18,7 +18,7 @@ use strict;
 use warnings;
 use List::Util qw(all);
 
-use Test::Simple tests => 42;
+use Test::Simple tests => 44;
 
 use lib '.';
 use Debian::DistroInfo;
@@ -77,11 +77,13 @@ my $deb = DebianDistroInfo->new();
 ok(unique(\@all, \@returned) == 0, 'Debian all');
 
 ok($deb->devel($date1) eq 'sid', 'Debian devel');
+ok($deb->experimental($date1) eq 'rc-buggy', 'Debian experimental');
 ok($deb->old($date1) eq 'etch', 'Debian oldstable');
 ok($deb->stable($date1) eq 'lenny', 'Debian stable');
 ok($deb->testing($date1) eq 'squeeze', 'Debian testing');
 ok($deb->valid('sid'), 'Debian valid');
 ok($deb->valid('stable'), 'Debian valid');
+ok($deb->valid('experimental'), 'Debian valid');
 ok(!$deb->valid('foobar'), 'Debian invalid');
 
 @expected = ('lenny', 'squeeze', 'sid', 'rc-buggy');

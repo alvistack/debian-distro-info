@@ -53,6 +53,10 @@ class DebianDistroInfoTestCase(unittest.TestCase):  # pylint: disable=too-many-p
         """Test: Get latest development Debian distribution."""
         self.assertEqual(self._distro_info.devel(self._date), "sid")
 
+    def test_experimental(self) -> None:
+        """Test: Get latest experimental Debian distribution."""
+        self.assertEqual(self._distro_info.experimental(self._date), "rc-buggy")
+
     def test_old(self) -> None:
         """Test: Get old (stable) Debian distribution."""
         self.assertEqual(self._distro_info.old(self._date), "etch")
@@ -83,6 +87,7 @@ class DebianDistroInfoTestCase(unittest.TestCase):  # pylint: disable=too-many-p
 
     def test_valid(self) -> None:
         """Test: Check for valid Debian distribution."""
+        self.assertTrue(self._distro_info.valid("experimental"))
         self.assertTrue(self._distro_info.valid("sid"))
         self.assertTrue(self._distro_info.valid("stable"))
         self.assertFalse(self._distro_info.valid("foobar"))
@@ -117,6 +122,7 @@ class DebianDistroInfoTestCase(unittest.TestCase):  # pylint: disable=too-many-p
         """Test: Check result set to codename."""
         self.assertEqual(self._distro_info.old(self._date, "codename"), "etch")
         self.assertEqual(self._distro_info.devel(self._date, result="codename"), "sid")
+        self.assertEqual(self._distro_info.experimental(self._date, result="codename"), "rc-buggy")
 
     def test_fullname(self) -> None:
         """Test: Check result set to fullname."""

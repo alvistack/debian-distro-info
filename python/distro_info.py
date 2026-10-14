@@ -321,6 +321,8 @@ class DebianDistroInfo(DistroInfo):
         default: typing.Optional[str] = None,
     ) -> typing.Union[DistroRelease, str, None]:
         """Map 'unstable', 'testing', etc. to their codenames."""
+        if release == "experimental":
+            return self.experimental(date)
         if release == "unstable":
             return self.devel(date)
         if release == "testing":
@@ -365,6 +367,27 @@ class DebianDistroInfo(DistroInfo):
         """Get latest development distribution based on the given date."""
         distros = self._get_unreleased_distros(date)
         return self._format(result, distros[-2])
+
+    @typing.overload
+    def experimental(
+        self, date: typing.Optional[datetime.date] = None, *, result: _ObjectResult
+    ) -> DistroRelease: ...
+
+    @typing.overload
+    # https://github.com/pylint-dev/pylint/issues/5264
+    # pylint: disable-next=arguments-differ
+    def experimental(
+        self, date: typing.Optional[datetime.date] = None, result: _NonObjectResult = "codename"
+    ) -> str: ...
+
+    # https://github.com/pylint-dev/pylint/issues/5264
+    # pylint: disable-next=arguments-differ
+    def experimental(
+        self, date: typing.Optional[datetime.date] = None, result: _AnyResult = "codename"
+    ) -> typing.Union[DistroRelease, str]:
+        """Get the experimental distribution based on the given date."""
+        distros = self._get_unreleased_distros(date)
+        return self._format(result, distros[-1])
 
     @typing.overload
     def old(
@@ -490,6 +513,7 @@ class DebianDistroInfo(DistroInfo):
     def valid(self, codename: str) -> bool:
         """Check if the given codename is known."""
         return DistroInfo.valid(self, codename) or codename in [
+            "experimental",
             "unstable",
             "testing",
             "stable",

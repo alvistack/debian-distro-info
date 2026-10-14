@@ -249,6 +249,7 @@ sub get_all_series {
     sub codename {
         my ($self, $release, $date, $default) = @_;
         $date = $self->{'date'} if (!defined($date));
+        return $self->experimental($date) if ($release eq 'experimental');
         return $self->devel($date) if ($release eq 'unstable');
         return $self->testing($date) if ($release eq 'testing');
         return $self->stable($date) if ($release eq 'stable');
@@ -278,6 +279,16 @@ sub get_all_series {
             return 0;
         }
         return $distros[-2]{'series'};
+    }
+
+    sub experimental {
+        my ($self, $date) = @_;
+        my @distros = $self->_get_unreleased_distros($date);
+        if (scalar(@distros) < 2) {
+            warn $outdated_error;
+            return 0;
+        }
+        return $distros[-1]{'series'};
     }
 
     sub old {
@@ -355,6 +366,7 @@ sub get_all_series {
     sub valid {
         my ($self, $codename) = @_;
         my %codenames = (
+            'experimental' => 1,
             'unstable' => 1,
             'testing' => 1,
             'stable' => 1,
