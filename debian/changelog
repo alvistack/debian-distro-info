@@ -1,3 +1,10 @@
+distro-info (1.20) unstable; urgency=medium
+
+  * autopkgtest: require distro-info-data >= 0.70 for test-ubuntu-distro-info
+  * perl/python: add experimental() and consider experimental as valid
+
+ -- Benjamin Drung <bdrung@debian.org>  Wed, 14 Oct 2026 21:20:53 +0200
+
 distro-info (1.19) unstable; urgency=medium
 
   * Makefile: remove python/.mypy_cache on clean
