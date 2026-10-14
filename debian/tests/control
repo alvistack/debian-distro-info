@@ -3,7 +3,7 @@ Depends: distro-info, distro-info-data (>= 0.73), shunit2 (>= 2.1.6)
 Features: test-name=test-debian-distro-info
 
 Test-Command: COMMAND=/usr/bin/ubuntu-distro-info ./test-ubuntu-distro-info
-Depends: distro-info, shunit2 (>= 2.1.6)
+Depends: distro-info, distro-info-data (>= 0.70), shunit2 (>= 2.1.6)
 Features: test-name=test-ubuntu-distro-info
 
 Test-Command: cp perl/test.pl "$AUTOPKGTEST_TMP" && cd "$AUTOPKGTEST_TMP" && ./test.pl
