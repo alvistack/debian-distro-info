@@ -256,7 +256,7 @@ sub get_all_series {
         return $default;
     }
 
-    sub devel {
+    sub _get_unreleased_distros {
         my ($self, $date) = @_;
         $date = $self->{'date'} if (!defined($date));
         my @distros;
@@ -267,6 +267,12 @@ sub get_all_series {
                 push(@distros, $row);
             }
         }
+        return @distros;
+    }
+
+    sub devel {
+        my ($self, $date) = @_;
+        my @distros = $self->_get_unreleased_distros($date);
         if (scalar(@distros) < 2) {
             warn $outdated_error;
             return 0;

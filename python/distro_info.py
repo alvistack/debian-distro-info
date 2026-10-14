@@ -331,6 +331,20 @@ class DebianDistroInfo(DistroInfo):
             return self.old(date)
         return default
 
+    def _get_unreleased_distros(
+        self, date: typing.Optional[datetime.date] = None
+    ) -> list[DistroRelease]:
+        if date is None:
+            date = self._date
+        distros = [
+            x
+            for x in self._avail(date)
+            if x.release is None or (date < x.release and (x.eol is None or date <= x.eol))
+        ]
+        if len(distros) < 2:
+            raise DistroDataOutdated()
+        return distros
+
     @typing.overload
     def devel(
         self, date: typing.Optional[datetime.date] = None, *, result: _ObjectResult
@@ -349,15 +363,7 @@ class DebianDistroInfo(DistroInfo):
         self, date: typing.Optional[datetime.date] = None, result: _AnyResult = "codename"
     ) -> typing.Union[DistroRelease, str]:
         """Get latest development distribution based on the given date."""
-        if date is None:
-            date = self._date
-        distros = [
-            x
-            for x in self._avail(date)
-            if x.release is None or (date < x.release and (x.eol is None or date <= x.eol))
-        ]
-        if len(distros) < 2:
-            raise DistroDataOutdated()
+        distros = self._get_unreleased_distros(date)
         return self._format(result, distros[-2])
 
     @typing.overload
